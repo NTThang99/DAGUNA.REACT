@@ -1,0 +1,66 @@
+.control-btn .next,
+.control-btn .prev {
+  top: 100%;
+  background: none;
+  position: absolute;
+  z-index: 10;
+}
+
+.control-btn .prev {
+  left: 45%;
+}
+
+.control-btn .next {
+  right: 45%;
+}
+
+.control-btn .prev i,
+.control-btn .next i {
+  background: rgba(0, 0, 0, 0.05);
+  color: black;
+  font-size: 15px;
+  transition: 0.5s;
+}
+
+.control-btn .prev i:hover,
+.control-btn .next i:hover {
+  background: #feb445;
+  color: white;
+}
+
+/*----- control btn -------*/
+@media screen and (max-width: 768px) {
+  .control-btn .prev {
+    left: 40%;
+  }
+
+  .control-btn .next {
+    right: 42%;
+  }
+}
+
+.control-btn button {
+  background-color: rgba(255, 255, 255, 0.3);
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+.control-btn i {
+  background-color: #feb445;
+  width: 45px;
+  height: 45px;
+  margin: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  font-size: 30px;
+}

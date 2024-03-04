@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../../css/booking.css"
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+// import dayjs from 'dayjs';
+// import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 
 
 export default function Booking() {
@@ -136,7 +136,7 @@ export default function Booking() {
                         </div>
                       )}
                     </div>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['DateRangeCalendar', 'DateRangeCalendar']}>
                         <DemoItem label="Uncontrolled calendar">
                           <DateRangeCalendar
@@ -150,7 +150,7 @@ export default function Booking() {
                           />
                         </DemoItem>
                       </DemoContainer>
-                    </LocalizationProvider>
+                    </LocalizationProvider> */}
 
                     {/* <button className="container_checkIn"
                       aria-expanded={isExpanded}

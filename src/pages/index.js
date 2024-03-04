@@ -8,7 +8,6 @@ import Room from "./RoomPage";
 import RoomDetail from "./RoomDetailPage";
 import Services from "./ServicesPage";
 import Home from "../components/home/Home";
-import DashBoard from "./DashBoardPage";
 export {
   Home,
   Booking,
@@ -20,5 +19,4 @@ export {
   Room,
   RoomDetail,
   Services,
-  DashBoard,
 };

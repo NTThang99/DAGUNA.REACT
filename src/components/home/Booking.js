@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../../css/booking.css"
 import '@fortawesome/fontawesome-free/css/all.min.css'
-// import dayjs from 'dayjs';
-// import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Room from "./Rooms";
 
 
 export default function Booking() {
@@ -13,10 +13,7 @@ export default function Booking() {
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(2);
 
-  const [value, setValue] = React.useState([
-    dayjs('2022-04-17'),
-    dayjs('2022-04-21'),
-  ]);
+  const [value, setValue] = React.useState(dayjs('2022-04-17T15:30'));
 
 
   const toggleFlyout = () => {
@@ -74,7 +71,7 @@ export default function Booking() {
                               </div>
                             </legend>
                             <button className="closeButton" aria-label="Close" onClick={toggleFlyout}>
-                              <i class="fa-solid fa-xmark"></i>
+                              <i className="fa-solid fa-xmark"></i>
                             </button>
                             <div className="selection_container" role="presentation">
                               <div>
@@ -83,18 +80,18 @@ export default function Booking() {
                                   <div className="quantity_wrapper" style={{ left: '14px' }}>
                                     <button className="button_btn button_primary button_md" aria-label="Remove one Adult" onClick={decreaseAdultQuantity} >
                                       <span>
-                                        <i class="button_subtract fa-solid fa-minus" />
+                                        <i className="button_subtract fa-solid fa-minus" />
                                       </span>
                                     </button>
                                     <div className="field_container" data-error="false" data-warning="false">
                                       <label>
-                                        <span class="input-field_label">Adults</span>
+                                        <span className="input-field_label">Adults</span>
                                         <input type="text" placeholder="" aria-label="Adults" data-error="false" value={adultQuantity} readOnly />
                                       </label>
                                     </div>
                                     <button className="button_btn button_primary button_md" aria-label="Add one Adult" onClick={increaseAdultQuantity}>
                                       <span>
-                                        <i class="fa-solid fa-plus"></i>
+                                        <i className="fa-solid fa-plus"></i>
                                       </span>
                                     </button>
                                   </div>
@@ -106,18 +103,18 @@ export default function Booking() {
                                   <div className="quantity_wrapper">
                                     <button className="button_btn button_primary button_md" aria-label="Remove one Adult" onClick={decreaseChildQuantity}>
                                       <span>
-                                        <i class="button_subtract fa-solid fa-minus" />
+                                        <i className="button_subtract fa-solid fa-minus" />
                                       </span>
                                     </button>
                                     <div className="field_container" data-error="false" data-warning="false">
                                       <label>
-                                        <span class="input-field_label">Children</span>
+                                        <span className="input-field_label">Children</span>
                                         <input type="text" placeholder="" aria-label="Children" data-error="false" value={childQuantity} readOnly />
                                       </label>
                                     </div>
                                     <button className="button_btn button_primary button_md" aria-label="Add one Adult" onClick={increaseChildQuantity}>
                                       <span>
-                                        <i class="fa-solid fa-plus"></i>
+                                        <i className="fa-solid fa-plus"></i>
                                       </span>
                                     </button>
                                   </div>
@@ -136,27 +133,22 @@ export default function Booking() {
                         </div>
                       )}
                     </div>
-                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['DateRangeCalendar', 'DateRangeCalendar']}>
-                        <DemoItem label="Uncontrolled calendar">
-                          <DateRangeCalendar
-                            defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
-                          />
-                        </DemoItem>
-                        <DemoItem label="Controlled calendar">
-                          <DateRangeCalendar
-                            value={value}
-                            onChange={(newValue) => setValue(newValue)}
-                          />
-                        </DemoItem>
-                      </DemoContainer>
-                    </LocalizationProvider> */}
+                    <div className="container_guestsWrapper">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker className="container_checkIn" defaultValue={dayjs('2022-04-17')} />
+                        <DatePicker className="container_checkOut"
+                          value={value}
+                          onChange={(newValue) => setValue(newValue)}
+                        />
+                      </LocalizationProvider>
+                    </div>
+
 
                     {/* <button className="container_checkIn"
                       aria-expanded={isExpanded}
                       aria-controls="guests-selection-flyout"
                     >
-                      <i class="containerIcon fa-regular fa-calendar-days"></i>
+                      <i className="containerIcon fa-regular fa-calendar-days"></i>
                       <span className="container_label">
                         <span>Check-in</span>
                       </span>
@@ -166,7 +158,7 @@ export default function Booking() {
                       aria-expanded={isExpanded}
                       aria-controls="guests-selection-flyout"
                     >
-                      <i class="containerIcon fa-regular fa-calendar-days"></i>
+                      <i className="containerIcon fa-regular fa-calendar-days"></i>
                       <span className="container_label">
                         <span>Check-out</span>
                       </span>
@@ -179,8 +171,101 @@ export default function Booking() {
                   <div className="container_mobileSearch"></div>
                 </div>
               </div>
+              <div className="breadcrumbs_wrapper">
+                <div className="breadcrumbs_header " data-testid="breadcrumbs-header">
+                  <div className="breadcrumbs_headerWithArrow">
+                    <h1 className="app_pageTitle">Select a Room</h1>
+                  </div>
+                </div>
+              </div>
             </header>
+            <div class="filter-bar_container">
+              <div class="filter-bar_box">
+                <div class="filter-bar_options">
+                  <div class="filter-bar_left">
+                  </div>
+                  <div class="filter-bar_right">
+                    <div class="filter-bar_layout filter-bar-select_container" datatest="room_layout">
+                      <div class="select_container select_hasValue" data-error="false">
+                        <button aria-expanded="false" aria-controls="select-dropdown-wrapper-view-results-by-room-rate" class="select_hiddenInput" aria-labelledby="view-results-by-room-rate" value="room" data-error="false" tabindex="0"></button>
+                        <div class="select_input" data-selector="true">
+                          <label class="select_label" id="view-results-by-room-rate">View Results By </label>
+                          <span class="select_value">Rooms</span>
+                          <span class="select_caret" aria-hidden="true">
+                            <i class="select_caret_icon fa-solid fa-caret-down"></i>
+                          </span>
+                        </div>
+                        <div role="alert"></div>
+                      </div>
+                    </div>
+                    <div class="filter-bar_sortBy filter-bar-select_container" datatest="sort-by-select">
+                      <div class="select_container select_hasValue" data-error="false">
+                        <button aria-expanded="false" aria-controls="select-dropdown-wrapper-filter-bar-sort-by" class="select_hiddenInput" aria-labelledby="filter-bar-sort-by" value="priceLowestToHighest" data-error="false" tabindex="0"></button>
+                        <div class="select_input" data-selector="true">
+                          <label class="select_label" id="filter-bar-sort-by">Sort By </label>
+                          <span class="select_value">Lowest Price</span>
+                          <span class="select_caret" aria-hidden="true">
+                            <i class="select_caret_icon fa-solid fa-caret-down "></i>
+                          </span>
+                        </div>
+                        <div role="alert"></div>
+                      </div>
+                    </div>
+                    <div class="filter-bar_filterLink">
+                      <a href="#" aria-expanded="false" aria-controls="filter-bar-filters-wrapper">
+                        <span>Show Filters</span>
+                        <i class="fa-solid fa-caret-down"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="filter-bar_tagsWrapper"></div>
+              </div>
+            </div>
+            <div>
+              <Room />
+            </div>
           </main>
+          <aside className="app_col-sm-12 app_col-md-12 app_col-lg-4">
+            <div className="container-inner">
+              <div className="container_body">
+                <div className="container_header">
+                  <h2 class="app_heading1">
+                    <span>Your Stay</span>
+                  </h2>
+                </div>
+                <div className="container_hotelDetails">
+                  <div className="cart-container_checkIn">
+                    <b ><span>Check-in</span></b>
+                    <span>After 3:00 PM</span>
+                  </div>
+                  <div class="cart-container_checkOut">
+                    <b><span>Check-out</span></b>
+                    <span>Before 12:00 PM</span>
+                  </div>
+                </div>
+                <div className="cart-container_summary">
+                  <div className="cart-container_dates">
+                    <span>Mon, Mar 4, 2024</span> - <span>Tue, Mar 5, 2024</span>
+                  </div>
+                  <div className="cart-container_guests">
+                    <span>{adultQuantity} Adults</span>
+                  </div>
+                </div>
+              </div>
+              <div class="price-summary_container">
+                <hr class="desktopOnly" />
+                <div class="price-summary_totalPrice">
+                  <div class="price-summary_total">
+                    <span>Total:</span>
+                  </div>
+                  <div class="price-summary_price">
+                    <span>₫0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </>

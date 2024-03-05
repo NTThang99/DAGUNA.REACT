@@ -366,4 +366,299 @@
 .button_sm {
     line-height: 0.875rem;
     padding: 0.625rem 0.625rem;
-}   
+}
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+    position: static !important;
+}
+
+.breadcrumbs_wrapper {
+    margin-bottom: 1rem;
+    padding-top: 20px;
+}
+
+.breadcrumbs_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.breadcrumbs_headerWithArrow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.app_pageTitle {
+    font-feature-settings: 'dlig' 0, 'liga' 0, 'lnum' 1, 'kern' 1;
+    margin: 0;
+    color: rgba(181, 82, 25, 1);
+    font-size: 28px;
+    font-weight: 300;
+    font-family: Monesta, Georgia, serif;
+    text-transform: capitalize;
+    line-height: 1.3;
+}
+
+.container-inner {
+    border: 1px solid #d7d7d7;
+    background: rgba(248, 245, 240, 1);
+    border-radius: 0;
+    padding: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.app_heading1 {
+    font-feature-settings: 'dlig' 0, 'liga' 0, 'lnum' 1, 'kern' 1;
+    color: rgba(152, 88, 19, 1);
+    font-size: 22px;
+    font-weight: 600;
+    font-family: Monesta, Georgia, serif;
+    text-transform: none;
+    line-height: 1.3;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem !important;
+}
+
+.filter-bar_container {
+    margin-bottom: 1rem;
+}
+
+.filter-bar_container .filter-bar_box {
+    background: #f8f5f0 !important;
+    border: 1px solid #d7d7d7;
+    border-radius: 0;
+    position: relative;
+}
+
+.filter-bar_options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 0 0.5rem;
+}
+
+.filter-bar_left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.5rem 0;
+    text-align: left;
+}
+
+.filter-bar_right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 0.5rem 0;
+    text-align: right;
+}
+
+.filter-bar-select_container {
+    text-align: left;
+}
+
+.select_container {
+    display: block;
+    position: relative;
+    max-width: 100%;
+}
+
+.select_hiddenInput {
+    font-size: 16px;
+    width: 100%;
+    opacity: 0;
+    outline: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    cursor: pointer !important;
+    height: 100%;
+    -webkit-appearance: none;
+}
+
+.filter-bar-select_container .select_input {
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    height: auto;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 0;
+}
+
+.select_input {
+    border-radius: 0;
+    font-family: Monesta, Arial, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 16px;
+    height: 3.5em;
+    color: rgba(0, 0, 0, 1);
+    border: 1px solid #575c5a;
+    background: rgba(255, 255, 255, 1);
+    width: 100%;
+    z-index: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.filter-bar-select_container .select_label {
+    font-weight: 400;
+    font-size: 0.875rem;
+}
+
+.filter-bar-select_container .select_label,
+.filter-bar-select_container .select_value {
+    font-family: Niramit, Arial, sans-serif;
+    color: #575c5a;
+    line-height: 1.3;
+    text-decoration: none;
+    padding: 0;
+    position: static;
+    display: block;
+}
+
+.select_label {
+    padding: 0 0.75rem;
+    display: block;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    line-height: 3.5em;
+    transition-duration: 0.1s;
+    transition-property: font-size, opacity, line-height;
+    transition-timing-function: cubic-bezier(0.86, 0, 0.07, 1);
+    z-index: 2;
+    font-family: 'Niramit', Arial, sans-serif;
+    font-weight: 400;
+    color: #555;
+}
+
+.filter-bar-select_container .select_value {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.filter-bar-select_container .select_value {
+    margin-right: 1.5rem;
+}
+
+.select_hasValue .select_value {
+    padding-right: 0;
+}
+
+.filter-bar-select_container .select_caret {
+    right: 0.5rem;
+}
+
+.select_hasValue .select_value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.filter-bar-select_container .select_caret {
+    transform: none !important;
+    top: auto !important;
+    bottom: 0.5rem;
+}
+
+.select_input .select_caret {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.select_input .select_caret_icon {
+    margin-left: 0.25em;
+}
+
+.select_input .select_caret_icon {
+    display: inline-block;
+    line-height: 1em;
+    font-size: 1em;
+    vertical-align: baseline;
+
+}
+
+.container_hotelDetails {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cart-container_checkIn,
+.cart-container_checkOut {
+    display: inline-block;
+    vertical-align: top;
+    flex-grow: 1;
+}
+
+.cart-container_checkIn b,
+.cart-container_checkOut b {
+    display: block;
+    font-weight: 700;
+}
+
+.cart-container_summary {
+    margin: 1rem 0;
+}
+
+.price-summary_container {
+    display: block;
+}
+
+.desktopOnly {
+    display: block;
+    background: #ccc;
+    border: 0;
+    height: 1px;
+    margin: 1rem 0;
+    padding: 0;
+    box-sizing: content-box;
+    overflow: visible;
+}
+
+.price-summary_totalPrice {
+    display: flex;
+    justify-content: space-between;
+}
+
+.price-summary_price,
+.price-summary_total {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.price-summary_price {
+    text-align: right;
+}
+
+.filter-bar_filterLink a {
+    display: block;
+    padding: 0.5rem;
+    color: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0;
+    border-bottom: 0;
+    cursor: pointer;
+    transition: color 150ms;
+}

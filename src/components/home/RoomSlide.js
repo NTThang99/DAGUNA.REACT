@@ -1,6 +1,7 @@
-import RoomService from "../../services/RoomService";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+
+import RoomService from "./../../services/roomService";
 const inItState = {
   filter: {
     price: 5000000,
@@ -13,7 +14,8 @@ export const getAllRoomsAPI = createAsyncThunk(
   "getAllRoomsAPI",
   async (arg, { rejectWithValue }) => {
     try {
-      let res = await RoomService.getAllRoom(arg);
+      let res = await RoomService.getAllRooms(arg);
+
       return res;
     } catch (err) {
       return rejectWithValue("Error getting all rooms");

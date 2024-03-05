@@ -33,7 +33,7 @@ export default function RoomDetails() {
                 <p> Hít thật sâu, đón bình minh đầy sảng khoái trong hơi thở đầu ngày khi trước mắt là khung cảnh hùng vĩ của dãy núi Trường Sơn từ chiếc giường cỡ King vô cùng thoải mái, bước chân ra là ban công riêng, nơi để bạn tận hưởng khí trời mát lành. Hạng phòng Garden Balcony King Grand của chúng tôi là sự kết hợp giữa phong cách truyền thống Việt Nam với nội thất tiện nghi hiện đại, như kênh TV vệ tinh, vòi sen phun mưa và internet miễn phí.</p>
               </div>
               <div className="btnWrapper css-i28fnt">
-                <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">book now</a>
+                <a className="btn btn-sm btn-dark rounded py-2 px-4" href="">book now</a>
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@ export default function RoomDetails() {
                         <path d="M8.27 13.315V8.438M8.294 8.438l13.628 13.707M8.27 8.438h4.878M21.922 17.268v4.877M21.922 22.145h-4.877M17.045 8.438h4.877M21.922 8.438v4.877M13.171 22.145H8.294M8.294 22.145v-4.877"></path>
                       </g>
                     </svg>
-                    <span class="colContentText">90-102 sqm</span>
+                    <span className="colContentText">90-102 sqm</span>
                   </Box>
                 </Box>
               </Grid>
@@ -91,7 +91,7 @@ export default function RoomDetails() {
                         </g>
                       </svg>
                     </Box>
-                    <Typography component="p" class="css-1vbufz3">King</Typography>
+                    <Typography component="p" className="css-1vbufz3">King</Typography>
                   </Box>
                 </Box>
               </Grid>
@@ -102,7 +102,7 @@ export default function RoomDetails() {
                     <Box className="IconWithLabel-icon">
                       <img src="https://www.angsana.com/assets/icons/Rooms - Courtyard.svg" alt="Rooms - Courtyard.svg" title="" width="30" height="30" decoding="async" data-src="https://www.angsana.com/assets/icons/Rooms - Courtyard.svg" />
                     </Box>
-                    <Typography component="p" class="css-1vbufz3">Courtyard</Typography>
+                    <Typography component="p" className="css-1vbufz3">Courtyard</Typography>
                   </Box>
                 </Box>
               </Grid>
@@ -116,38 +116,38 @@ export default function RoomDetails() {
                   </Box>
                   <Typography component="p" className="css-1vbufz3">Bathtub</Typography>
                 </Box>
-                <Box class="IconWithLabel css-1j8bv2l">
-                  <Box class="IconWithLabel-icon">
+                <Box className="IconWithLabel css-1j8bv2l">
+                  <Box className="IconWithLabel-icon">
                     <img src="https://www.angsana.com/assets/icons/Angsana - Bike.svg" alt="Angsana - Bike.svg" title="" width="30" height="30" decoding="async" data-src="https://www.angsana.com/assets/icons/Angsana - Bike.svg" />
                   </Box>
                   <Typography component="p" className="css-1vbufz3">Complimentary Bicycles</Typography>
                 </Box>
-                <Box class="IconWithLabel css-1j8bv2l">
-                  <Box class="IconWithLabel-icon">
+                <Box className="IconWithLabel css-1j8bv2l">
+                  <Box className="IconWithLabel-icon">
                     <img src="https://www.angsana.com/assets/icons/AN Amenities - WiFi.svg" alt="AN Amenities - WiFi.svg" title="" width="30" height="30" decoding="async" data-src="https://www.angsana.com/assets/icons/AN Amenities - WiFi.svg" />
                   </Box>
                   <Typography component="p" className="css-1vbufz3">Complimentary Wi-Fi</Typography>
                 </Box>
                 <Box className="IconWithLabel css-1j8bv2l">
-                  <Box class="IconWithLabel-icon">
+                  <Box className="IconWithLabel-icon">
                     <img src="https://www.angsana.com/assets/icons/AN Amenities - Fridge.svg" alt="AN Amenities - Fridge.svg" title="" width="30" height="30" decoding="async" data-src="https://www.angsana.com/assets/icons/AN Amenities - Fridge.svg" />
                   </Box>
                   <Typography component="p" className="css-1vbufz3">Minibar</Typography>
                 </Box>
                 <Box className="IconWithLabel css-1j8bv2l">
-                  <Box class="IconWithLabel-icon">
+                  <Box className="IconWithLabel-icon">
                     <img src="https://www.angsana.com/assets/icons/AN Amenities - Terrace-Deck.svg" alt="AN Amenities - Terrace-Deck.svg" title="" width="30" height="30" decoding="async" data-src="https://www.angsana.com/assets/icons/AN Amenities - Terrace-Deck.svg" />
                   </Box>
                   <Typography component="p" className="css-1vbufz3">Private Deck</Typography>
                 </Box>
                 <Box className="IconWithLabel css-1j8bv2l">
-                  <Box class="IconWithLabel-icon">
+                  <Box className="IconWithLabel-icon">
                     <img src="https://www.angsana.com/assets/icons/AN Amenities - Pool.svg" alt="AN Amenities - Pool.svg" title="" width="30" height="30" decoding="async" data-src="https://www.angsana.com/assets/icons/AN Amenities - Pool.svg" />
                   </Box>
                   <Typography component="p" className="css-1vbufz3">Private Plunge Pool</Typography>
                 </Box>
                 <Box className="IconWithLabel css-1j8bv2l">
-                  <Box class="IconWithLabel-icon">
+                  <Box className="IconWithLabel-icon">
                     <img src="https://www.angsana.com/assets/icons/AN Amenities - TV_0.svg" alt="AN Amenities - TV.svg" title="" width="30" height="30" decoding="async" data-src="https://www.angsana.com/assets/icons/AN Amenities - TV_0.svg" />
                   </Box>
                   <Typography component="p" className="css-1vbufz3">Television Set</Typography>

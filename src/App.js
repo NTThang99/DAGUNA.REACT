@@ -18,6 +18,7 @@ import {
   Team,
   Testimonial,
   DashBoard,
+  LoginForm,
 
 } from "./pages/index";
 import Footer from "./components/common/Footer";
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="/rooms/:roomName" element={<RoomDetail />} />
             <Route path="/services" element={<Services />} />
             <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="/login" element={<LoginForm />} />
           </Routes>
           <Footer />
         </Router>

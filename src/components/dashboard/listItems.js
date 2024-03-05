@@ -12,7 +12,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 export const mainListItems = (
   <React.Fragment>
     <ListItemButton>
-      <ListItemIcon>
+      <ListItemIcon >
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />

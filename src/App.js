@@ -22,6 +22,10 @@ import {
 
 } from "./pages/index";
 import Footer from "./components/common/Footer";
+import Dashboard from "./components/dashboard/Dashboard";
+import RoomList from "./components/dashboard/rooms/RoomList";
+import RoomPage from "./pages/dashboard/RoomPage";
+import CreateRoom from "./components/dashboard/rooms/CreateRoom";
 export default function App() {
   return (
     <>
@@ -39,7 +43,17 @@ export default function App() {
             <Route path="/rooms" element={<Room />} />
             <Route path="/rooms/:roomName" element={<RoomDetail />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="/dashboard" element={<Dashboard />}>
+
+              <Route path="rooms" element={<RoomPage/>}>
+                <Route index element={<RoomList />} />
+                <Route path="list" element={<RoomList />} />
+                <Route path="add" element={<CreateRoom />} />
+                <Route path=":roomId'" element={<RoomDetail />} />
+                <Route path="remove" />
+              </Route>
+
+            </Route>
             <Route path="/login" element={<LoginForm />} />
           </Routes>
           <Footer />

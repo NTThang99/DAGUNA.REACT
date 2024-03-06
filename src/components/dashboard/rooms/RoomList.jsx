@@ -6,7 +6,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import RoomService from "../../../services/roomService";
+import RoomService from "../../../services/RoomService";
 import axios from "axios";
 
 import { getAllRoomsAPI } from "../../home/RoomSlide";

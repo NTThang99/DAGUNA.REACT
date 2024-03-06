@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import RoomService from "./../../services/roomService";
+import RoomService from "./../../services/RoomService";
 const inItState = {
   filter: {
     price: 5000000,

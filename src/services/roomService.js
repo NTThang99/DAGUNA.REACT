@@ -1,5 +1,5 @@
 import apiClients from "../apiClients/apiClients";
-//up
+//up ..
 class RoomService {
   static getRoomList() {
     return apiClients.get(`/rooms`);

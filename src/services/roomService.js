@@ -4,6 +4,7 @@ class RoomService {
   static getRoomList() {
     return apiClients.get(`/rooms`);
   }
+  // get all room
   static async getAllRooms(url) {
     return fetch(url)
       .then((res) => res.json())

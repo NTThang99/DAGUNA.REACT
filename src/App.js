@@ -9,6 +9,8 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import {
   Home,
   Booking,
+  BookingService,
+  BookingCheckout,
   AboutUs,
   Contact,
   PageNotFound,
@@ -19,6 +21,7 @@ import {
   Testimonial,
   DashBoard,
   LoginForm,
+  
 
 } from "./pages/index";
 import Footer from "./components/common/Footer";
@@ -34,7 +37,9 @@ export default function App() {
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/booking/:roomName" element={<Booking />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/booking/addons" element={<BookingService />} />
+            <Route path="/booking/checkout" element={<BookingCheckout />} />
             <Route path="/team" element={<Team />} />
             <Route path="/testimonial" element={<Testimonial />} />
             <Route path="/about" element={<AboutUs />} />

@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 
 
 import roomReducer from "../components/home/RoomSlide";
-import customerReducer from "../components/home/CustomerSlide";
+import customerReducer from "../components/home/Slide/CustomerSlide";
 import bookingReducer from "../components/home/BookingSlide";
 
 

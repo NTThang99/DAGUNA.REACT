@@ -3,6 +3,7 @@ import apiClients from "../apiClients/apiClients";
 
 class RoomService {
 
+  // get all room
   static async getAllRooms(url) {
     return fetch(url)
       .then((res) => res.json())

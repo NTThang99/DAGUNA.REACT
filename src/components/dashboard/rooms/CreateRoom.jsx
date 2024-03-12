@@ -55,7 +55,7 @@ export default function CreateRoom() {
         setLoading(true);
         async function loadData() {
             try {
-                let dataViewType = await ViewTypeService.getAllViewType("http://localhost:8080/api/eview-types");
+                let dataViewType = await ViewTypeService.getAllViewType(`${import.meta.env.VITE_API_URL}/eview-types`);
                 setViewTypeList(dataViewType);
 
                 let dataKindOfRoom = await KindOfRoomService.getAllKindOfRoom("http://localhost:8080/api/kindofroom")

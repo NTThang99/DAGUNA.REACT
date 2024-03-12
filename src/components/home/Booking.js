@@ -1,16 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../css/booking.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import Room from "./Rooms";
+import { roomItems } from "../data/Data";
+import Box from '@mui/material/Box';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { searchRoomsAPI } from "./BookingSlide";
+
+const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
+
 
 export default function Booking() {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(2);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [activeStep, setActiveStep] = React.useState(0);
+  const dispatch = useDispatch();
+  const room = useSelector((state) => state.booking.room);
+
+
 
   const [value, setValue] = React.useState(dayjs("2022-04-17T15:30"));
 
@@ -36,6 +53,19 @@ export default function Booking() {
   const increaseChildQuantity = () => {
     setChildQuantity(childQuantity + 1);
   };
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    handleNavigateBooking();
+  };
+  const handleNavigateBooking = () => {
+    navigate(`/booking/addons`);
+  };
+
+  
+  useEffect(()=>{
+    dispatch(searchRoomsAPI(room));
+  }, [])
   return (
     <>
       <div className="app_container">
@@ -190,40 +220,43 @@ export default function Booking() {
                         </div>
                       )}
                     </div>
-                    <div className="container_guestsWrapper">
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          className="container_checkIn"
-                          defaultValue={dayjs("2022-04-17")}
-                        />
-                        <DatePicker
-                          className="container_checkOut"
-                          value={value}
-                          onChange={(newValue) => setValue(newValue)}
-                        />
-                      </LocalizationProvider>
-                    </div>
 
-                    {/* <button className="container_checkIn"
-                      aria-expanded={isExpanded}
-                      aria-controls="guests-selection-flyout"
-                    >
-                      <i className="containerIcon fa-regular fa-calendar-days"></i>
-                      <span className="container_label">
-                        <span>Check-in</span>
-                      </span>
-                      <span>Fri, Mar 1, 2024</span>
-                    </button>
-                    <button className="container_checkOut"
-                      aria-expanded={isExpanded}
-                      aria-controls="guests-selection-flyout"
-                    >
-                      <i className="containerIcon fa-regular fa-calendar-days"></i>
-                      <span className="container_label">
-                        <span>Check-out</span>
-                      </span>
-                      <span>Sat, Mar 2, 2024</span>
-                    </button> */}
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <div className="container_guestsWrapper">
+                        <button
+                          className="container_guests"
+                          aria-expanded={isExpanded}
+                          aria-controls="guests-selection-flyout"
+                        >
+                          <span className="container_label">
+                            <span>Check in</span>
+                          </span>
+                          <DatePicker
+                            className="container_checkIn"
+                            defaultValue={selectedDate}
+                            selected={selectedDate}
+                            onChange={(date) => setSelectedDate(date)}
+                          />
+                        </button>
+                      </div>
+                      <div className="container_guestsWrapper">
+                        <button
+                          className="container_guests"
+                          aria-expanded={isExpanded}
+                          aria-controls="guests-selection-flyout"
+                        >
+                          <span className="container_label">
+                            <span>Check out</span>
+                          </span>
+                          <DatePicker
+                            className="container_checkOut"
+                            value={value}
+                            onChange={(newValue) => setValue(newValue)}
+                          />
+                        </button>
+                      </div>
+                    </LocalizationProvider>
+
                     <div
                       className="date"
                       id="date2"
@@ -243,6 +276,15 @@ export default function Booking() {
                     <h1 className="app_pageTitle">Select a Room</h1>
                   </div>
                 </div>
+                <Box sx={{ width: '100%' }}>
+                  <Stepper  alternativeLabel activeStep={0}>
+                    {steps.map((label) => (
+                      <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                </Box>
               </div>
             </header>
             <div class="filter-bar_container">
@@ -327,7 +369,82 @@ export default function Booking() {
               </div>
             </div>
             <div>
-              <Room />
+              <div className="thumb-cards_products">
+                <div className="app_row">
+                  {room.data.map((item, key) => (
+                    <div className="thumb-cards_condensedCategory app_col-sm-12 app_col-md-12 app_col-lg-12">
+                      <div className="thumb-cards_groupedCards">
+                        <div className="thumb-cards_cardSplit thumb-cards_byRoom">
+                          <div className="thumb-cards_container">
+                            <div className="thumb-cards_extraDetails app_col-sm-12 app_col-md-4 app_col-lg-4">
+                              <div className="thumb-cards_imgWrapper thumb-cards_hasMultipleImages">
+                                <button className="thumb-cards_openImage" />
+                                <img className="thumb-cards_image" src={item.imageResDTOS.length == 0 ? "" : item.imageResDTOS[0].fileUrl} />
+                              </div>
+                            </div>
+                            <div className="app_col-sm-12 app_col-md-8 app_col-lg-8">
+                              <div className="thumb-cards_cardHeader">
+                                <h2 class="app_heading1">{item.name}</h2>
+                                <div className="thumb-cards_urgencyTriggerAndRoomInfo">
+                                  <div className="thumb-cards_urgencyTrigger">
+                                    <span>9 people booked in last 24 hours</span>
+                                  </div>
+                                  <div className="guests-and-roomsize_roomProperties">
+                                    <div className="guests-and-roomsize_item guests-and-roomsize_guests">
+                                      <span>Guests 2</span>
+                                    </div>
+                                    <div className="guests-and-roomsize_item guests-and-roomsize_bed">
+                                      <span>1 King</span>
+                                    </div>
+                                    <div class="guests-and-roomsize_item guests-and-roomsize_size">53
+                                      <span aria-hidden="true" >
+                                        <span>m²</span>
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                </div>
+                                <div className="thumb-cards_roomShortDesc">{item.description}</div>
+                              </div>
+                              <div className="thumb-cards_rate thumb-cards_show">
+                                <div className="thumb-cards_cardItem">
+                                  <div className="thumb-cards_details">
+                                    <div className="thumb-cards_left">
+                                      <ul className="product-icons_iconList">
+                                        <li className="product-icons_creditCard product-icons_bold">
+                                          <span aria-hidden="true"></span>
+                                          <span>Deposit Required</span>
+                                        </li>
+                                      </ul>
+                                      <div class="thumb-cards_rateShortDesc">Enjoy up to 30% savings on your beach family vacation!</div>
+                                    </div>
+                                    <div className="thumb-cards_right">
+                                      <div className="thumb-cards_priceMessages">
+                                        <div className="thumb-cards_priceContainer">
+                                          <div class="thumb-cards_price">
+                                            <span>₫2,975,168</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="thumb-cards_button">
+                                        <button class="btn button_btn button_primary button_sm" style={{ height: '35px' }} datatest="Button">
+                                          <span onClick={handleNext}>
+                                            {activeStep === steps.length - 1 ? 'Finish' : 'Book Now'}
+                                          </span>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </main>
           <aside className="app_col-sm-12 app_col-md-12 app_col-lg-4">

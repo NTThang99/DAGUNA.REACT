@@ -1,11 +1,15 @@
 import { combineReducers } from "redux";
 
-import roomReducer from "../components/home/Slide/RoomSlide";
-import customerReducer from "../components/home/Slide/RoomSlide";
+
+import roomReducer from "../components/home/RoomSlide";
+import customerReducer from "../components/home/CustomerSlide";
+import bookingReducer from "../components/home/BookingSlide";
+
 
 const rootReducer = combineReducers({
   room: roomReducer.reducer,
-  customer: customerReducer.reducer
+  customer: customerReducer.reducer,
+  booking: bookingReducer.reducer
 });
 
 export default rootReducer;

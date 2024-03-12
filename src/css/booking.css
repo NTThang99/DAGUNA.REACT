@@ -49,7 +49,7 @@
         max-width: 66.66667%;
     }
 
-    .app_lg-12 {
+    .app_col-lg-12 {
         flex: 0 0 100%;
         max-width: 100%;
     }
@@ -92,6 +92,10 @@
     display: flex;
     position: relative;
     flex-grow: 2;
+}
+
+.container_guests {
+    width: 165px;
 }
 
 .container_guests,
@@ -426,7 +430,6 @@
 }
 
 .filter-bar_container .filter-bar_box {
-    background: #f8f5f0 !important;
     border: 1px solid #d7d7d7;
     border-radius: 0;
     position: relative;
@@ -661,4 +664,286 @@
     border-bottom: 0;
     cursor: pointer;
     transition: color 150ms;
+}
+
+.thumb-cards_products {
+    margin-top: -1rem;
+}
+
+.app_row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+}
+
+.thumb-cards_condensedCategory .thumb-cards_groupedCards:last-child {
+    margin-bottom: 0;
+}
+
+.thumb-cards_condensedCategory .thumb-cards_groupedCards {
+    margin: 0 0 1rem;
+}
+
+.thumb-cards_byRate,
+.thumb-cards_byRoom {
+    display: block;
+}
+
+.thumb-cards_cardSplit {
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid #d7d7d7;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.criteria-promo-codes_wrapper,
+.filter-bar_container .filter-bar_box,
+.thumb-cards_cardSplit,
+.add-ons-container_addOn,
+.room-accordion_container,
+.add-coupon-to-reservations_container,
+.guest-policies_container,
+.policy-acknowledgement_container {
+    background: #f8f5f0 !important;
+}
+
+.thumb-cards_cardSplit .thumb-cards_container {
+    padding: 0 0.5rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.thumb-cards_cardSplit .thumb-cards_extraDetails .thumb-cards_imageAndVideoContainer,
+.thumb-cards_cardSplit .thumb-cards_extraDetails .thumb-cards_imgWrapper {
+    margin: 0 0 1rem;
+}
+
+.thumb-cards_imgWrapper {
+    position: relative;
+}
+
+.thumb-cards_openImage {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 10;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.thumb-cards_imgWrapper.thumb-cards_hasMultipleImages .thumb-cards_openImage::before {
+    right: 0.5rem;
+}
+
+.thumb-cards_imgWrapper.thumb-cards_hasMultipleImages .thumb-cards_openImage::before {
+    margin-right: 0;
+}
+
+.thumb-cards_imgWrapper.thumb-cards_hasMultipleImages .thumb-cards_openImage::before {
+    position: absolute;
+    bottom: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    color: rgba(246, 224, 193, 1);
+    background: rgba(119, 53, 27, 1);
+}
+
+.thumb-cards_imgWrapper.thumb-cards_hasMultipleImages .thumb-cards_openImage::before {
+    display: inline-block;
+    line-height: 1em;
+    font-family: "Font Awesome 6 Free";
+    font-size: 1em;
+    vertical-align: baseline;
+    font-weight: normal;
+    content: "\f302";
+}
+
+.thumb-cards_image {
+    position: relative;
+    width: 100%;
+    /* padding-bottom: 66.66%; */
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.thumb-cards_cardSplit .thumb-cards_urgencyTriggerAndRoomInfo {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.thumb-cards_cardSplit .thumb-cards_urgencyTrigger {
+    margin: 0.5rem 1rem 0 0;
+}
+
+.thumb-cards_urgencyTrigger {
+    font-size: 0.875rem;
+    color: #ac0000;
+}
+
+.thumb-cards_cardSplit .guests-and-roomsize_roomProperties {
+    margin-top: 0.5rem;
+}
+
+.guests-and-roomsize_roomProperties {
+    font-size: 0.875rem;
+}
+
+.guests-and-roomsize_bed,
+.guests-and-roomsize_guests,
+.guests-and-roomsize_size {
+    display: inline-block;
+}
+
+.guests-and-roomsize_item {
+    margin: 0 1.5rem 0 0;
+}
+
+.guests-and-roomsize_item:not(:last-child)::after {
+    left: 0.75rem;
+}
+
+.guests-and-roomsize_item:not(:last-child)::after {
+    content: "|";
+    position: relative;
+}
+
+.thumb-cards_cardSplit .thumb-cards_roomShortDesc {
+    margin-top: 1rem;
+}
+
+.thumb-cards_rate .thumb-cards_cardItem {
+    display: block;
+}
+
+.thumb-cards_cardItem {
+    border-top: 1px solid #ccc;
+    padding: 1rem 0 0;
+    margin: 1rem 0 0;
+}
+
+.thumb-cards_rate .thumb-cards_cardItem .thumb-cards_details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.thumb-cards_rate .thumb-cards_cardItem .thumb-cards_left {
+    flex-grow: 2;
+    flex-shrink: 1;
+    flex-basis: 60%;
+}
+
+.product-icons_iconList {
+    margin-top: 1rem;
+    padding: 0;
+}
+
+.product-icons_iconList li:not(.product-icons_dot) {
+    margin-left: 0;
+    list-style: none;
+    display: flex;
+    align-items: baseline;
+}
+
+.product-icons_bold {
+    font-weight: 700;
+}
+
+.product-icons_iconList li:not(.product-icons_dot) span:first-child::before {
+    margin-right: 0.5rem;
+}
+
+.product-icons_creditCard span:first-child::before {
+    display: inline-block;
+    line-height: 1em;
+    font-family: "Font Awesome 6 Free";
+    font-size: 1em;
+    vertical-align: baseline;
+    font-weight: normal;
+    content: "\f09d";
+}
+
+.thumb-cards_cardSplit .thumb-cards_promoLongDesc,
+.thumb-cards_cardSplit .thumb-cards_rateShortDesc {
+    margin-top: 0.5rem;
+}
+
+.thumb-cards_rate .thumb-cards_cardItem .thumb-cards_priceMessages {
+    text-align: right;
+    padding: 0 0 1rem 0.75rem;
+}
+
+.thumb-cards_priceContainer {
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+.thumb-cards_price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.thumb-cards_rate .thumb-cards_cardItem .thumb-cards_button {
+    padding: 0 0 0 0.75rem;
+    text-align: right;
+
+}
+
+.css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root {
+    color: #fff !important;
+    border: 1px solid rgba(181, 82, 25, 1);
+    border-radius: 50%;
+    font-size: 30px !important;
+}
+
+.css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
+    color: rgba(246, 224, 193, 1) !important;
+}
+
+.css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
+    color: rgba(152, 88, 19, 1) !important;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    font-size: 30px !important;
+}
+
+.css-117w1su-MuiStepIcon-text {
+    fill: rgba(181, 82, 25, 1) !important;
+}
+
+.css-z7uhs0-MuiStepConnector-line {
+    border-color: rgba(181, 82, 25, 1) !important;
+    border-top-width: 3px !important;
+}
+
+.reservation-cart-container_addAnotherRoom {
+    margin: 2rem 0;
+}
+.button_circle {
+    font-size: 16px;
+    font-family: Niramit, Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    text-transform: none;
+    color: rgba(181, 82, 25, 1);
+    text-decoration: underline;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    cursor: pointer;
+    transition: color 150ms;
+    background: none;
+    border: 0;
+    padding: 0;
 }

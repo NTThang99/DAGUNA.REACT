@@ -8,7 +8,6 @@ import InfoIcon from '@mui/icons-material/Info';
 export default function RoomPage() {
     const { roomId } = useParams()
     return (
-      
         <>
             <Table>
                 <TableHead>
@@ -36,10 +35,10 @@ export default function RoomPage() {
                         }
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                    <Outlet />
-                </TableBody>
             </Table>
+            <TableBody>
+                <Outlet />
+            </TableBody>
         </>
     )
 }

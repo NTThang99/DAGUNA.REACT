@@ -29,9 +29,9 @@ export const mainListItems = (
         </ListItemIcon>
         <ListItemText primary="Orders" />
       </ListItemButton>
-    </NavLink>
+    </NavLink> */}
 
-    <NavLink to={'Customers'}>
+   {/* <NavLink to={'Customers'}>
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />

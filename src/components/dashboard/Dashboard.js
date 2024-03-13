@@ -95,7 +95,7 @@ export default function Dashboard() {
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-       
+
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -132,7 +132,7 @@ export default function Dashboard() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                <Outlet />
+                  <Outlet />
                 </Paper>
               </Grid>
             </Grid>

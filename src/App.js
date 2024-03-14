@@ -27,8 +27,11 @@ import {
 import Footer from "./components/common/Footer";
 import Dashboard from "./components/dashboard/Dashboard";
 import RoomList from "./components/dashboard/rooms/RoomList";
+import ReceptionistList from "./components/dashboard/receptionists/ReceptionistList";
 import RoomPage from "./pages/dashboard/RoomPage";
+import ReceptionistPage from"./pages/dashboard/ReceptionistPage";
 import CreateRoom from "./components/dashboard/rooms/CreateRoom";
+import CreateReceptionist from "./components/dashboard/receptionists/CreateReceptionist";
 export default function App() {
   return (
     <>
@@ -56,6 +59,11 @@ export default function App() {
                 <Route path="add" element={<CreateRoom />} />
                 <Route path=":roomId'" element={<RoomDetail />} />
                 <Route path="remove" />
+              </Route>
+              <Route path="receptionists" element={<ReceptionistPage/>}>
+                <Route index element={<ReceptionistList />} />
+                <Route path="list" element={<ReceptionistList />} />
+                <Route path="add" element={<CreateReceptionist />} />
               </Route>
 
             </Route>

@@ -49,6 +49,16 @@ export const mainListItems = (
       </ListItemButton>
     </NavLink>
 
+
+    <NavLink to={'receptionists/list'} >
+      <ListItemButton>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Receptionists" />
+      </ListItemButton>
+    </NavLink>
+
     {/* <NavLink to={'Reports'}>
       <ListItemButton>
         <ListItemIcon>

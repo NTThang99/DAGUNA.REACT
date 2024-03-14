@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "../../css/booking.css";
+import "../../../css/booking.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { roomItems } from "../data/Data";
+import { roomItems } from "../../data/Data";
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';

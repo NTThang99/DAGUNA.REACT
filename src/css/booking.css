@@ -98,9 +98,7 @@
     width: 165px;
 }
 
-.container_guests,
-.container_checkIn,
-.container_checkOut {
+.container_guests {
     background: none;
     border: 1px solid #c2c2c2;
     user-select: none;
@@ -116,6 +114,19 @@
     flex-grow: 2;
 }
 
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+    font-weight: 700 !important;
+    color: rgba(152, 88, 19, 1) !important;
+    font-size: 20px !important;
+}
+
+.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.23) !important;
+}
+
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+    top: -13px !important;
+}
 
 .containerIcon {
     display: inline-block;
@@ -239,7 +250,7 @@
 }
 
 .quantity_wrapper button:last-child {
-    left: 118px;
+    left: 155px;
     top: 0;
     bottom: 0;
     position: absolute;
@@ -931,6 +942,7 @@
 .reservation-cart-container_addAnotherRoom {
     margin: 2rem 0;
 }
+
 .button_circle {
     font-size: 16px;
     font-family: Niramit, Arial, sans-serif;
@@ -946,4 +958,233 @@
     background: none;
     border: 0;
     padding: 0;
+}
+
+.cart-container_product {
+    list-style-type: none;
+    margin: 0 0 0 0;
+    padding: 0;
+}
+
+.cart-container_room {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+
+.cart-container_roomRate {
+    display: inline-block;
+}
+
+.cart-container_roomRate a {
+    border: 0;
+    text-decoration: underline;
+}
+
+.cart_name {
+    color: rgba(181, 82, 25, 1);
+    font-weight: 300;
+    cursor: pointer;
+    transition: color 150ms;
+}
+
+.cart-container_price {
+    text-align: right;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.cart-container_taxesAndFees {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.cart-container_headerWithPrice {
+    display: flex;
+    padding-bottom: 20px;
+    justify-content: space-between;
+}
+
+.cart-container_taxesAndFeesHeader {
+    display: flex;
+    flex-direction: column
+}
+
+.display-prices_wrapper {
+    margin-top: -0.5rem;
+    min-height: 1px;
+    margin: -1rem 0 1rem;
+}
+
+.display-prices_wrapper button {
+    font-size: 0.875rem;
+}
+
+.display-prices_breakdown {
+    padding-left: 1.5rem;
+    animation: display-prices_detailsAnimation 0.8s;
+}
+
+.display-prices_row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.display-prices_label {
+    font-size: 0.875rem;
+}
+
+.display-prices_price {
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+.cart-container_actions {
+    margin: 1rem 0;
+}
+
+.button_modify::before {
+    margin-right: 0.25em
+}
+
+.cart-container_actions>span {
+    border-left: 1px solid #ccc;
+}
+
+.cart-container_actions>span {
+    margin: 0 1rem;
+}
+
+.button_remove::before {
+    margin-right: 0.25em;
+}
+
+.add-coupon-to-reservation_container {
+    padding-bottom: 1rem;
+}
+
+.add-coupon-to-reservation_container>button {
+    font-size: 0.875rem;
+}
+
+.cart-container_addAnotherRoom {
+    margin: 2rem 0;
+}
+
+.cart-container_addAnotherRoom button {
+    font-size: 0.875rem;
+}
+
+.button_circle .button_add::before {
+    margin-right: 0.25em;
+}
+
+.button_add::before {
+    border: 1px solid transparent;
+    font-size: 30px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.price-summary_taxIncluded {
+    color: rgba(152, 88, 19, 1);
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+.add-coupon-to-reservation_couponField>form {
+    display: flex;
+    align-items: flex-start;
+}
+
+.add-coupon-to-reservation_couponField>form .input-field_container {
+    flex-grow: 1;
+}
+
+.input-field_container {
+    position: relative;
+    font-size: 16px;
+}
+
+.input-field_container label {
+    display: block;
+
+}
+
+.input-field_labels:not(.input-field_textAreaLabel) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.input-field_labels {
+    display: block;
+    padding: 0 0.75rem;
+    font-size: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    line-height: 3.5em;
+    transition-duration: 0.1s;
+    transition-property: font-size, opacity, line-height;
+    transition-timing-function: cubic-bezier(0.86, 0, 0.07, 1);
+    z-index: 2;
+    font-family: 'Niramit', Arial, sans-serif;
+    font-weight: 400;
+    color: #555;
+
+}
+
+.input-field_container input {
+    height: auto;
+    line-height: 1;
+    padding-top: 1.5em;
+    min-height: 3.5em;
+    color: rgba(0, 0, 0, 1);
+    border: 1px solid #575c5a;
+    padding: 0 0.75rem;
+    width: 100%;
+}
+
+.add-coupon-to-reservation_couponField>form .button_btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.add-coupon-to-reservation_couponField>form .button_btn {
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 3.5em;
+}
+
+.button_md {
+    line-height: 1.5rem;
+    padding: 1rem 2.25rem;
+}
+
+.button_secondary {
+    font-size: 14px;
+    font-family: Niramit, Arial, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    text-transform: uppercase;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid transparent;
+    color: rgba(181, 82, 25, 1);
+}
+
+.add-ons-container_rightContinue {
+    margin-top: 1rem;
+}
+
+.button_block {
+    display: block;
+    width: 100%;
+    margin-top: 0.65rem;
 }

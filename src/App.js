@@ -29,6 +29,8 @@ import Dashboard from "./components/dashboard/Dashboard";
 import RoomList from "./components/dashboard/rooms/RoomList";
 import RoomPage from "./pages/dashboard/RoomPage";
 import CreateRoom from "./components/dashboard/rooms/CreateRoom";
+import RoomDetailDashboard from "./components/dashboard/rooms/RoomDetailDashboard"
+
 export default function App() {
   return (
     <>
@@ -54,8 +56,7 @@ export default function App() {
                 <Route index element={<RoomList />} />
                 <Route path="list" element={<RoomList />} />
                 <Route path="add" element={<CreateRoom />} />
-                <Route path=":roomId'" element={<RoomDetail />} />
-                <Route path="remove" />
+                <Route path=":roomId" element={<RoomDetailDashboard />} />
               </Route>
 
             </Route>

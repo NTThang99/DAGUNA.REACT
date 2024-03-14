@@ -26,13 +26,13 @@ export default function RoomPage() {
                         </TableCell>
                         {roomId ?
                             <TableCell className="nav-link ">
-                                <NavLink to={`//dashboard/rooms/${roomId}`}>
+                                <NavLink to={`/dashboard/rooms/${roomId}`}>
                                     <InfoIcon />
                                     Room Detail
                                 </NavLink>
                             </TableCell>
-                            : ''
-                        }
+                             : '' 
+                        } 
                     </TableRow>
                 </TableHead>
             </Table>

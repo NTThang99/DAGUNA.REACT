@@ -3,7 +3,7 @@ import apiClients from "../apiClients/apiClients";
 
 class RoomService {
 
-  // get all room mmm bbbb
+  // get all room mmm ccc
 
   
   static async getAllRooms(url) {

@@ -8,11 +8,11 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 export const mainListItems = (
   <React.Fragment>
-    <NavLink to={''}>
+    <Link to={'/dashboard'}>
       <ListItemButton >
         
         <ListItemIcon>
@@ -20,7 +20,7 @@ export const mainListItems = (
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
-    </NavLink>
+    </Link>
 
     {/* <NavLink to={'Orders'}>
       <ListItemButton>

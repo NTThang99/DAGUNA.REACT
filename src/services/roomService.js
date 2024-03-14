@@ -3,7 +3,7 @@ import apiClients from "../apiClients/apiClients";
 
 class RoomService {
 
-  // get all room
+  // get all room mmm
 
   
   static async getAllRooms(url) {
@@ -11,13 +11,13 @@ class RoomService {
       .then((res) => res.json())
   }
   static async createRoom(formData) {
-    console.log("formData", formData);
-    // return axios.post(url, formData, {
-    //   headers: {
-    //     'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-    //   },
-    // });
-    return apiClients.post('/rooms',formData)
+    return apiClients.post('/rooms', formData)
+  }
+  static async getRoomById(roomId) {
+    return apiClients.get(`/rooms/${roomId}`)
+  }
+  static async getAllRoomByFilter(url) {
+    return apiClients.get(`${url}`)
   }
   static async searchRooms(url, objSend) {
     return fetch(url, {

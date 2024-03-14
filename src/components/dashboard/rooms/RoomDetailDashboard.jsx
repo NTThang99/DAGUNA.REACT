@@ -3,98 +3,80 @@ import { useParams } from "react-router-dom";
 import RoomService from "../../../services/RoomService";
 
 export default function RoomDetailDashboard() {
-    /*  "id": 2,
-    "name"
-    "roomType": 
-    "statusRoom"
-    "viewType"
-    "kindOfRoom"
-        "id": 1,
-        "name": "Angsana SkyPool Sea View Two Bedroom Loft"
-    },
-    "perType"
-        "id": 1,
-        "name": "Giường cỡ lớn"
-   
-    "pricePerNight"
-    "acreage"
-    "sleep"
-    "description"
-    "utilitie": "{\"Shower\": true, \"Mini Bar\": false, \"Room Safe\": true}",
-    "rate": null,
-    "imageResDTOS": []
-}
-*/
-    const { roomId } = useParams();
+
+    const { idRoomDetail } = useParams();
     const [room, setRoom] = useState({})
-    const [loading,setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         setLoading(true)
-        async function getRoomById() {
-            let roomDetail = await RoomService.getRoomById(roomId)
-            setRoom(roomDetail?.data)
-            setLoading(false)
+        try {
+            async function getRoomById() {
+                let roomDetail = await RoomService.getRoomById(idRoomDetail)
+                setRoom(roomDetail?.data)
+                setLoading(false)
+            }
+            getRoomById()
+        } catch (error) {
+            console.log("error", error);
         }
-        getRoomById()
-    }, [roomId])
-    console.table("room images", room)
+
+    }, [idRoomDetail])
+    console.table("room ", room)
 
     return (
         <>
 
             {
 
-                <div className="row">
-                    <div className="d-flex justify-content-center">
-                        <div className="d-flex justify-content-center">
-                            <div className="">
-                                <p>{room?.name}</p>
-
-                            </div>
-                            <div>    <p>{room?.kindOfRoom?.name}</p>
-                            </div>
+                <div>
+                    <div className="row">
+                        <div className="col-md-6 col-lg-6 col-sm-12">
+                            <div className="d-flex justify-content-center algin-items-left">1</div>
+                            <div className="d-flex justify-content-center algin-items-left">2</div>
                         </div>
-                        <div className="d-flex justify-content-center">
-                            <div className="d-flex justify-content-center">
-                                <p>{room?.pricePerNight}</p>
-                            </div>
-                            <div className="d-flex justify-content-center">
-                                <div>
-                                    <p>{room?.acreage}</p>
-                                </div>
-                                <div>
-                                    <p>{room?.sleep}</p>
-                                </div>
-                                <div>
-                                    <p>{room?.roomType}</p>
-                                </div>
-                            </div>
+                        <div className="col-md-6 col-lg-6 col-sm-12">
+                            <div className="d-flex justify-content-center algin-items-right">3</div>
+                            <div className="d-flex justify-content-center algin-items-right">4</div>
                         </div>
                     </div>
                     <div className="d-flex justify-content-center">
-                        {
-                            room?.images
-                        }
-
+                        IMG
                     </div>
                     <div className="d-flex justify-content-center">
-                        <div>
-                            <p>{room?.statusRoom}</p>
-                        </div>
-                        <div>
-                            <p>{room?.viewType}</p>
-                        </div>
-                        <div >
-                            <p>{room?.perType?.name}</p>
-                        </div>
+                        description
                     </div>
+                    <div className="d-flex justify-content-center">
+                        utilitie
+                    </div>
+                    {/* <p>{room?.name}</p>
 
-                    <div className="d-flex justify-content-center"> <p>{room?.description}</p></div>
-                    <div className="d-flex justify-content-center"><p>{room?.utilitie}</p></div>
+
+                    <p>{room?.kindOfRoom?.name}</p>
+
+
+                    <p>{room?.pricePerNight}</p>
+
+                    <p>{room?.acreage}</p>
+
+
+                    <p>{room?.roomType}</p>
+
+                    {
+                    // room?.images
+                    }
+
+                    <p>{room?.statusRoom}</p>
+
+                    <p>{room?.viewType}</p>
+
+                    <p>{room?.perType?.name}</p>
+
+                    <p>{room?.description}</p>
+                    <p>{room?.utilitie}</p> */}
+
 
 
                 </div>
-
             }
 
         </>

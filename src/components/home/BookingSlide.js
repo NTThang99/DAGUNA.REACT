@@ -1,51 +1,57 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import RoomService from "../../services/RoomService";
+import BookingService from "../../services/BookingService";
 const inItState = {
   room: {
     searchBar: {
-        guests: {
-            numberAdult: 2,
-            numberChildren: 0,
-        },
-        checkIn: new Date(),
-        checkOut: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-        viewType: "ALL",
-        sortBy: "",
-        perType: "-1",   
-        // rateType: "ALL",
-        roomType: "ALL",
-        priceMin: 1000000,
-        priceMax: 30000000,
+      guests: {
+        numberAdult: 2,
+        numberChildren: 0,
+      },
+      checkIn: new Date(),
+      checkOut: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+      viewType: "ALL",
+      sortBy: "",
+      perType: "-1",
+      // rateType: "ALL",
+      roomType: "ALL",
+      priceMin: 1000000,
+      priceMax: 30000000,
     },
     data: [],
   },
   addOns: {
-
+    bookingServices: [],
+    data:[]
   },
   guest: {
 
   },
-  booking:{
+  booking: {
+    bookingId: null,
     bookingDetails: [
-        {
-            checkIn: "2024-03-08",
-            checkOut: "2024-03-08",
-            numberAdult: 0,
-            numberChildren: 0,
-            roomId: 1,
-            roomName: "Seaview Balcony King Grand",
-            priceRoom: 2000000,
-            vatBookingDetail: 10,
-        }
     ]
   }
 };
 export const searchRoomsAPI = createAsyncThunk(
   "searchRoomsAPI",
   async (arg, { rejectWithValue }) => {
+    // console.log("arg", arg);
+
+    let objSend = {
+      guest: {
+        numberAdult: arg.searchBar.guests.numberAdult,
+        numberChildren: arg.searchBar.guests.numberChildren
+      },
+      checkIn: arg.searchBar.checkIn,
+      checkOut: arg.searchBar.checkOut,
+      perType: arg.searchBar.perType,
+      priceMin: arg.searchBar.priceMin,
+      priceMax: arg.searchBar.priceMax
+    }
     try {
-      let res = await RoomService.getAllRooms("http://localhost:8080/api/rooms");
+      let res = await RoomService.searchRooms(`http://localhost:8080/api/rooms/search?page=${0}`, objSend);
 
       return res;
     } catch (err) {
@@ -54,37 +60,145 @@ export const searchRoomsAPI = createAsyncThunk(
   }
 );
 export const changeGuestInSearchBarAPI = createAsyncThunk(
-    "changeGuestInSearchBarAPI",
-    async (arg, { rejectWithValue }) => {
-      try {
-        // tùy vào arg để gửi thông tin lên cho phù hợp
-        let res = await RoomService.getAllRooms("http://localhost:8080/api/rooms");
-  
-        return res;
-      } catch (err) {
-        return rejectWithValue("Error getting all rooms");
-      }
+  "changeGuestInSearchBarAPI",
+  async (arg, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+      let res = await RoomService.getAllRooms("http://localhost:8080/api/rooms");
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error getting all rooms");
     }
-  );
+  }
+);
+
+export const getAllBookingServiceAPI = createAsyncThunk(
+  "getAllBookingServiceAPI",
+  async (arg, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+      let res = await BookingService.getAllBookingService("http://localhost:8080/api/booking-services");
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error getting all booking service");
+    }
+  }
+);
+export const createBookingAPI = createAsyncThunk(
+  "createBookingAPI",
+  async (arg, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+      let objSend = {
+        bookingDetail: {
+          checkIn: arg.searchBar.checkIn,
+          checkOut: arg.searchBar.checkOut,
+          roomId: arg.roomId,
+          numberAdult: arg.searchBar.guests.numberAdult,
+          numberChildren: arg.searchBar.guests.numberChildren
+        }
+      };
+      let res = await BookingService.createBooking("http://localhost:8080/api/bookings", objSend);
+
+
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error getting all rooms");
+    }
+  }
+);
+
+export const getBookingByIdAPI = createAsyncThunk(
+  "getBookingByIdAPI",
+  async (id, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+      let res = await BookingService.getBookingById(`http://localhost:8080/api/bookings/${id}`);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error getting when get booking by Id");
+    }
+  }
+);
+
+export const updateBooking_AddRoomAPI = createAsyncThunk(
+  "updateBooking_AddRoomAPI",
+  async (arg, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+
+      let objSend = {
+        bookingId: arg.bookingId,
+        bookingDetail: {
+          checkIn: arg.searchBar.checkIn,
+          checkOut: arg.searchBar.checkOut,
+          roomId: arg.roomId,
+          numberAdult: arg.searchBar.guests.numberAdult,
+          numberChildren: arg.searchBar.guests.numberChildren
+        }
+      };
+      console.log("objSend", objSend);
+      let res = await BookingService.updateBooking_AddRoom("http://localhost:8080/api/bookings/rooms/edit", objSend);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error update booking: add room");
+    }
+  }
+);
+
+
 
 const bookingReducer = createSlice({
   name: "booking",
   initialState: inItState,
   reducers: {
-    // getAll: (state, action) => {
-    //   state.data = action.payload;
-    // },
+    updateSearchBar: (state, action) => {
+      state.room.searchBar = { ...state.room.searchBar, ...action.payload };
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(searchRoomsAPI.pending, (state, action) => {});
+    builder.addCase(searchRoomsAPI.pending, (state, action) => { });
     builder.addCase(searchRoomsAPI.fulfilled, (state, action) => {
-      state.room.data = action.payload;
+      state.room.data = action.payload.content;
     });
-    builder.addCase(changeGuestInSearchBarAPI.pending, (state, action) => {});
+    builder.addCase(changeGuestInSearchBarAPI.pending, (state, action) => { });
     builder.addCase(changeGuestInSearchBarAPI.fulfilled, (state, action) => {
       state.room.data = action.payload;
     });
+
+    builder.addCase(createBookingAPI.pending, (state, action) => { });
+    builder.addCase(createBookingAPI.fulfilled, (state, action) => {
+
+      localStorage.setItem("bookingId", action.payload.bookingId)
+      state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.bookingId = action.payload.bookingId;
+    });
+    builder.addCase(getBookingByIdAPI.pending, (state, action) => { });
+    builder.addCase(getBookingByIdAPI.fulfilled, (state, action) => {
+
+      // console.log("booking full", action.payload);
+      state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.bookingId = action.payload.bookingId;
+    });
+    builder.addCase(updateBooking_AddRoomAPI.pending, (state, action) => { });
+    builder.addCase(updateBooking_AddRoomAPI.fulfilled, (state, action) => {
+      console.log("booking", action.payload);
+      state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.bookingId = action.payload.bookingId;
+    });
+    builder.addCase(getAllBookingServiceAPI.pending, (state, action) => { });
+    builder.addCase(getAllBookingServiceAPI.fulfilled, (state, action) => {
+  
+      state.addOns.data = action.payload;
+    });
   },
 });
+
+export const { updateSearchBar, updateBookingDetails } = bookingReducer.actions;
 
 export default bookingReducer;

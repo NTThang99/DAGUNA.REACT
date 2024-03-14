@@ -966,19 +966,35 @@
     padding: 0;
 }
 
-.cart-container_room {
+.cart-container_room,
+.cart-container_addon {
     display: flex;
     justify-content: space-between;
     padding-bottom: 20px;
 }
 
-.cart-container_roomRate {
+.cart-container_roomRate,
+.cart-container_addonNameInfo {
     display: inline-block;
 }
 
+.cart-container_addonNameInfo a,
 .cart-container_roomRate a {
     border: 0;
-    text-decoration: underline;
+    text-decoration: underline !important;
+    color: rgba(181, 82, 25, 1) !important;
+}
+
+.cart-container_addonInfo,
+.cart-container_rate {
+    display: block;
+    margin-bottom: 1rem;
+}
+.cart-container_addonActions {
+    margin: -1rem 0 1rem;
+}
+.cart-container_addonActions button {
+    font-size: 0.875rem;
 }
 
 .cart_name {
@@ -1187,4 +1203,356 @@
     display: block;
     width: 100%;
     margin-top: 0.65rem;
+}
+
+.add-ons-container_group {
+    margin-bottom: 1rem;
+    background: rgba(248, 245, 240, 1);
+    border: 1px solid #ccc;
+    border-radius: 0;
+    padding-top: 1rem;
+}
+
+.add-ons-container_categoryGroup {
+    padding: 0 1rem;
+}
+
+.add-ons-container_categoryGroup>h2,
+.add-ons-container_categoryGroup>h3 {
+    margin-bottom: 1rem;
+}
+
+.app_heading1 {
+    font-feature-settings: 'dlig' 0, 'liga' 0, 'lnum' 1, 'kern' 1;
+    margin: 0;
+    color: rgba(152, 88, 19, 1);
+    font-size: 22px;
+    font-weight: 600;
+    font-family: Monesta, Georgia, serif;
+    text-transform: none;
+    line-height: 1.3;
+    letter-spacing: 0.5px;
+}
+
+.add-ons-container_addOn {
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid #d7d7d7;
+    border-radius: 0;
+    margin-bottom: 1rem;
+}
+
+.add-ons-container_addOnheader {
+    display: flex;
+    flex-direction: row;
+}
+
+.add-ons-container_addOnImgWrapper {
+    width: 35%;
+    padding: 1rem;
+}
+
+.add-ons-container_addOnImage {
+    width: 100%;
+    padding-bottom: 66.66%;
+    border-radius: 0;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.add-ons-container_addOnInfo {
+    width: 65%;
+    padding: 1rem 1rem 1rem 0;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+.add-ons-container_addOnInfoTop {
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+.add-ons-container_addOnDetails {
+    display: block;
+}
+
+.add-ons-container_addOnDetails h3,
+.add-ons-container_addOnDetails h4 {
+    margin-bottom: 1rem !important;
+}
+
+.add-ons-container_addOnDescription,
+.add-ons-container_viewMoreButton {
+    margin-bottom: 1rem;
+}
+
+.add-ons-ul {
+    margin: 0;
+    padding: 0;
+}
+
+.add-ons-li {
+    font-feature-settings: 'kern' 1, 'lnum' 1, 'liga' 1;
+    margin: 0 0 0.5rem 1rem;
+}
+
+.add-ons-container_viewMoreButton {
+    margin-bottom: 1rem;
+}
+
+.fa-chevron-down:before {
+    margin-left: 0.25em;
+}
+
+.fa-chevron-down:before {
+    display: inline-block;
+    line-height: 1em;
+    font-size: 1em;
+    vertical-align: baseline;
+}
+
+.add-ons-thumb-card-price_container {
+    text-align: right;
+    margin: 0 0 1rem 1rem;
+    white-space: nowrap;
+}
+
+.add-ons-thumb-card-price_priceWrapper {
+    display: block;
+}
+
+.add-ons-thumb-card-price_price,
+.add-ons-thumb-card-price_freeLabel {
+    display: inline-block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.add-ons-thumb-card-price_priceType {
+    font-size: 0.875rem;
+}
+
+.add-ons-thumb-card-price_taxesFees {
+    color: rgba(152, 88, 19, 1);
+    font-size: 0.875rem;
+}
+
+.add-ons-container_addOnInfoBottom {
+    text-align: right;
+}
+
+.add-ons-details_container {
+    border-top: 1px solid #d7d7d7;
+    padding: 2rem 1rem 0.5rem 2rem;
+}
+
+.add-ons-details_left,
+.add-ons-details_right {
+    margin-right: 3rem;
+}
+
+.add-ons-details_left,
+.add-ons-details_right {
+    width: calc(50% - 3rem);
+    display: inline-block;
+    vertical-align: top;
+}
+
+.add-ons-quantity-selection_wrapper {
+    margin: 0 0 2rem;
+}
+
+.add-ons-quantity-selection_wrapper .quantity-selection_container {
+    display: block;
+}
+
+.add-ons-quantity-selection_wrapper .quantity-selection_container>span {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.add-ons-quantity-selection_wrapper .quantity-selection_wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+.quantity-selection_wrapper {
+    max-width: 250px;
+    position: relative;
+}
+
+.quantity-selection_wrapper button:first-child {
+    left: 0;
+}
+
+.quantity-selection_wrapper button:first-child {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    width: 30%;
+    padding: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    line-height: 3.5em;
+}
+
+.fa-minus::before {
+    margin-right: 0.25em;
+    font-size: 20px;
+}
+
+.fa-minus::before {
+    display: inline-block;
+    line-height: 1em;
+    font-size: 1em;
+    vertical-align: baseline;
+}
+
+.quantity-selection_container .input-field_container label {
+    padding: 0;
+}
+
+.input-field_container label {
+    display: block;
+}
+
+.input-field_active .input-field_label,
+.input-field_focus .input-field_label {
+    top: 0.5rem;
+    line-height: 1.2em;
+    font-size: .85rem;
+}
+
+.input-field_label:not(.input-field_textAreaLabel) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.quantity-selection_container .input-field_label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.quantity-selection_container .input-field_container input {
+    padding-top: 0;
+}
+
+.quantity-selection_wrapper input {
+    text-align: center;
+}
+
+.quantity-selection_wrapper button:last-child {
+    left: 235px;
+}
+
+.quantity-selection_wrapper button:last-child {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    width: 30%;
+    padding: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    line-height: 3.5em;
+}
+
+.fa-add:before {
+    margin-right: 0.25em;
+    font-size: 20px;
+}
+
+.fa-add:before {
+    display: inline-block;
+    line-height: 1em;
+    font-size: 1em;
+    vertical-align: baseline;
+}
+
+.add-on-price-breakdown_wrapper {
+    margin-bottom: 1rem;
+    text-align: right;
+}
+
+.add-on-price-breakdown_total {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.add-on-price-breakdown_price {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.add-on-price-breakdown_taxIncluded {
+    color: rgba(152, 88, 19, 1);
+    font-size: 0.875rem;
+}
+
+.add-on-price-breakdown_detailsLink {
+    display: block;
+}
+
+.add-on-price-breakdown_expanded {
+    display: inline-block;
+}
+
+.add-on-price-breakdown_breakdown {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+}
+
+.add-on-price-breakdown_detailedPrice,
+.add-on-price-breakdown_taxesAndFees {
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+}
+
+.add-on-price-breakdown_value {
+    padding-left: 1rem;
+}
+
+.add-on-price-breakdown_value {
+    text-align: right;
+}
+
+.add-ons-details_messages {
+    display: flex;
+    justify-content: flex-end;
+
+}
+
+.chosen-booking-detail {
+    background-color: white;
+}
+
+.reservation-cart-container_productDetails h3 {
+    margin-bottom: 1rem
+}
+
+.app_subheading1 {
+    margin: 0;
+    color: rgba(181, 82, 25, 1);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: Niramit, Arial, sans-serif;
+    text-transform: uppercase;
+    line-height: 1.3;
 }

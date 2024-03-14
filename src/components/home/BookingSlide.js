@@ -23,13 +23,14 @@ const inItState = {
   },
   addOns: {
     bookingServices: [],
-    data:[]
+    data: []
   },
   guest: {
 
   },
   booking: {
     bookingId: null,
+    bookingDetailChoosen: null,
     bookingDetails: [
     ]
   }
@@ -111,6 +112,28 @@ export const createBookingAPI = createAsyncThunk(
   }
 );
 
+export const updateBooking_AddBookingService = createAsyncThunk(
+  "updateBooking_AddBookingService",
+  async (arg, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+      let objSend = {
+        bookingDetailId: arg.bookingDetailId,
+        bookingServiceId: arg.bookingServiceId,
+        bookingServiceType: arg.bookingServiceType,
+        numberCarOrPerson: 1,
+        // dateChooseService: arg?.dateChooseService
+      };
+      console.log("objSend", JSON.stringify(objSend));
+      let res = await BookingService.updateBooking_AddService("http://localhost:8080/api/bookings/booking-services/add", objSend);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error getting all Booking_Add_Service");
+    }
+  }
+);
+
 export const getBookingByIdAPI = createAsyncThunk(
   "getBookingByIdAPI",
   async (id, { rejectWithValue }) => {
@@ -177,6 +200,9 @@ const bookingReducer = createSlice({
       localStorage.setItem("bookingId", action.payload.bookingId)
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
+
+
+
     });
     builder.addCase(getBookingByIdAPI.pending, (state, action) => { });
     builder.addCase(getBookingByIdAPI.fulfilled, (state, action) => {
@@ -184,16 +210,21 @@ const bookingReducer = createSlice({
       // console.log("booking full", action.payload);
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
+
+      // console.log("action.payload.bookingDetails", action.payload.bookingDetails);
+      state.booking.bookingDetailChoosen = action.payload.bookingDetails[0].bookingDetailId;
     });
     builder.addCase(updateBooking_AddRoomAPI.pending, (state, action) => { });
     builder.addCase(updateBooking_AddRoomAPI.fulfilled, (state, action) => {
-      console.log("booking", action.payload);
+
+      // console.log("booking", action.payload);
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
+      state.booking.bookingDetailChoosen = action.payload.bookingDetails[action.payload.bookingDetails.length - 1].bookingDetailId;
     });
     builder.addCase(getAllBookingServiceAPI.pending, (state, action) => { });
     builder.addCase(getAllBookingServiceAPI.fulfilled, (state, action) => {
-  
+
       state.addOns.data = action.payload;
     });
   },

@@ -24,8 +24,10 @@ export default function Booking() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(2);
+  
   // const [selectedDate, setSelectedDate] = useState(dayjs());
   const [activeStep, setActiveStep] = React.useState(0);
   const dispatch = useDispatch();
@@ -63,8 +65,14 @@ export default function Booking() {
     setChildQuantity(childQuantity + 1);
   };
 
+  
+
   const toggleForm = () => {
     setShowForm(!showForm);
+  };
+
+  const handleChooseBookingDetail = (bookingDetailId) => {
+    setBookingDetailChoosen(bookingDetailId);
   };
 
   const cancelForm = () => {
@@ -74,21 +82,21 @@ export default function Booking() {
   const handleNext = (id) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     handleNavigateBooking();
-    if(booking.bookingId == null){
+    if (booking.bookingId == null) {
       dispatch(createBookingAPI({
         searchBar: room.searchBar,
         roomId: id
       }))
-    } else{
+    } else {
       dispatch(updateBooking_AddRoomAPI({
-        bookingId: booking.book,
+        bookingId: booking.bookingId,
         roomId: id,
         searchBar: room.searchBar,
       }))
     }
-    
 
-   
+
+
 
   };
   const handleNavigateBooking = () => {
@@ -113,7 +121,7 @@ export default function Booking() {
   useEffect(() => {
     dispatch(searchRoomsAPI(room));
     let bookingId = localStorage.getItem("bookingId");
-    if(bookingId != null){
+    if (bookingId != null) {
       dispatch(getBookingByIdAPI(bookingId))
     }
   }, [])
@@ -313,85 +321,85 @@ export default function Booking() {
                 </Box>
               </div>
             </header>
-            <div class="filter-bar_container">
-              <div class="filter-bar_box">
-                <div class="filter-bar_options">
-                  <div class="filter-bar_left"></div>
-                  <div class="filter-bar_right">
+            <div className="filter-bar_container">
+              <div className="filter-bar_box">
+                <div className="filter-bar_options">
+                  <div className="filter-bar_left"></div>
+                  <div className="filter-bar_right">
                     <div
-                      class="filter-bar_layout filter-bar-select_container"
+                      className="filter-bar_layout filter-bar-select_container"
                       datatest="room_layout"
                     >
                       <div
-                        class="select_container select_hasValue"
+                        className="select_container select_hasValue"
                         data-error="false"
                       >
                         <button
                           aria-expanded="false"
                           aria-controls="select-dropdown-wrapper-view-results-by-room-rate"
-                          class="select_hiddenInput"
+                          className="select_hiddenInput"
                           aria-labelledby="view-results-by-room-rate"
                           value="room"
                           data-error="false"
                           tabindex="0"
                         ></button>
-                        <div class="select_input" data-selector="true">
+                        <div className="select_input" data-selector="true">
                           <label
-                            class="select_label"
+                            className="select_label"
                             id="view-results-by-room-rate"
                           >
                             View Results By{" "}
                           </label>
-                          <span class="select_value">Rooms</span>
-                          <span class="select_caret" aria-hidden="true">
-                            <i class="select_caret_icon fa-solid fa-caret-down"></i>
+                          <span className="select_value">Rooms</span>
+                          <span className="select_caret" aria-hidden="true">
+                            <i className="select_caret_icon fa-solid fa-caret-down"></i>
                           </span>
                         </div>
                         <div role="alert"></div>
                       </div>
                     </div>
                     <div
-                      class="filter-bar_sortBy filter-bar-select_container"
+                      className="filter-bar_sortBy filter-bar-select_container"
                       datatest="sort-by-select"
                     >
                       <div
-                        class="select_container select_hasValue"
+                        className="select_container select_hasValue"
                         data-error="false"
                       >
                         <button
                           aria-expanded="false"
                           aria-controls="select-dropdown-wrapper-filter-bar-sort-by"
-                          class="select_hiddenInput"
+                          className="select_hiddenInput"
                           aria-labelledby="filter-bar-sort-by"
                           value="priceLowestToHighest"
                           data-error="false"
                           tabindex="0"
                         ></button>
-                        <div class="select_input" data-selector="true">
-                          <label class="select_label" id="filter-bar-sort-by">
+                        <div className="select_input" data-selector="true">
+                          <label className="select_label" id="filter-bar-sort-by">
                             Sort By{" "}
                           </label>
-                          <span class="select_value">Lowest Price</span>
-                          <span class="select_caret" aria-hidden="true">
-                            <i class="select_caret_icon fa-solid fa-caret-down "></i>
+                          <span className="select_value">Lowest Price</span>
+                          <span className="select_caret" aria-hidden="true">
+                            <i className="select_caret_icon fa-solid fa-caret-down "></i>
                           </span>
                         </div>
                         <div role="alert"></div>
                       </div>
                     </div>
-                    <div class="filter-bar_filterLink">
+                    <div className="filter-bar_filterLink">
                       <a
                         href="#"
                         aria-expanded="false"
                         aria-controls="filter-bar-filters-wrapper"
                       >
                         <span>Show Filters</span>
-                        <i class="fa-solid fa-caret-down"></i>
+                        <i className="fa-solid fa-caret-down"></i>
                       </a>
                     </div>
                   </div>
                 </div>
-                <div class="filter-bar_tagsWrapper"></div>
+                <div className="filter-bar_tagsWrapper"></div>
               </div>
             </div>
             <div>
@@ -422,7 +430,7 @@ export default function Booking() {
                                     <div className="guests-and-roomsize_item guests-and-roomsize_bed">
                                       <span>1 King</span>
                                     </div>
-                                    <div class="guests-and-roomsize_item guests-and-roomsize_size">53
+                                    <div className="guests-and-roomsize_item guests-and-roomsize_size">53
                                       <span aria-hidden="true" >
                                         <span>m²</span>
                                       </span>
@@ -442,19 +450,22 @@ export default function Booking() {
                                           <span>Deposit Required</span>
                                         </li>
                                       </ul>
-                                      <div class="thumb-cards_rateShortDesc">Enjoy up to 30% savings on your beach family vacation!</div>
+                                      <div className="thumb-cards_rateShortDesc">Enjoy up to 30% savings on your beach family vacation!</div>
                                     </div>
                                     <div className="thumb-cards_right">
                                       <div className="thumb-cards_priceMessages">
                                         <div className="thumb-cards_priceContainer">
-                                          <div class="thumb-cards_price">
+                                          <div className="thumb-cards_price">
                                             <span>₫{item.pricePerNight}</span>
                                           </div>
                                         </div>
                                       </div>
                                       <div className="thumb-cards_button">
-                                        <button class="btn button_btn button_primary button_sm" style={{ height: '35px' }} datatest="Button">
-                                          <span onClick={() => handleNext(item.id)}>
+                                        <button className="btn button_btn button_primary button_sm" style={{ height: '35px' }} datatest="Button">
+                                          <span onClick={() => {
+                                            handleNext(item.id);
+                                            handleChooseBookingDetail(item.id);
+                                          }}>
                                             {activeStep === steps.length - 1 ? 'Finish' : 'Book Now'}
                                           </span>
                                         </button>
@@ -474,21 +485,17 @@ export default function Booking() {
             </div>
           </main>
           <aside className="app_col-sm-12 app_col-md-12 app_col-lg-4">
-            {booking.bookingDetails.map((item, key) => (
-              <BookingDetail
-                key={key}
-                item={item}
-                showDetails={showDetails}
-                setShowDetails={setShowDetails}
-                toggleForm={toggleForm}
-                showForm={showForm}
-                cancelForm={cancelForm}
-                adultQuantity={adultQuantity}
-                childQuantity={childQuantity}
-              />
-            ))}
-
-
+            <BookingDetail
+              showDetails={showDetails}
+              setShowDetails={setShowDetails}
+              toggleForm={toggleForm}
+              showForm={showForm}
+              cancelForm={cancelForm}
+              adultQuantity={adultQuantity}
+              childQuantity={childQuantity}
+              handleNext={handleNext}
+              handleChooseBookingDetail={handleChooseBookingDetail}
+            />
           </aside>
         </div>
       </div>

@@ -1,17 +1,23 @@
+import axios from "axios";
 import apiClients from "../apiClients/apiClients";
-//up ..
+
 class RoomService {
-  static getRoomList() {
-    return apiClients.get(`/rooms`);
-  }
+
   // get all room
 
   
   static async getAllRooms(url) {
     return fetch(url)
       .then((res) => res.json())
-      .then((data) => data)
-      .catch((error) => error);
+  }
+  static async createRoom(formData) {
+    console.log("formData", formData);
+    // return axios.post(url, formData, {
+    //   headers: {
+    //     'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+    //   },
+    // });
+    return apiClients.post('/rooms',formData)
   }
   static async searchRooms(url, objSend) {
     return fetch(url, {
@@ -27,3 +33,5 @@ class RoomService {
   }
 }
 export default RoomService;
+
+

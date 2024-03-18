@@ -28,16 +28,14 @@ export default function RoomList() {
     const [filters, setFilters] = useState({
         direction: '',
         page: 0,
-        size: 2,
+        size: 5,
         kw: "",
-        statusRoom: "",
         roomType: "",
         sortByField: "id",        // name, price
         orderBySort: "asc",        // desc, asc
     })
     const [totalPages, setTotalPages] = useState(0)
     const [roomTypeList, setRoomTypeList] = useState([]);
-    const [statusRoomList, setStatusRoomList] = useState([]);
     const [keyword, setKeyword] = useState(null)
 
     function calculateUrl(filters) {
@@ -58,20 +56,11 @@ export default function RoomList() {
         return urlArray.join("&");
     }
 
-    // console.log(`http:localhost:8080/api/rooms/filters?` + calculateUrl(filters));
-    // const dispatch = useDispatch();
-    // const rooms = useSelector((state) => state.room.data);
-    // useEffect(() => {
-    //     dispatch(getAllRoomsAPI("http://localhost:8080/api/rooms"));
-    // }, []);
-
     useEffect(() => {
         async function getFilter() {
             let dataRoomType = await RoomTypeService.getAllRoomType("http://localhost:8080/api/erooms")
             setRoomTypeList(dataRoomType)
 
-            let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api/estatus")
-            setStatusRoomList(dataStatusRoom)
         }
         getFilter()
     }, [])
@@ -90,15 +79,7 @@ export default function RoomList() {
         }
         getAllRoomFilter()
     }, [filters, totalPages])
-//   useEffect(() => {
-//         async function getRoomRealById() {
-//             let roomRealRes = await RoomRealService.getRoomRealById(room?.id)
-//             console.log("room?.id",room?.id);
-//             console.log("roomRealRes", roomRealRes);
-//             setRoomRealList(roomRealRes)
-//         }
-//         getRoomRealById()
-//     }, [roomRealList])
+
     const handleClickNextPage = () => {
         if (Number(filters.page) < totalPages) {
             setFilters({
@@ -194,19 +175,7 @@ export default function RoomList() {
                                         <div className="row me-2">
                                             <div className="d-flex me-2 algin-items-center justify-content-center my-1 ">
                                                 <label className="form-label me-2 d-flex justify-content-center" style={{ marginTop: '5px' }} >Filter</label>
-                                                <select
-                                                    defaultValue={""}
-                                                    onChange={handleFilterStatusRoom}
-                                                    className="me-1"
-                                                >
-                                                    <option value="">Room status</option>
-                                                    {
-                                                        statusRoomList?.map((stt) => (
-                                                            <option className="d-flex justify-content-center algin-items-center" key={stt?.estatusName} value={stt?.estatusName}>{stt?.estatusTitle}</option>
-                                                        ))
-                                                    }
-                                                </select>
-
+                                        
                                                 <select defaultValue={""}
                                                     onChange={handleFilterRoomType}
                                                     className="me-1"
@@ -229,7 +198,7 @@ export default function RoomList() {
                                         <TableCell className="text-center">Id</TableCell>
                                         <TableCell className="text-center">Name</TableCell>
                                         <TableCell className="text-center">Type</TableCell>
-                                        <TableCell className="text-center">Status</TableCell>
+                                        {/* <TableCell className="text-center">Status</TableCell> */}
                                         <TableCell className="text-center">Per type</TableCell>
                                         <TableCell className="text-center">Sleeper</TableCell>
                                         <TableCell className="text-center">Price</TableCell>
@@ -245,7 +214,7 @@ export default function RoomList() {
                                                 <TableCell className="text-center">{room?.id}</TableCell>
                                                 <TableCell className="text-center align-middle">{room?.name}</TableCell>
                                                 <TableCell className="text-center align-middle">{room?.roomType}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.statusRoom}</TableCell>
+                                                {/* <TableCell className="text-center align-middle">{room?.statusRoom}</TableCell> */}
                                                 <TableCell className="text-center align-middle">{room?.perType?.name}</TableCell>
                                                 <TableCell className="text-center align-middle">{room?.sleep}</TableCell>
                                                 <TableCell className="text-center align-middle">{room?.pricePerNight}</TableCell>

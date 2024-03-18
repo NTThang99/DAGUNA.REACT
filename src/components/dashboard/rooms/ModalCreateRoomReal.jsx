@@ -11,32 +11,23 @@ const schema = yup.object({
 
 })
 
-export default function ModalCreateRoomReal({ show, handleClose, roomReals, setRoomReals, idRoom }) {
+export default function ModalCreateRoomReal({ show, handleClose, roomRealList, setRoomRealList }) {
     const [loading, setLoading] = useState(false)
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
     const [sttRoom, setSttRoom] = useState([])
-    const [roomRealList, setRoomRealList] = useState([])
+    // const [roomRealList, setRoomRealList] = useState([])
     useEffect(() => {
         async function getStatusRoom() {
-            let sttRes = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api/estatus")
+            let sttRes = await StatusRoomService.getAllStatusRoom()
             //estatusName estatusTitle
             setSttRoom(sttRes)
         }
         getStatusRoom()
     }, [])
 
-    // useEffect(() => {
-    //     async function getRoomRealById() {
-    //         let roomRealRes = await RoomRealService.getRoomRealById(idRoom)
-    //         console.log("idRoom",idRoom);
-    //         console.log("roomRealRes", roomRealRes);
-    //         setRoomRealList(roomRealRes)
-    //     }
-    //     getRoomRealById()
-    // }, [roomRealList])
-    //http://localhost:8080/api/room-reals/4
+    console.log("roomRealList", roomRealList);
     const handleSaveRoomReal = async (values) => {
         values = {
             ...values,
@@ -81,11 +72,11 @@ export default function ModalCreateRoomReal({ show, handleClose, roomReals, setR
                                     <form onChange={handleSaveRoomReal}>
                                         <tbody>
                                             <tr>
-                                                <td>1</td>
-                                                <td><input type="text" /></td>
-                                                <td><input type="text" /></td>
-                                                <td><input type="text" /></td>
-                                                <td><input type="text" /></td>
+                                                <td>{roomRealList?.id}</td>
+                                                <td><input type="text" />{roomRealList?.roomCode}</td>
+                                                <td><input type="text" />{roomRealList?.statusRoom}</td>
+                                                <td><input type="text" />{roomRealList?.floor}</td>
+                                                <td><input type="text" />{roomRealList?.erangeRoom}</td>
                                             </tr>
                                         </tbody>
                                     </form>

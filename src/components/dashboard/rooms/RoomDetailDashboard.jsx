@@ -4,6 +4,7 @@ import RoomService from "../../../services/RoomService";
 import AddHomeIcon from '@mui/icons-material/AddHome';
 import ModalCreateRoomReal from "./ModalCreateRoomReal";
 import RoomRealService from "../../../services/RoomRealService";
+import StatusRoomService from "../../../services/StatusRoomService";
 
 export default function RoomDetailDashboard() {
 
@@ -13,12 +14,17 @@ export default function RoomDetailDashboard() {
     const [show, setShow] = useState(false)
     const [roomReals, setRoomReals] = useState({})
     const [roomRealList, setRoomRealList] = useState([])
+    const [statusRoomList, setStatusRoomList] = useState([]);
+
     useEffect(() => {
         setLoading(true)
         try {
             async function getRoomById() {
                 let roomDetail = await RoomService.getRoomById(idRoomDetail)
                 setRoom(roomDetail?.data)
+                
+                let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api")
+                setStatusRoomList(dataStatusRoom)
                 setLoading(false)
             }
             getRoomById()
@@ -31,15 +37,13 @@ export default function RoomDetailDashboard() {
     const handleShowModalCreateReal = (roomReals) => {
         setShow(true)
     }
-    // useEffect(() => {
-    //     async function getRoomRealById() {
-    //         let roomRealRes = await RoomRealService.getRoomRealById(room?.id)
-    //         console.log("room?.id",room?.id);
-    //         console.log("roomRealRes", roomRealRes);
-    //         setRoomRealList(roomRealRes)
-    //     }
-    //     getRoomRealById()
-    // }, [roomRealList])
+    useEffect(() => {
+        async function getRoomRealById() {
+            let roomRealRes = await RoomRealService.getRoomRealById(idRoomDetail)
+            setRoomRealList(roomRealRes)
+        }
+        getRoomRealById()
+    }, [])
     return (
         <>
 
@@ -105,8 +109,10 @@ export default function RoomDetailDashboard() {
             <ModalCreateRoomReal
                 show={show}
                 handleClose={setShow}
-                roomReals={roomReals}
-                setRoomReals={setRoomReals}
+                // roomReals={roomReals}
+                // setRoomReals={setRoomReals}
+                roomRealList={roomRealList}
+                 setRoomRealList={setRoomRealList}
                 idRoom={room?.id}
             />
         </>

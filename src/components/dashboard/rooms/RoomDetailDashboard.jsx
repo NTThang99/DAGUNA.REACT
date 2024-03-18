@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import RoomService from "../../../services/RoomService";
+import AddHomeIcon from '@mui/icons-material/AddHome';
+import ModalCreateRoomReal from "./ModalCreateRoomReal";
+import RoomRealService from "../../../services/RoomRealService";
 
 export default function RoomDetailDashboard() {
 
     const { idRoomDetail } = useParams();
     const [room, setRoom] = useState({})
     const [loading, setLoading] = useState(false)
+    const [show, setShow] = useState(false)
+    const [roomReals, setRoomReals] = useState({})
+    const [roomRealList, setRoomRealList] = useState([])
     useEffect(() => {
         setLoading(true)
         try {
@@ -21,8 +27,19 @@ export default function RoomDetailDashboard() {
         }
 
     }, [idRoomDetail])
-    console.table("room ", room)
 
+    const handleShowModalCreateReal = (roomReals) => {
+        setShow(true)
+    }
+    // useEffect(() => {
+    //     async function getRoomRealById() {
+    //         let roomRealRes = await RoomRealService.getRoomRealById(room?.id)
+    //         console.log("room?.id",room?.id);
+    //         console.log("roomRealRes", roomRealRes);
+    //         setRoomRealList(roomRealRes)
+    //     }
+    //     getRoomRealById()
+    // }, [roomRealList])
     return (
         <>
 
@@ -31,7 +48,7 @@ export default function RoomDetailDashboard() {
                 <div>
                     <div className="row">
                         <div className="col-md-6 col-lg-6 col-sm-12">
-                            <div className="d-flex justify-content-center algin-items-left">1</div>
+                            <div className="d-flex justify-content-center algin-items-left">{room?.id}</div>
                             <div className="d-flex justify-content-center algin-items-left">2</div>
                         </div>
                         <div className="col-md-6 col-lg-6 col-sm-12">
@@ -74,11 +91,24 @@ export default function RoomDetailDashboard() {
                     <p>{room?.description}</p>
                     <p>{room?.utilitie}</p> */}
 
+                    <div>
+                        <div className="d-flex flex-column justify-content-center align-items-center">
 
+                            <AddHomeIcon className="text-success" size={22} role="button" title="add"
+                                onClick={() => handleShowModalCreateReal(roomReals)}
+                            />
+                        </div>
+                    </div>
 
                 </div>
             }
-
+            <ModalCreateRoomReal
+                show={show}
+                handleClose={setShow}
+                roomReals={roomReals}
+                setRoomReals={setRoomReals}
+                idRoom={room?.id}
+            />
         </>
     )
 }

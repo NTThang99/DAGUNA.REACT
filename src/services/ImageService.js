@@ -3,8 +3,6 @@ import axios from "axios";
 class ImageService {
 
     static async saveImage(formData) {
-
-        console.log("formData", formData);
         return axios.post('http://localhost:8080/api/images', formData, {
             headers: {
                 'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,

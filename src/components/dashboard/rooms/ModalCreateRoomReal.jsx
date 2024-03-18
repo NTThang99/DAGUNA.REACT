@@ -20,7 +20,7 @@ export default function ModalCreateRoomReal({ show, handleClose, roomRealList, s
     // const [roomRealList, setRoomRealList] = useState([])
     useEffect(() => {
         async function getStatusRoom() {
-            let sttRes = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api/estatus")
+            let sttRes = await StatusRoomService.getAllStatusRoom()
             //estatusName estatusTitle
             setSttRoom(sttRes)
         }
@@ -73,10 +73,10 @@ export default function ModalCreateRoomReal({ show, handleClose, roomRealList, s
                                         <tbody>
                                             <tr>
                                                 <td>{roomRealList?.id}</td>
-                                                <td><input type="text" />{roomRealList?.code}</td>
-                                                <td><input type="text" />{roomRealList?.st}</td>
-                                                <td><input type="text" />{}</td>
-                                                <td><input type="text" />{}</td>
+                                                <td><input type="text" />{roomRealList?.roomCode}</td>
+                                                <td><input type="text" />{roomRealList?.statusRoom}</td>
+                                                <td><input type="text" />{roomRealList?.floor}</td>
+                                                <td><input type="text" />{roomRealList?.erangeRoom}</td>
                                             </tr>
                                         </tbody>
                                     </form>

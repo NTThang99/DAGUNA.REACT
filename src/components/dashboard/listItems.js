@@ -9,7 +9,7 @@ import GroupIcon from '@mui/icons-material/Group';
 
 export const mainListItems = (
   <React.Fragment>
-    <Link to={'/dashboard'}>
+    {/* <Link to={'/dashboard'}>
       <ListItemButton >
         
         <ListItemIcon>
@@ -17,7 +17,7 @@ export const mainListItems = (
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
-    </Link>
+    </Link> */}
 
     {/* <NavLink to={'Orders'}>
       <ListItemButton>

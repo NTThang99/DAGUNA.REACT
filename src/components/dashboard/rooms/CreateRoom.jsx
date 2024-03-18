@@ -12,7 +12,6 @@ import KindOfRoomService from "../../../services/KindOfRoomService";
 import PerTypeService from "../../../services/PerTypeService";
 import RoomTypeService from "../../../services/RoomTypeService";
 import UtilityService from "../../../services/UtilityService";
-// import StatusRoomService from "../../../services/StatusRoomService";
 import RoomService from "../../../services/RoomService";
 import { toast } from "react-toastify";
 
@@ -27,8 +26,6 @@ const schema = yup.object({
     sleep: yup.string().required(`Vui lòng nhập số lượng người mỗi phongg`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
     acreage: yup.string().required(`Vui lòng nhập diện tích phòng`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
     pricePerNight: yup.string().required(`Vui lòng nhập giá tiền phòng`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
-    // utility: yup.string().required(`Vui lòng chọn utility`),
-    // utility: yup.object().transform()
 
 })
 
@@ -39,15 +36,9 @@ export default function CreateRoom() {
     const [roomTypeList, setRoomTypeList] = useState([]);
     const [utilityList, setUtilityList] = useState([]);
     const [utilitiesCheck, setUtilitiesCheck] = useState([]);
-    // const [statusRoomList, setStatusRoomList] = useState([]);
 
     const [isCreate, setIsCreate] = useState(false);
     const [loading, setLoading] = useState(false)
-    // const dispatch = useDispatch();
-
-    // let obj = useForm({
-    //     resolver: yupResolver(schema)
-    // });
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
@@ -70,10 +61,8 @@ export default function CreateRoom() {
                 let dataUtility = await UtilityService.getAllUtility("http://localhost:8080/api/utility")
                 setUtilityList(dataUtility)
 
-                // let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api/estatus")
-                // setStatusRoomList(dataStatusRoom)
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
             setLoading(false);
         }
@@ -160,7 +149,7 @@ export default function CreateRoom() {
             return;
         }
         if (selectedfile.length === 0) {
-            toast.error("lỗi img", { theme: "light" });
+            toast.error("lỗi image", { theme: "light" });
             return
         }
         let imageIds = selectedfile.map(sImg => sImg.id);

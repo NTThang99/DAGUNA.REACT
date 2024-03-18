@@ -132,7 +132,7 @@ export default function ReceptionistList() {
                                     <form className="d-flex align-items-center " onSubmit={handleSearch}>
                                         <input
                                             type="text"
-                                            placeholder="Search Room By Name"
+                                            placeholder="Search Receptionist By Name"
                                             className="form-control form-control-sm "
                                             onInput={handleSearchText}
                                         />

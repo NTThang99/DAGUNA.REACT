@@ -62,7 +62,7 @@ export default function CreateRoom() {
                 setUtilityList(dataUtility)
 
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
             setLoading(false);
         }
@@ -149,7 +149,7 @@ export default function CreateRoom() {
             return;
         }
         if (selectedfile.length === 0) {
-            toast.error("lỗi img", { theme: "light" });
+            toast.error("lỗi image", { theme: "light" });
             return
         }
         let imageIds = selectedfile.map(sImg => sImg.id);

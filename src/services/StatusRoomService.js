@@ -1,8 +1,8 @@
+import apiClients from "../apiClients/apiClients";
 
 class StatusRoomService {
     static async getAllStatusRoom(url) {
-        return fetch(url)
-          .then((res) => res.json());
-      }
+        return apiClients.get(`/estatus`)
+    }
 }
 export default StatusRoomService;

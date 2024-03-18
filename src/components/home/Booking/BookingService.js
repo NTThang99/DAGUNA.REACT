@@ -21,7 +21,7 @@ export default function BookingService() {
   const [childQuantity, setChildQuantity] = useState(2);
   const [perCarQuantity, setPerCarQuantity] = useState(1);
   const [activeStep, setActiveStep] = React.useState(0);
-
+  // const [loadng,setLoading] =useState(fai  l)
   const [showDetails, setShowDetails] = useState(-1);
   const [showAddon, setShowAddon] = useState(-1);
   
@@ -116,6 +116,8 @@ export default function BookingService() {
     }
   }, [])
 
+console.log("bookingServices",bookingServices);
+
   return (
     <>
       <div className="app_container">
@@ -148,8 +150,8 @@ export default function BookingService() {
                   <div className="add-ons-container_group">
                     <div className="add-ons-container_categoryGroup">
                       <h2 className="app_heading1">Airport Transfer</h2>
-                      {bookingServices.map((item, key) => (
-                        <div className="add-ons-container_addOn">
+                      {bookingServices && bookingServices.length > 0 && bookingServices.map((item, key) => (
+                        <div className="add-ons-container_addOn" key={key}>
                           <div className="add-ons-container_addOnheader">
                             <div className="add-ons-container_addOnImgWrapper">
                               <img className="add-ons-container_addOnImage" src={item.img} />

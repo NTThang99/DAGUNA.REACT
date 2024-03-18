@@ -38,7 +38,7 @@ const inItState = {
 export const searchRoomsAPI = createAsyncThunk(
   "searchRoomsAPI",
   async (arg, { rejectWithValue }) => {
-    // console.log("arg", arg);
+    console.log("arg", arg);
 
     let objSend = {
       guest: {
@@ -168,7 +168,6 @@ export const getBookingByIdAPI = createAsyncThunk(
       // tùy vào arg để gửi thông tin lên cho phù hợp
       let res = await BookingService.getBookingById(`http://localhost:8080/api/bookings/${id}`);
 
-
       return res;
     } catch (err) {
       return rejectWithValue("Error getting when get booking by Id");
@@ -270,7 +269,7 @@ const bookingReducer = createSlice({
     builder.addCase(updateBooking_EditRoom.pending, (state, action) => { });
     builder.addCase(updateBooking_EditRoom.fulfilled, (state, action) => {
 
-      console.log("booking", action.payload);
+      // console.log("booking", action.payload);
       state.addOns.data = action.payload;
     });
   },

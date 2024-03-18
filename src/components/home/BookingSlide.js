@@ -104,10 +104,37 @@ export const createBookingAPI = createAsyncThunk(
       let res = await BookingService.createBooking("http://localhost:8080/api/bookings", objSend);
 
 
-
+      console.log("objSend", objSend);
       return res;
     } catch (err) {
       return rejectWithValue("Error getting all rooms");
+    }
+  }
+);
+
+
+export const updateBooking_EditRoom = createAsyncThunk(
+  "updateBooking_EditRoom",
+  async (arg, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+      let objSend = {
+        bookingId: arg.bookingId,
+        bookingDetail: {
+          checkIn: arg.searchBar.checkIn,
+          checkOut: arg.searchBar.checkOut,
+          roomId: arg.roomId,
+          numberAdult: arg.searchBar.guests.numberAdult,
+          numberChildren: arg.searchBar.guests.numberChildren
+        }
+        // dateChooseService: arg?.dateChooseService
+      };
+      console.log("objSend", objSend);
+      let res = await BookingService.updateBooking_EditRooms("http://localhost:8080/api/bookings/rooms/edit", objSend);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error getting all Booking_Add_Service");
     }
   }
 );
@@ -124,7 +151,7 @@ export const updateBooking_AddBookingService = createAsyncThunk(
         numberCarOrPerson: 1,
         // dateChooseService: arg?.dateChooseService
       };
-      console.log("objSend", JSON.stringify(objSend));
+      // console.log("objSend", JSON.stringify(objSend));
       let res = await BookingService.updateBooking_AddService("http://localhost:8080/api/bookings/booking-services/add", objSend);
 
       return res;
@@ -140,6 +167,7 @@ export const getBookingByIdAPI = createAsyncThunk(
     try {
       // tùy vào arg để gửi thông tin lên cho phù hợp
       let res = await BookingService.getBookingById(`http://localhost:8080/api/bookings/${id}`);
+
 
       return res;
     } catch (err) {
@@ -164,8 +192,8 @@ export const updateBooking_AddRoomAPI = createAsyncThunk(
           numberChildren: arg.searchBar.guests.numberChildren
         }
       };
-      console.log("objSend", objSend);
-      let res = await BookingService.updateBooking_AddRoom("http://localhost:8080/api/bookings/rooms/edit", objSend);
+      // console.log("objSend", objSend);
+      let res = await BookingService.updateBooking_AddRoom("http://localhost:8080/api/bookings/rooms/add", objSend);
 
       return res;
     } catch (err) {
@@ -207,12 +235,17 @@ const bookingReducer = createSlice({
     builder.addCase(getBookingByIdAPI.pending, (state, action) => { });
     builder.addCase(getBookingByIdAPI.fulfilled, (state, action) => {
 
-      // console.log("booking full", action.payload);
-      state.booking.bookingDetails = action.payload.bookingDetails;
-      state.booking.bookingId = action.payload.bookingId;
+      if (action.payload != null) {
+        state.booking.bookingDetails = action.payload.bookingDetails;
+        state.booking.bookingId = action.payload.bookingId;
+        if (action.payload.bookingDetails.length != 0) {
+          state.booking.bookingDetailChoosen = action.payload.bookingDetails[action.payload.bookingDetails.length - 1].bookingDetailId;
+        }
+      }
+
 
       // console.log("action.payload.bookingDetails", action.payload.bookingDetails);
-      state.booking.bookingDetailChoosen = action.payload.bookingDetails[0].bookingDetailId;
+
     });
     builder.addCase(updateBooking_AddRoomAPI.pending, (state, action) => { });
     builder.addCase(updateBooking_AddRoomAPI.fulfilled, (state, action) => {
@@ -222,9 +255,22 @@ const bookingReducer = createSlice({
       state.booking.bookingId = action.payload.bookingId;
       state.booking.bookingDetailChoosen = action.payload.bookingDetails[action.payload.bookingDetails.length - 1].bookingDetailId;
     });
+    builder.addCase(updateBooking_AddBookingService.pending, (state, action) => { });
+    builder.addCase(updateBooking_AddBookingService.fulfilled, (state, action) => {
+
+      state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.bookingId = action.payload.bookingId;
+      // state.booking.bookingDetailChoosen = action.payload.bookingDetails[action.payload.bookingDetails.length - 1].bookingDetailId;
+    });
     builder.addCase(getAllBookingServiceAPI.pending, (state, action) => { });
     builder.addCase(getAllBookingServiceAPI.fulfilled, (state, action) => {
 
+      state.addOns.data = action.payload;
+    });
+    builder.addCase(updateBooking_EditRoom.pending, (state, action) => { });
+    builder.addCase(updateBooking_EditRoom.fulfilled, (state, action) => {
+
+      console.log("booking", action.payload);
       state.addOns.data = action.payload;
     });
   },

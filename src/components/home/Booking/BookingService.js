@@ -24,6 +24,7 @@ export default function BookingService() {
 
   const [showDetails, setShowDetails] = useState(-1);
   const [showAddon, setShowAddon] = useState(-1);
+  
   const [showDetailsBill, setShowDetailsBill] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
@@ -68,6 +69,15 @@ export default function BookingService() {
 
   const handleNavigateBookingBack = () => {
     navigate(`/booking`);
+  };
+  const handleEdit = () =>{
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    handleNavigateBookingEdit();
+
+  }
+
+  const handleNavigateBookingEdit = () => {
+    navigate(`/booking/edit`);
   };
 
   const toggleForm = () => {
@@ -135,7 +145,6 @@ export default function BookingService() {
             <div>
               <div>
                 <div>
-
                   <div className="add-ons-container_group">
                     <div className="add-ons-container_categoryGroup">
                       <h2 className="app_heading1">Airport Transfer</h2>
@@ -306,6 +315,7 @@ export default function BookingService() {
               handleNext={handleNext}
               handleChooseBookingDetail={handleChooseBookingDetail}
               showAddon={showAddon}
+              handleEdit={handleEdit}
             />
           </aside>
         </div>

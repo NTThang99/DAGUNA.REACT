@@ -15,6 +15,7 @@ import {
   Contact,
   PageNotFound,
   Room,
+  Receptionist,
   RoomDetail,
   Services,
   Team,
@@ -27,10 +28,16 @@ import {
 import Footer from "./components/common/Footer";
 import Dashboard from "./components/dashboard/Dashboard";
 import RoomList from "./components/dashboard/rooms/RoomList";
+import ReceptionistList from "./components/dashboard/receptionists/ReceptionistList";
 import RoomPage from "./pages/dashboard/RoomPage";
+import ReceptionistPage from "./pages/dashboard/ReceptionistPage";
 import CreateRoom from "./components/dashboard/rooms/CreateRoom";
-import RoomDetailDashboard from "./components/dashboard/rooms/RoomDetailDashboard"
+import CreateReceptionist from "./components/dashboard/receptionists/CreateReceptionist";
+
+import RoomDetailDashboard from "./components/dashboard/rooms/RoomDetailDashboard";
+import ReceptionistDetailDashboard from "./components/dashboard/receptionists/ReceptionistDetailDashboard";
 import EditRoom from "./components/dashboard/rooms/EditRoom";
+import EditReceptionist from "./components/dashboard/receptionists/EditReceptionist";
 
 export default function App() {
   return (
@@ -49,7 +56,9 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/*" element={<PageNotFound />} />
             <Route path="/rooms" element={<Room />} />
+            <Route path="/receptionists" element={<Receptionist />} />
             <Route path="/rooms/:roomName" element={<RoomDetail />} />
+            <Route path="/receptionists/ :receptionistName" element={<ReceptionistDetailDashboard />} />
             <Route path="/services" element={<Services />} />
             <Route path="/dashboard" element={<Dashboard />}>
 
@@ -61,6 +70,13 @@ export default function App() {
                   <Route path="room-reals"></Route>
                 </Route>
                 <Route path=":idRoomEdit" element={<EditRoom />} />
+              </Route>
+
+              <Route path="receptionists" element={<ReceptionistPage/>}>
+                {/* <Route index element={<RoomList />} /> */}
+                <Route  path="list" index element={<ReceptionistList />} />
+                <Route path="add" element={<CreateReceptionist />} />
+                <Route path=":idReceptionistEdit" element={<EditReceptionist />} />
               </Route>
 
             </Route>

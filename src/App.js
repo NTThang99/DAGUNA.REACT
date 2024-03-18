@@ -11,6 +11,7 @@ import {
   Booking,
   BookingService,
   BookingCheckout,
+  BookingEdit,
   AboutUs,
   Contact,
   PageNotFound,
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="/booking" element={<Booking />} />
             <Route path="/booking/addons" element={<BookingService />} />
             <Route path="/booking/checkout" element={<BookingCheckout />} />
+            <Route path="/booking/edit" element={<BookingEdit />} />
             <Route path="/team" element={<Team />} />
             <Route path="/testimonial" element={<Testimonial />} />
             <Route path="/about" element={<AboutUs />} />

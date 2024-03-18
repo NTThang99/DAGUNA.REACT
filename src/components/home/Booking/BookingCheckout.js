@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
 
 
-export default function BookingService() {
+export default function BookingCheckout() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [adultQuantity, setAdultQuantity] = useState(2);
   const navigate = useNavigate();

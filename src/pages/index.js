@@ -2,6 +2,7 @@ import AboutUs from "./AboutUs";
 import Booking from "./BookPage/BookingPage";
 import BookingService from "./BookPage/BookingServicePage";
 import BookingCheckout from "./BookPage/BookingCheckoutPage";
+import BookingEdit from "./BookPage/BookingEditPage";
 import Team from "./TeamPage";
 import Testimonial from "./TestimonialPage";
 import Contact from "./ContactPage";
@@ -17,6 +18,7 @@ export {
   Booking,
   BookingService,
   BookingCheckout,
+  BookingEdit,
   Testimonial,
   Team,
   AboutUs,

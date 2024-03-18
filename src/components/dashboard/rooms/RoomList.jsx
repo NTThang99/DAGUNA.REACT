@@ -90,7 +90,15 @@ export default function RoomList() {
         }
         getAllRoomFilter()
     }, [filters, totalPages])
-
+//   useEffect(() => {
+//         async function getRoomRealById() {
+//             let roomRealRes = await RoomRealService.getRoomRealById(room?.id)
+//             console.log("room?.id",room?.id);
+//             console.log("roomRealRes", roomRealRes);
+//             setRoomRealList(roomRealRes)
+//         }
+//         getRoomRealById()
+//     }, [roomRealList])
     const handleClickNextPage = () => {
         if (Number(filters.page) < totalPages) {
             setFilters({

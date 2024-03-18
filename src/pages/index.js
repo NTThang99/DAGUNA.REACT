@@ -8,6 +8,7 @@ import Testimonial from "./TestimonialPage";
 import Contact from "./ContactPage";
 import PageNotFound from "./PageNotFound";
 import Room from "./RoomPage";
+import Receptionist from "./dashboard/ReceptionistPage";
 import RoomDetail from "./RoomDetailPage";
 import Services from "./ServicesPage";
 import Home from "../components/home/Home";
@@ -25,6 +26,7 @@ export {
   Contact,
   PageNotFound,
   Room,
+  Receptionist,
   RoomDetail,
   Services,
   DashBoard,

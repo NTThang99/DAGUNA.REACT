@@ -7,98 +7,61 @@ import {
     TableRow,
 } from "@mui/material";
 
-import { getAllRoomsAPI } from "../../home/Slide/RoomSlide";
+import { getAllReceptionistsAPI } from "../../home/Slide/ReceptionistSlide";
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { useDispatch, useSelector } from "react-redux";
-import { BiCommentDetail } from "react-icons/bi"; 
+import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import RoomService from "../../../services/RoomService";
-import RoomTypeService from "../../../services/RoomTypeService";
-import StatusRoomService from "../../../services/StatusRoomService";
+import ReceptionistSevrice from "../../../services/ReceptionistService";
 import SearchIcon from '@mui/icons-material/Search';
 import { Margin } from "@mui/icons-material";
 
 
-export default function RoomList() {
-    const [roomList, setRoomList] = useState([]);
+export default function ReceptionistList() {
+    const [receptionistList, setReceptionistList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false)
-    const [room, setRoom] = useState(null)
+    const [receptionist, setReceptionist] = useState(null)
     const [filters, setFilters] = useState({
         direction: '',
         page: 0,
         size: 2,
         kw: "",
-        statusRoom: "",
-        roomType: "",
         sortByField: "id",        // name, price
         orderBySort: "asc",        // desc, asc
     })
     const [totalPages, setTotalPages] = useState(0)
-    const [roomTypeList, setRoomTypeList] = useState([]);
-    const [statusRoomList, setStatusRoomList] = useState([]);
     const [keyword, setKeyword] = useState(null)
+    // function calculateUrl(filters) {
+    //     let urlArray = [];
+    //     if (filters.kw !== "") {
+    //         urlArray.push(`kw=${filters.kw}`)
+    //     }
+    //     urlArray.push(`page=${filters.page}`);
+    //     urlArray.push(`size=${filters.size}`);
+    //     urlArray.push(`sort=${filters.sortByField},${filters.orderBySort}`);
 
-    function calculateUrl(filters) {
-        let urlArray = [];
-        if (filters.kw !== "") {
-            urlArray.push(`kw=${filters.kw}`)
-        }
-        urlArray.push(`page=${filters.page}`);
-        urlArray.push(`size=${filters.size}`);
-        if (filters.statusRoom !== "") {
-            urlArray.push(`statusRoom=${filters.statusRoom}`);
-        }
-        if (filters.roomType !== "") {
-            urlArray.push(`roomType=${filters.roomType}`);
-        }
-        urlArray.push(`sort=${filters.sortByField},${filters.orderBySort}`);
+    //     return urlArray.join("&");
+    // }
 
-        return urlArray.join("&");
-    }
-
-    // console.log(`http:localhost:8080/api/rooms/filters?` + calculateUrl(filters));
-    // const dispatch = useDispatch();
-    // const rooms = useSelector((state) => state.room.data);
-    // useEffect(() => {
-    //     dispatch(getAllRoomsAPI("http://localhost:8080/api/rooms"));
-    // }, []);
-
+  
     useEffect(() => {
-        async function getFilter() {
-            let dataRoomType = await RoomTypeService.getAllRoomType("http://localhost:8080/api/erooms")
-            setRoomTypeList(dataRoomType)
-
-            let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api/estatus")
-            setStatusRoomList(dataStatusRoom)
-        }
-        getFilter()
-    }, [])
-    useEffect(() => {
-        async function getAllRoomFilter() {
+        async function getAllReceptionistFilter() {
             try {
-                let roomFilters = await RoomService.getAllRoomByFilter(`/rooms/filters?` + calculateUrl(filters))
-                let result = roomFilters?.data?.content
-                let totalPage = roomFilters?.data?.totalPages
+                let receptionistFilters = await ReceptionistSevrice.getAllReceptionistByFilter(`/receptionists`)
+                let result = receptionistFilters?.data?.content
+                let totalPage = receptionistFilters?.data?.totalPages
                 setTotalPages(totalPage)
-                setRoomList(result)
+                setReceptionistList(result)
 
             } catch (error) {
                 console.log(error);
             }
         }
-        getAllRoomFilter()
+        getAllReceptionistFilter()
     }, [filters, totalPages])
-//   useEffect(() => {
-//         async function getRoomRealById() {
-//             let roomRealRes = await RoomRealService.getRoomRealById(room?.id)
-//             console.log("room?.id",room?.id);
-//             console.log("roomRealRes", roomRealRes);
-//             setRoomRealList(roomRealRes)
-//         }
-//         getRoomRealById()
-//     }, [roomRealList])
+
     const handleClickNextPage = () => {
         if (Number(filters.page) < totalPages) {
             setFilters({
@@ -123,11 +86,11 @@ export default function RoomList() {
             page: Number(pageNumber)
         })
     }
-    const handleEditRoom = (room) => {
+    const handleEditReceptionist = (receptionist) => {
         setShow(true)
-        setRoom(room)
+        setReceptionist(receptionist)
     }
-    const handleRemoveRoom = () => { }
+    const handleRemoveReceptionist = () => { }
 
     const handleSearchText = (e) => {
         setKeyword(e.target.value)
@@ -137,18 +100,6 @@ export default function RoomList() {
         setFilters({
             ...filters,
             kw: keyword
-        })
-    }
-    const handleFilterStatusRoom = (e) => {
-        setFilters({
-            ...filters,
-            statusRoom: e.target.value
-        })
-    }
-    const handleFilterRoomType = (e) => {
-        setFilters({
-            ...filters,
-            roomType: e.target.value
         })
     }
     const handleSelectLimit = (e) => {
@@ -189,7 +140,7 @@ export default function RoomList() {
                                         <input type="button" value="search" style={{ marginLeft: '5px' }} />
                                     </form>
                                 </div>
-                                <div className="d-flex me-2 algin-items-center my-2 justify-content-end">
+                                {/* <div className="d-flex me-2 algin-items-center my-2 justify-content-end">
                                     <div className="d-flex me-2 algin-items-center ">
                                         <div className="row me-2">
                                             <div className="d-flex me-2 algin-items-center justify-content-center my-1 ">
@@ -221,49 +172,52 @@ export default function RoomList() {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                             <Table size="small" className="table table-bordered table-striped table-hover rounded-3 overflow-hidden">
                                 <TableHead >
                                     <TableRow className="table-secondary">
                                         <TableCell className="text-center">Id</TableCell>
                                         <TableCell className="text-center">Name</TableCell>
-                                        <TableCell className="text-center">Type</TableCell>
-                                        <TableCell className="text-center">Status</TableCell>
-                                        <TableCell className="text-center">Per type</TableCell>
-                                        <TableCell className="text-center">Sleeper</TableCell>
-                                        <TableCell className="text-center">Price</TableCell>
+                                        <TableCell className="text-center">Dob</TableCell>
+                                        <TableCell className="text-center">Email</TableCell>
+                                        <TableCell className="text-center">Phone</TableCell>
+                                        <TableCell className="text-center">Address</TableCell>
+                                        <TableCell className="text-center">Avatar</TableCell>
+                                        <TableCell className="text-center">Receptionist Info</TableCell>
                                         <TableCell className="text-center">Action</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {roomList?.map((room) => (
+                                    {receptionistList?.map((receptionist) => (
                                         <>
 
-                                            <TableRow key={`room_${room?.id}`}>
-                                                {/* <Link to={`/dashboard/rooms/${room?.id}`}> */}
-                                                <TableCell className="text-center">{room?.id}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.name}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.roomType}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.statusRoom}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.perType?.name}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.sleep}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.pricePerNight}</TableCell>
+                                            <TableRow key={`receptionist_${receptionist?.id}`}>
+                                                <TableCell className="text-center">{receptionist?.id}</TableCell>
+                                                <TableCell className="text-center align-middle">{receptionist?.receptionistName}</TableCell>
+                                                <TableCell className="text-center align-middle">{receptionist?.dob}</TableCell>
+                                                <TableCell className="text-center align-middle">{receptionist?.email}</TableCell>
+                                                <TableCell className="text-center align-middle">{receptionist?.phone}</TableCell>
+                                                <TableCell className="text-center align-middle">{receptionist?.address}</TableCell>
+                                                <TableCell className="text-center align-middle">
+                                        <img width={"100px"} height={"100px"}  src={receptionist?.avatarImg}/>
+                                    </TableCell>
+                                                <TableCell className="text-center align-middle">{receptionist?.receptionistInfo}</TableCell>
                                                 {/* </Link> */}
                                                 <TableCell className="text-center d-flex align-items-center">
-                                                    <Link className="mx-1" to={`/dashboard/rooms/${room?.id}`}>
+                                                    <Link className="mx-1" to={`/dashboard/receptionists/${receptionist?.id}`}>
                                                         <BiCommentDetail style={{ color: 'orange' }} size={22} title="edit" role="button"
                                                         />
 
                                                     </Link>
                                                     <div className="mx-1">
                                                         <EditIcon style={{ color: 'green' }} size={22} title="edit" role="button"
-                                                            onClick={() => handleEditRoom(room)} />
+                                                            onClick={() => handleEditReceptionist(receptionist)} />
 
                                                     </div>
                                                     <div className="mx-1">
                                                         <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
-                                                            onClick={() => handleRemoveRoom(room)} />
+                                                            onClick={() => handleRemoveReceptionist(receptionist)} />
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -326,7 +280,6 @@ export default function RoomList() {
                         >
                             <option value="">Select Filter</option>
                             <option value="name">Name</option>
-                            <option value="pricePerNight">Price</option>
                         </select>
                     </div>
                     <div className="d-flex me-2 algin-items-center ">

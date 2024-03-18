@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import ImageService from "../../../services/ImageService";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import ViewTypeService from "../../../services/ViewTypeService";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
@@ -12,7 +12,7 @@ import KindOfRoomService from "../../../services/KindOfRoomService";
 import PerTypeService from "../../../services/PerTypeService";
 import RoomTypeService from "../../../services/RoomTypeService";
 import UtilityService from "../../../services/UtilityService";
-import StatusRoomService from "../../../services/StatusRoomService";
+// import StatusRoomService from "../../../services/StatusRoomService";
 import RoomService from "../../../services/RoomService";
 import { toast } from "react-toastify";
 
@@ -20,13 +20,13 @@ import { toast } from "react-toastify";
 const schema = yup.object({
     name: yup.string().required(`Vui lòng nhập tên phòng`),
     viewType: yup.string().required(`Vui lòng chọn loại view`),
-    statusRoom: yup.string().required(`Vui lòng chọn statusRooms`),
+    quantity: yup.string().required(`Vui lòng nhập số lượng phòng`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
     kindOfRoomId: yup.string().required(`Vui lòng chọn kindOfRooms`),
-    perTypId: yup.string().required(`Vui lòng chọn perTypes`),
-    roomType: yup.string().required(`Vui lòng chọn roomTypes`),
-    sleep: yup.string().required(`Vui lòng chọn sleeper`),
-    acreage: yup.string().required(`Vui lòng chọn acreage`),
-    pricePerNight: yup.string().required(`Vui lòng chọn giá tiền phòng`),
+    perTypId: yup.string().required(`Vui lòng chọn loại giường`),
+    roomType: yup.string().required(`Vui lòng chọn loại phòng`),
+    sleep: yup.string().required(`Vui lòng nhập số lượng người mỗi phongg`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
+    acreage: yup.string().required(`Vui lòng nhập diện tích phòng`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
+    pricePerNight: yup.string().required(`Vui lòng nhập giá tiền phòng`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
     // utility: yup.string().required(`Vui lòng chọn utility`),
     // utility: yup.object().transform()
 
@@ -39,16 +39,16 @@ export default function CreateRoom() {
     const [roomTypeList, setRoomTypeList] = useState([]);
     const [utilityList, setUtilityList] = useState([]);
     const [utilitiesCheck, setUtilitiesCheck] = useState([]);
-    const [statusRoomList, setStatusRoomList] = useState([]);
+    // const [statusRoomList, setStatusRoomList] = useState([]);
 
     const [isCreate, setIsCreate] = useState(false);
     const [loading, setLoading] = useState(false)
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     // let obj = useForm({
     //     resolver: yupResolver(schema)
     // });
-    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
     useEffect(() => {
@@ -70,8 +70,8 @@ export default function CreateRoom() {
                 let dataUtility = await UtilityService.getAllUtility("http://localhost:8080/api/utility")
                 setUtilityList(dataUtility)
 
-                let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api/estatus")
-                setStatusRoomList(dataStatusRoom)
+                // let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api/estatus")
+                // setStatusRoomList(dataStatusRoom)
             } catch (error) {
                 console.log(error);
             }
@@ -114,11 +114,13 @@ export default function CreateRoom() {
                                 fileimage: reader.result,
                                 datetime: e.target.files[i].lastModifiedDate.toLocaleString('en-IN'),
                                 filesize: filesizes(e.target.files[i].size)
+
                             }
+
                         ]
+
                     });
                     setLoading(false)
-
                 })
                     .catch(error => {
                         console.error(error);
@@ -136,30 +138,29 @@ export default function CreateRoom() {
             setLoading(true);
             ImageService.deleteImage(id)
                 .then(() => {
-                    console.log(`File with ID ${id} deleted successfully`);
+                    toast.success(`File with ID ${id} deleted successfully`, { theme: "light" });
                     const result = selectedfile.filter((data) => data.id !== id);
 
-                    console.log("result", result);
                     SetSelectedFile(result);
 
-                    console.log("selectedfile", selectedfile);
                 })
                 .finally(() => {
                     setLoading(false);
                 })
                 .catch(error => {
                     console.error(`Error deleting file with ID ${id}`, error);
+                    toast.error(`Error deleting file`, { theme: "light" })
                 })
         }
     }
     const handleCreateRoom = async (values) => {
 
-        if (utilitiesCheck.length == 0) {
-            console.log("lỗi utility");
+        if (utilitiesCheck.length === 0) {
+            toast.error("lỗi utility", { theme: "light" });
             return;
         }
-        if (selectedfile.length == 0) {
-            console.log("lỗi img");
+        if (selectedfile.length === 0) {
+            toast.error("lỗi img", { theme: "light" });
             return
         }
         let imageIds = selectedfile.map(sImg => sImg.id);
@@ -170,28 +171,24 @@ export default function CreateRoom() {
             utilitie: JSON.stringify(utilitiesCheck),
             imageIds: imageIds,
             roomType: values.roomType,
-            statusRoom: values.statusRoom,
             viewType: values.viewType,
         }
         try {
             setIsCreate(true);
             let createRoomRes = await RoomService.createRoom(values)
-            console.log("createRoomRes", createRoomRes);
             let result = createRoomRes?.data;
             if (result) {
-                console.log("result", result);
                 SetSelectedFile([])
                 reset();
                 toast.success('Create room success!', { theme: "light" });
             }
-            setIsCreate(false)
+
         } catch (error) {
             console.log("error", error);
             toast.error('Create room unsuccess')
         }
+        setIsCreate(false)
     }
-
-    console.log("errors", errors);
     let handleClickRadio = (evt, id) => {
         let newArray = [...utilitiesCheck, id];
         if (utilitiesCheck.includes(id)) {
@@ -224,15 +221,10 @@ export default function CreateRoom() {
                             <span className="invalid-feedback">{errors.roomType?.message}</span>
                         </div>
                         <div className="form-group mb-2">
-                            <label className="form-label">Room Status</label>
-                            <select defaultValue={""}  {...register('statusRoom')}
-                                className={`form-control form-control-sm `}>
-                                <option value="">Select Room status</option>
-                                {
-                                    statusRoomList?.map((stt) => <option key={stt?.estatusName} value={stt?.estatusName}>{stt?.estatusTitle}</option>
-                                    )
-                                }
-                            </select>
+                            <label className="form-label">Room Quantity</label>
+                            <input type="text" {...register('quantity')} placeholder="Room quantity"
+                                className={`form-control form-control-sm ${errors.quantity?.message ? 'is-invalid' : ''}`} />
+                            <span className="invalid-feedback">{errors.quantity?.message}</span>
                         </div>
                         <div className="form-group mb-2">
                             <label className="form-label">View Type</label>
@@ -357,18 +349,18 @@ export default function CreateRoom() {
                                             )
                                         })}
                                         <div className="col-md-3 col-lg-3 col-sm-12 mb-3">
-                                        {
-                                            loading ? (<div>
-                                                <span
-                                                    className="spinner-border text-primary spinner-border-sm"
-                                                    role="status"
-                                                    aria-hidden="true"
-                                                >
-                                                </span>
-                                            </div>) : ""
-                                        }
+                                            {
+                                                loading ? (<div>
+                                                    <span
+                                                        className="spinner-border text-primary spinner-border-sm"
+                                                        role="status"
+                                                        aria-hidden="true"
+                                                    >
+                                                    </span>
+                                                </div>) : ""
+                                            }
                                         </div>
-                                        
+
                                     </div>
                                     {/* <span className="invalid-feedback">{errors.image?.message}</span> */}
                                 </div>
@@ -377,13 +369,22 @@ export default function CreateRoom() {
                     </div>
                 </div>
                 <div className="row">
-                        <button
-                            type="submit"
-                            className="btn btn-success btn-sm d-flex align-items-center flex-grow-1 me-2 justify-content-center"
-                        >
-                            Create
-                        </button>
-                    </div>
+                    {
+                        isCreate ?
+                            <button
+                                type="submit"
+                                className="btn btn-success btn-sm d-flex align-items-center flex-grow-1 me-2 justify-content-center hide"
+                            >
+                                Create
+                            </button> : (
+                                <button
+                                    type="submit"
+                                    className="btn btn-success btn-sm d-flex align-items-center flex-grow-1 me-2 justify-content-center"
+                                >
+                                    Create
+                                </button>
+                            )}
+                </div>
             </form >
         </div >
     )

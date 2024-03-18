@@ -57,7 +57,9 @@ export default function App() {
                 {/* <Route index element={<RoomList />} /> */}
                 <Route  path="list" index element={<RoomList />} />
                 <Route path="add" element={<CreateRoom />} />
-                <Route path=":idRoomDetail" element={<RoomDetailDashboard />} />
+                <Route path=":idRoomDetail" element={<RoomDetailDashboard />}>
+                  <Route path="room-reals"></Route>
+                </Route>
                 <Route path=":idRoomEdit" element={<EditRoom />} />
               </Route>
 

@@ -114,7 +114,6 @@ export default function RoomList() {
             ...filters,
             page: Number(pageNumber)
         })
-        console.log(pageNumber);
     }
     const handleEditRoom = (room) => {
         setShow(true)
@@ -162,8 +161,6 @@ export default function RoomList() {
             sortByField: e.target.value
         })
     }
-    console.log("totalPages",totalPages);
-    console.log("filters.page",filters.page);
     return (
         <>
 

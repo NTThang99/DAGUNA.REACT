@@ -40,7 +40,7 @@ export default function RoomDetailDashboard() {
     useEffect(() => {
         async function getRoomRealById() {
             let roomRealRes = await RoomRealService.getRoomRealById(idRoomDetail)
-            setRoomRealList(roomRealRes)
+            setRoomRealList(roomRealRes?.data)
         }
         getRoomRealById()
     }, [])

@@ -269,11 +269,12 @@
 }
 
 .fade {
-    border-radius: 250px 0 0 250px;
-    opacity: 1 !important;
-    transition: opacity 2.5s ease 0s;
-    z-index: 0;
+    /* border-radius: 250px 0 0 250px; */
+    /* opacity: 1 !important; */
+    /* transition: opacity 2.5s ease 0s; */
+    z-index: 1000;
     height: 100% !important;
+    /* transition: opacity 39.15s linear; */
 }
 
 @media (min-width: 1280px) {

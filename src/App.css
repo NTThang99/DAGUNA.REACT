@@ -37,3 +37,6 @@
     margin-left: 90px;
     border-color: hide;
 }
+.modal-backdrop{
+    background-color: rgba(0,0,0,0.8);
+}

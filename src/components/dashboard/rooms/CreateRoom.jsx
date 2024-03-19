@@ -14,18 +14,19 @@ import RoomTypeService from "../../../services/RoomTypeService";
 import UtilityService from "../../../services/UtilityService";
 import RoomService from "../../../services/RoomService";
 import { toast } from "react-toastify";
+import { Button, Modal } from "react-bootstrap";
 
 
 const schema = yup.object({
-    name: yup.string().required(`Vui lòng nhập tên phòng`),
-    viewType: yup.string().required(`Vui lòng chọn loại view`),
-    quantity: yup.string().required(`Vui lòng nhập số lượng phòng`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
-    kindOfRoomId: yup.string().required(`Vui lòng chọn kindOfRooms`),
-    perTypId: yup.string().required(`Vui lòng chọn loại giường`),
-    roomType: yup.string().required(`Vui lòng chọn loại phòng`),
-    sleep: yup.string().required(`Vui lòng nhập số lượng người mỗi phongg`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
-    acreage: yup.string().required(`Vui lòng nhập diện tích phòng`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
-    pricePerNight: yup.string().required(`Vui lòng nhập giá tiền phòng`).matches(/^[0-9]/, 'Vui lòng nhập số').typeError(`Vui lòng nhập số`),
+    name: yup.string().required(`Không được để trống`),
+    viewType: yup.string().required(`Không được để trống`),
+    quantity: yup.number().required(`Không được để trốngg`).min(1, 'Tối thiểu 1 phòng').typeError(`Vui lòng nhập số`),
+    kindOfRoomId: yup.string().required(`Không được để trống`),
+    perTypId: yup.string().required(`Không được để trống`),
+    roomType: yup.string().required(`Không được để trống`),
+    sleep: yup.number().required(`Không được để trống`).min(1, 'Tối thiểu 1 người').typeError(`Vui lòng nhập số`),
+    acreage: yup.number().required(`Không được để trốngg`).min(50, `Diện tích không được ít hơn 50m²`).typeError(`Vui lòng nhập số`),
+    pricePerNight: yup.number().required(`Không được để trống`).typeError(`Vui lòng nhập số`),
 
 })
 
@@ -36,7 +37,8 @@ export default function CreateRoom() {
     const [roomTypeList, setRoomTypeList] = useState([]);
     const [utilityList, setUtilityList] = useState([]);
     const [utilitiesCheck, setUtilitiesCheck] = useState([]);
-
+    const [showModal, setShowModal] = useState(false);
+    const [idToDelete, setIdToDelete] = useState(null);
     const [isCreate, setIsCreate] = useState(false);
     const [loading, setLoading] = useState(false)
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -71,7 +73,6 @@ export default function CreateRoom() {
 
 
     const [selectedfile, SetSelectedFile] = useState([]);
-    const [Files, SetFiles] = useState([]);
     const filesizes = (bytes, decimals = 2) => {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -122,26 +123,37 @@ export default function CreateRoom() {
             }
         }
     }
-    const DeleteSelectFile = (id) => {
-        if (window.confirm(`Delete ${id}`)) {
-            setLoading(true);
-            ImageService.deleteImage(id)
-                .then(() => {
-                    toast.success(`File with ID ${id} deleted successfully`, { theme: "light" });
-                    const result = selectedfile.filter((data) => data.id !== id);
+    const DeleteSelectFile = (idToDelete) => {
+        // if (window.confirm(`Delete ${id}`)) {
+        setLoading(true);
+        ImageService.deleteImage(idToDelete)
+            .then(() => {
+                toast.success(`File with ID ${idToDelete} deleted successfully`, { theme: "light" });
+                const result = selectedfile.filter((data) => data.id !== idToDelete);
 
-                    SetSelectedFile(result);
+                SetSelectedFile(result);
 
-                })
-                .finally(() => {
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error(`Error deleting file with ID ${id}`, error);
-                    toast.error(`Error deleting file`, { theme: "light" })
-                })
-        }
+            })
+            .finally(() => {
+                setLoading(false);
+                handleModalClose()
+            })
+            .catch(error => {
+                console.error(`Error deleting file with ID ${idToDelete}`, error);
+                toast.error(`Error deleting file`, { theme: "light" })
+            })
+        // }
     }
+   
+    const handleDeleteConfirm = () => {
+        setShowModal(false);
+        DeleteSelectFile(idToDelete);
+    };
+    const handleModalClose = () => {
+        setShowModal(false);
+        setIdToDelete(null)
+    };
+
     const handleCreateRoom = async (values) => {
 
         if (utilitiesCheck.length === 0) {
@@ -188,6 +200,22 @@ export default function CreateRoom() {
 
     return (
         <div>
+            <div>
+                <Modal show={showModal} onHide={handleModalClose}>
+                    <Modal.Dialog >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Confirm delete image</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <label>{`Are you sure you want to delete the file ${idToDelete}?`}</label>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={handleDeleteConfirm}>Yes</Button>
+                            <Button variant="secondary" onClick={handleModalClose}>No</Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </Modal>
+            </div>
             <form className="border rounded p-3" onSubmit={handleSubmit(handleCreateRoom)} >
                 <div className="row">
                     <div className="col-md-6 col-lg-6 col-sm-12">
@@ -254,13 +282,13 @@ export default function CreateRoom() {
                         <div className="form-group mb-2">
                             <label className="form-label" >Sleeper</label>
                             <input type="text"  {...register('sleep')}
-                                placeholder="number per/room"
+                                placeholder="Number per/room"
                                 className={`form-control form-control-sm ${errors.sleep?.message ? 'is-invalid' : ''}`} />
                             <span className="invalid-feedback">{errors.sleep?.message}</span>
                         </div>
                         <div className="form-group mb-2">
                             <label className="form-label">Acreage</label>
-                            <input type="text" placeholder="acreage"  {...register('acreage')}
+                            <input type="text" placeholder="Acreage"  {...register('acreage')}
                                 className={`form-control form-control-sm ${errors.acreage?.message ? 'is-invalid' : ''}`} />
                             <span className="invalid-feedback">{errors.acreage?.message}</span>
                         </div>
@@ -307,7 +335,7 @@ export default function CreateRoom() {
                                     <input type="file" onChange={InputChange} multiple className="form-control form-control-sm mb-3" />
                                     <div className="row mb-3">
                                         {selectedfile.map((data) => {
-                                            const { id, filename, filetype, fileimage, datetime, filesize } = data;
+                                            const { id, filename, fileimage } = data;
                                             return (
                                                 <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={id}>
                                                     {
@@ -318,11 +346,16 @@ export default function CreateRoom() {
                                                                         <img
                                                                             src={fileimage}
                                                                             style={{ width: '120px', height: '100px' }}
+                                                                            alt="fileimage"
                                                                         />
                                                                         <FontAwesomeIcon
                                                                             className="upload-icon-delete"
                                                                             icon={faTimes}
-                                                                            onClick={() => DeleteSelectFile(id)}
+                                                                            // onClick={() => ModalDeleteSelectFile(idDelete)}
+                                                                            onClick={() => {
+                                                                                setIdToDelete(id);
+                                                                                setShowModal(true)
+                                                                            }}
                                                                         />
                                                                     </div>
                                                                 </div>

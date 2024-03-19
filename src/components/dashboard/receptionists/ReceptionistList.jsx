@@ -45,18 +45,18 @@ export default function ReceptionistList() {
     //     return urlArray.join("&");
     // }
 
-  
+
     useEffect(() => {
         async function getAllReceptionistFilter() {
             try {
-                let receptionistFilters = await ReceptionistSevrice.getAllReceptionistByFilter(`/receptionists`)
-                let result = receptionistFilters?.data?.content
-                let totalPage = receptionistFilters?.data?.totalPages
+                let receptionistFilters = await ReceptionistSevrice.getAllReceptionists(`http://localhost:8080/api/receptionists`)
+                let result = receptionistFilters?.content
+                let totalPage = receptionistFilters?.totalPages
                 setTotalPages(totalPage)
                 setReceptionistList(result)
 
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
         }
         getAllReceptionistFilter()
@@ -133,7 +133,8 @@ export default function ReceptionistList() {
                                         <input
                                             type="text"
                                             placeholder="Search Receptionist By Name"
-                                            className="form-control form-control-sm "
+                                            className="form-control form-control-sm"
+                                            style={{ width: '230px' }}
                                             onInput={handleSearchText}
                                         />
                                         <SearchIcon style={{ marginLeft: '-25px', marginTop: '2px', fontSize: '27px' }} />
@@ -200,26 +201,24 @@ export default function ReceptionistList() {
                                                 <TableCell className="text-center align-middle">{receptionist?.phone}</TableCell>
                                                 <TableCell className="text-center align-middle">{receptionist?.address}</TableCell>
                                                 <TableCell className="text-center align-middle">
-                                        <img width={"100px"} height={"100px"}  src={receptionist?.avatarImg}/>
-                                    </TableCell>
+                                                    <img width={"80px"} height={"80px"} src={receptionist?.avatarImg} />
+                                                </TableCell>
                                                 <TableCell className="text-center align-middle">{receptionist?.receptionistInfo}</TableCell>
                                                 {/* </Link> */}
-                                                <TableCell className="text-center d-flex align-items-center">
-                                                    <Link className="mx-1" to={`/dashboard/receptionists/${receptionist?.id}`}>
-                                                        <BiCommentDetail style={{ color: 'orange' }} size={22} title="edit" role="button"
-                                                        />
-
+                                                <TableCell style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                    <div>
+                                                        <Link className="mx-1" to={`/dashboard/receptionists/${receptionist?.id}`}>
+                                                        <EditIcon style={{ color: 'orange', marginRight: '10px' }} size={22} title="edit" role="button" />
                                                     </Link>
                                                     <div className="mx-1">
-                                                        <EditIcon style={{ color: 'green' }} size={22} title="edit" role="button"
-                                                            onClick={() => handleEditReceptionist(receptionist)} />
-
+                                                        <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="edit" role="button" onClick={() => handleEditReceptionist(receptionist)} />
                                                     </div>
                                                     <div className="mx-1">
-                                                        <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
-                                                            onClick={() => handleRemoveReceptionist(receptionist)} />
+                                                        <PlaylistRemoveIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="remove" role="button" onClick={() => handleRemoveReceptionist(receptionist)} />
+                                                    </div>
                                                     </div>
                                                 </TableCell>
+
                                             </TableRow>
                                         </>
                                     ))}
@@ -229,7 +228,7 @@ export default function ReceptionistList() {
                     )
             }
             <div className="d-flex align-items-center justify-content-between">
-                <ul className="pagination">
+                {/* <ul className="pagination">
                     {
                         filters.page <= 1 ? "" :
                             (<li className="page-items">
@@ -243,7 +242,7 @@ export default function ReceptionistList() {
                         <li key={pageNumber} className="page-items">
                             <button
                                 onClick={() => handleClickPageNumber(pageNumber)}
-                                className={`page-link ${filters.page === pageNumber   ? 'active' : ''}`}
+                                className={`page-link ${filters.page === pageNumber ? 'active' : ''}`}
                             >{pageNumber + 1}</button>
                         </li>
                     ))}
@@ -257,8 +256,8 @@ export default function ReceptionistList() {
                             </li>)
                     }
 
-                </ul>
-                <div className="d-flex align-items-center ">
+                </ul> */}
+                {/* <div className="d-flex align-items-center ">
                     <span style={{ width: '45px' }}>Limit</span>
                     <select
                         className="form-select form-select-sm" style={{ width: '70px' }}
@@ -271,8 +270,8 @@ export default function ReceptionistList() {
                         <option value={50} className={`${filters.limit === 50 ? 'action' : ''}`} >50</option>
                         <option value={100} className={`${filters.limit === 100 ? 'action' : ''}`} >100</option>
                     </select>
-                </div>
-                <div className="d-flex algin-items-center">
+                </div> */}
+                {/* <div className="d-flex algin-items-center">
                     <div className="d-flex me-2 algin-items-center ">
                         <span style={{ width: '40px', marginTop: '5px' }}>Sort</span>
                         <select defaultValue={""} className="form-select form-select-sm " style={{ width: '120px' }}
@@ -291,7 +290,7 @@ export default function ReceptionistList() {
                             <option value="desc">Descending</option>
                         </select>
                     </div>
-                </div>
+                </div> */}
             </div>
         </>
     );

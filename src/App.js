@@ -60,7 +60,7 @@ export default function App() {
             <Route path="/rooms" element={<Room />} />
             <Route path="/receptionists" element={<Receptionist />} />
             <Route path="/rooms/:roomName" element={<RoomDetail />} />
-            <Route path="/receptionists/ :receptionistName" element={<ReceptionistDetailDashboard />} />
+            <Route path="/receptionists/:receptionistName" element={<ReceptionistDetailDashboard />} />
             <Route path="/services" element={<Services />} />
             <Route path="/dashboard" element={<Dashboard />}>
 
@@ -78,7 +78,7 @@ export default function App() {
                 {/* <Route index element={<RoomList />} /> */}
                 <Route  path="list" index element={<ReceptionistList />} />
                 <Route path="add" element={<CreateReceptionist />} />
-                <Route path=":idReceptionistEdit" element={<EditReceptionist />} />
+                <Route path=":receptionistId" element={<EditReceptionist />} />
               </Route>
 
             </Route>

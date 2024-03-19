@@ -12,9 +12,10 @@ import ReceptionistService from "../../../services/ReceptionistService";
 
 
 const schema = yup.object({
+  receptionistName: yup.string().required(`Vui lòng nhập tên lễ tân`),
   dob: yup.string().required(`Vui lòng nhập ngày tháng năm sinh`),
   email: yup.string().required(`Vui lòng nhập email`),
-
+  phone: yup.string().required('Vui lòng nhập số điện thoại').matches(/^[0-9]+$/, 'Vui lòng nhập số điện thoại').typeError(`Vui lòng nhập số điện thoại`),
   address: yup.string().required(`Vui lòng nhập địa chỉ`),
   receptionistInfo: yup.string().required(`Vui lòng nhập tiểu sử của lễ tân`),
 
@@ -120,6 +121,7 @@ export default function CreateReceptionist() {
       setIsCreate(true);
       let createReceptionistRes = await ReceptionistService.createReceptionist(values)
       let result = createReceptionistRes?.data;
+      console.log("result",result);
       if (result) {
         SetSelectedFile([])
         reset();
@@ -132,7 +134,7 @@ export default function CreateReceptionist() {
     }
     setIsCreate(false)
   }
-
+console.log("errors",errors);
 
   return (
     <div>
@@ -141,7 +143,7 @@ export default function CreateReceptionist() {
           <div className="col-md-6 col-lg-6 col-sm-12">
             <div className="form-group mb-2">
               <label className={`form-label `}>Name</label>
-              <input {...register('name')} type="text" placeholder="Name Receptionist"
+              <input {...register('receptionistName')} type="text" placeholder="Name Receptionist"
                 className={`form-control form-control-sm ${errors.receptionistName?.message ? 'is-invalid' : ''}`} />
               <span className="invalid-feedback">{errors.receptionistName?.message}</span>
             </div>
@@ -163,12 +165,7 @@ export default function CreateReceptionist() {
               <input
                 type="text"
                 placeholder="Phone"
-                {...register('phone', {
-                  pattern: {
-                    value: /^[0-9]{10}$/i, // Biểu thức chính quy để kiểm tra số điện thoại có 10 chữ số
-                    message: 'Invalid phone number'
-                  }
-                })}
+                {...register('phone')}
                 className={`form-control form-control-sm ${errors.phone?.message ? 'is-invalid' : ''}`}
               />
               <span className="invalid-feedback">{errors.phone?.message}</span>
@@ -183,7 +180,7 @@ export default function CreateReceptionist() {
           <div className="col-md-6 col-lg-6 col-sm-12">
             <div className="form-group mb-2">
               <label className="form-label">Info</label>
-              <textarea cols="30" rows="5" {...register('Receptionist Info')}
+              <textarea cols="30" rows="5" {...register('receptionistInfo')}
                 className={`form-control form-control-sm `}></textarea>
             </div>
             <div className="form-group mb-2">
@@ -203,7 +200,7 @@ export default function CreateReceptionist() {
                                   <div>
                                     <img
                                       src={fileimage}
-                                      style={{ width: '120px', height: '100px' }}
+                                      style={{ width: '80px', height: '80px' }}
                                     />
                                     <FontAwesomeIcon
                                       className="upload-icon-delete"

@@ -10,7 +10,6 @@ import {
 import { getAllRoomsAPI } from "../../home/Slide/RoomSlide";
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
-import { useDispatch, useSelector } from "react-redux";
 import { BiCommentDetail } from "react-icons/bi"; 
 import { Link } from "react-router-dom";
 import RoomService from "../../../services/RoomService";

@@ -1,7 +1,7 @@
 import apiClients from "../apiClients/apiClients";
 
 class StatusRoomService {
-    static async getAllStatusRoom(url) {
+    static async getAllStatusRoom() {
         return apiClients.get(`/estatus`)
     }
 }

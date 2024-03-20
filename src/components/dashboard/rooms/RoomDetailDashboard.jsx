@@ -13,8 +13,7 @@ export default function RoomDetailDashboard() {
     const [loading, setLoading] = useState(false)
     const [show, setShow] = useState(false)
     const [roomReals, setRoomReals] = useState({})
-    const [roomRealList, setRoomRealList] = useState([])
-    const [statusRoomList, setStatusRoomList] = useState([]);
+
 
     useEffect(() => {
         setLoading(true)
@@ -22,9 +21,7 @@ export default function RoomDetailDashboard() {
             async function getRoomById() {
                 let roomDetail = await RoomService.getRoomById(idRoomDetail)
                 setRoom(roomDetail?.data)
-                
-                let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api")
-                setStatusRoomList(dataStatusRoom)
+
                 setLoading(false)
             }
             getRoomById()
@@ -34,16 +31,10 @@ export default function RoomDetailDashboard() {
 
     }, [idRoomDetail])
 
-    const handleShowModalCreateReal = (roomReals) => {
+    const handleShowModalCreateReal = (room) => {
         setShow(true)
     }
-    useEffect(() => {
-        async function getRoomRealById() {
-            let roomRealRes = await RoomRealService.getRoomRealById(idRoomDetail)
-            setRoomRealList(roomRealRes?.data)
-        }
-        getRoomRealById()
-    }, [])
+
     return (
         <>
 
@@ -109,11 +100,7 @@ export default function RoomDetailDashboard() {
             <ModalCreateRoomReal
                 show={show}
                 handleClose={setShow}
-                // roomReals={roomReals}
-                // setRoomReals={setRoomReals}
-                roomRealList={roomRealList}
-                 setRoomRealList={setRoomRealList}
-                idRoom={room?.id}
+                idRoomDetail={idRoomDetail}
             />
         </>
     )

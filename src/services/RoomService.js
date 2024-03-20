@@ -30,7 +30,8 @@ class RoomService {
       .catch((error) => error);
   }
   static async patchUpdateRoomReal(roomId,formData){
-    return apiClients.patch(`"/${roomId}/room-reals"`,formData)
+    console.log("formData",formData);
+    return apiClients.patch(`/rooms/${roomId}/room-reals`,formData)
   }
 }
 export default RoomService;

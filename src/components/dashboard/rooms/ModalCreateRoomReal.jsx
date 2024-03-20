@@ -38,6 +38,7 @@ export default function ModalCreateRoomReal({
 }) {
   const [loading, setLoading] = useState(false);
   const [roomRealList, setRoomRealList] = useState([]);
+  const [showEditAllRow, setShowEditAllRow] = useState(false);
   const {
     register,
     handleSubmit,
@@ -47,16 +48,13 @@ export default function ModalCreateRoomReal({
   } = useForm({
     resolver: yupResolver(schema),
   });
+  console.log("error", errors);
+  const [newRoomRealList, setNewRoomRealList] = useState([])
   useEffect(() => {
     async function getRoomRealById() {
       let roomRealRes = await RoomRealService.getRoomRealById(idRoomDetail);
       let result = roomRealRes?.data;
       result?.forEach((roomReal, index) => {
-        // setValue(this, roomReal.id)
-        // setValue(this, roomReal.roomCode);
-        // setValue(this, roomReal.statusRoom);
-        // setValue(this, roomReal.floor);
-        // setValue(this, roomReal.erangeRoom);
         setValue(`roomReals[${index}].id`, roomReal.id);
         setValue(`roomReals[${index}].roomCode`, roomReal.roomCode);
         setValue(`roomReals[${index}].statusRoom`, roomReal.statusRoom);
@@ -116,13 +114,74 @@ export default function ModalCreateRoomReal({
   };
   console.log("roomRealList", roomRealList);
   const handleCloseModel = () => {
-    console.log("aaa", roomRealList);
     reset({
       roomReals: roomRealList,
     });
     handleClose(false);
   };
-  console.log("reset", reset);
+
+
+  const handleEditAllClick = () => {
+    setShowEditAllRow(prevState => !prevState);
+  };
+  const handleInputFlowRoomCode = (e) => {
+    const value = e.target.value
+    const updatedRoomRealList = newRoomRealList.map((roomReal, index) => ({
+      ...roomReal,
+      roomCode: value,
+
+    }));
+    // updatedRoomRealList.forEach((item, index) => {
+    //   setValue(`roomReals[${index}].roomCode`, item.roomCode);
+    // })
+    setNewRoomRealList(updatedRoomRealList);
+  }
+  const handleSelectFlowStatusRoom = (e) => {
+    const value = e.target.value
+    const updatedRoomRealList = newRoomRealList.map((roomReal, index) => ({
+      ...roomReal,
+      statusRoom: value,
+    }));
+    // updatedRoomRealList.forEach((item, index) => {
+    //   setValue(`roomReals[${index}].statusRoom`, item.statusRoom);
+    // })
+    setNewRoomRealList(updatedRoomRealList);
+  }
+  const handleInputFlowRoomFloor = (e) => {
+    const value = e.target.value
+    const updatedRoomRealList = newRoomRealList.map((roomReal, index) => ({
+      ...roomReal,
+      floor: value
+    }));
+    // updatedRoomRealList.forEach((item, index) => {
+    //   setValue(`roomReals[${index}].floor`, item.floor);
+    // })
+    setNewRoomRealList(updatedRoomRealList);
+  }
+  const handleSelectFlowRangeRoom = (e) => {
+    const value = e.target.value
+    const updatedRoomRealList = newRoomRealList.map((roomReal, index) => ({
+      ...roomReal,
+      erangeRoom: value
+    }));
+    // updatedRoomRealList.forEach((item, index) => {
+    //   setValue(`roomReals[${index}].rangeRoom`, item.erangeRoom);
+    // }) 
+    setNewRoomRealList(updatedRoomRealList);
+  }
+  const handleAcceptEditAll = () => {
+    newRoomRealList?.forEach((item, index) => {
+      setValue(`roomReals[${index}].roomCode`, item.roomCode);
+      setValue(`roomReals[${index}].statusRoom`, item.statusRoom);
+      setValue(`roomReals[${index}].floor`, item.floor);
+      setValue(`roomReals[${index}].rangeRoom`, item.erangeRoom);
+    });
+    setRoomRealList(newRoomRealList)
+
+  }
+  console.log("newRoomRealList", newRoomRealList);
+
+
   return (
     <div>
       <Modal
@@ -134,6 +193,7 @@ export default function ModalCreateRoomReal({
       >
         <ModalHeader>
           <ModalTitle>Add Room Real</ModalTitle>
+          <input type="button" value="Edit All" onClick={handleEditAllClick} />
         </ModalHeader>
         {loading ? (
           <span
@@ -146,6 +206,48 @@ export default function ModalCreateRoomReal({
             <ModalBody>
               <Table>
                 <thead>
+                  {
+                    showEditAllRow && (
+                      <>
+                        <tr >
+                          <td> <input type="button" value="Accept" onClick={handleAcceptEditAll} /></td>
+                          <td>
+                            <input
+                              onChange={handleInputFlowRoomCode}
+                              type="text"
+                              placeholder="Room code"
+                            />
+                          </td>
+                          <td>
+                            <select onChange={handleSelectFlowStatusRoom}>
+                              <option value="">Select status</option>
+                              {sttRoom?.map((stt) => (
+                                <option value={stt?.estatusName}>
+                                  {stt?.estatusTitle}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                          <td className="">
+                            <input
+                              onChange={handleInputFlowRoomFloor}
+                              type="text"
+                              placeholder="Floor"
+                            />
+                          </td>
+                          <td>
+                            <select onChange={handleSelectFlowRangeRoom} >
+                              <option value="">Select range</option>
+                              <option value="A">A</option>
+                              <option value="B">B</option>
+                              <option value="C">C</option>
+                              <option value="D">D</option>
+                            </select>
+                          </td>
+                        </tr>
+                      </>
+                    )
+                  }
                   <tr>
                     <th>ID</th>
                     <th>Room code</th>
@@ -166,11 +268,10 @@ export default function ModalCreateRoomReal({
                           <input
                             type="text"
                             {...register(`roomReals[${index}].roomCode`)}
-                            className={`${
-                              errors.roomReals?.[index]?.roomCode?.message
-                                ? "is-invalid"
-                                : ""
-                            }`}
+                            className={`${errors.roomReals?.[index]?.roomCode?.message
+                              ? "is-invalid"
+                              : ""
+                              }`}
                           />
                           <span className="invalid-feedback">
                             {errors.roomReals?.[index]?.roomCode?.message}
@@ -188,15 +289,14 @@ export default function ModalCreateRoomReal({
                             ))}
                           </select>
                         </td>
-                        <td>
+                        <td className="">
                           <input
                             type="text"
                             {...register(`roomReals[${index}].floor`)}
-                            className={`${
-                              errors.roomReals?.[index]?.floor?.message
-                                ? "is-invalid"
-                                : ""
-                            }`}
+                            className={`${errors.roomReals?.[index]?.floor?.message
+                              ? "is-invalid"
+                              : ""
+                              }`}
                           />
                           <span className="invalid-feedback">
                             {errors.roomReals?.[index]?.floor?.message}
@@ -204,11 +304,10 @@ export default function ModalCreateRoomReal({
                         </td>
                         <td>
                           <select
-                            className={`${
-                              errors.roomReals?.[index]?.rangeRoom?.message
-                                ? "is-invalid"
-                                : ""
-                            }`}
+                            className={`${errors.roomReals?.[index]?.rangeRoom?.message
+                              ? "is-invalid"
+                              : ""
+                              }`}
                             {...register(`roomReals[${index}].rangeRoom`)}
                             defaultValue={
                               roomReals && roomReals[index]?.erangeRoom === null

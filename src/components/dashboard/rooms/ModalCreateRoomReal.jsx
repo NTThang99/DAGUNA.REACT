@@ -171,13 +171,17 @@ export default function ModalCreateRoomReal({
   }
   const handleAcceptEditAll = () => {
     newRoomRealList?.forEach((item, index) => {
+      setValue(`roomReals[${index}].roomCode`, item.id);
       setValue(`roomReals[${index}].roomCode`, item.roomCode);
       setValue(`roomReals[${index}].statusRoom`, item.statusRoom);
       setValue(`roomReals[${index}].floor`, item.floor);
       setValue(`roomReals[${index}].rangeRoom`, item.erangeRoom);
     });
-    setRoomRealList(newRoomRealList)
-
+    if (newRoomRealList.length === 0) {
+      return
+    } else {
+      setRoomRealList(newRoomRealList)
+    }
   }
   console.log("newRoomRealList", newRoomRealList);
 

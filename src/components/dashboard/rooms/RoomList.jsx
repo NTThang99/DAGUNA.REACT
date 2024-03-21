@@ -10,7 +10,7 @@ import {
 import { getAllRoomsAPI } from "../../home/Slide/RoomSlide";
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
-import { BiCommentDetail } from "react-icons/bi"; 
+import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import RoomService from "../../../services/RoomService";
 import RoomTypeService from "../../../services/RoomTypeService";
@@ -174,7 +174,7 @@ export default function RoomList() {
                                         <div className="row me-2">
                                             <div className="d-flex me-2 algin-items-center justify-content-center my-1 ">
                                                 <label className="form-label me-2 d-flex justify-content-center" style={{ marginTop: '5px' }} >Filter</label>
-                                        
+
                                                 <select defaultValue={""}
                                                     onChange={handleFilterRoomType}
                                                     className="me-1"
@@ -257,7 +257,7 @@ export default function RoomList() {
                         <li key={pageNumber} className="page-items">
                             <button
                                 onClick={() => handleClickPageNumber(pageNumber)}
-                                className={`page-link ${filters.page === pageNumber   ? 'active' : ''}`}
+                                className={`page-link ${filters.page === pageNumber ? 'active' : ''}`}
                             >{pageNumber + 1}</button>
                         </li>
                     ))}

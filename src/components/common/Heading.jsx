@@ -1,7 +1,7 @@
 import React from "react";
 import { roomItems } from "../data/Data";
 
-export default function Heading({heading}) {
+export default function Heading({ heading }) {
   console.log(heading);
 
   const room = roomItems.find(item => item.url === heading);

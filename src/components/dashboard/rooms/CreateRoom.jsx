@@ -308,6 +308,8 @@ export default function CreateRoom() {
                                     <div className="row mb-3">
                                         {selectedfile.map((data) => {
                                             const { id, filename, filetype, fileimage, datetime, filesize } = data;
+
+                                            console.log("data....", data);
                                             return (
                                                 <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={id}>
                                                     {

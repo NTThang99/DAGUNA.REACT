@@ -27,7 +27,7 @@ export default function Booking() {
   const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(2);
-  
+
   // const [selectedDate, setSelectedDate] = useState(dayjs());
   const [activeStep, setActiveStep] = React.useState(0);
   const dispatch = useDispatch();
@@ -65,7 +65,7 @@ export default function Booking() {
     setChildQuantity(childQuantity + 1);
   };
 
-  
+
 
   const toggleForm = () => {
     setShowForm(!showForm);

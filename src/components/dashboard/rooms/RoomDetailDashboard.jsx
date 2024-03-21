@@ -22,7 +22,7 @@ export default function RoomDetailDashboard() {
             async function getRoomById() {
                 let roomDetail = await RoomService.getRoomById(idRoomDetail)
                 setRoom(roomDetail?.data)
-                
+
                 let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api")
                 setStatusRoomList(dataStatusRoom)
                 setLoading(false)
@@ -112,7 +112,7 @@ export default function RoomDetailDashboard() {
                 // roomReals={roomReals}
                 // setRoomReals={setRoomReals}
                 roomRealList={roomRealList}
-                 setRoomRealList={setRoomRealList}
+                setRoomRealList={setRoomRealList}
                 idRoom={room?.id}
             />
         </>

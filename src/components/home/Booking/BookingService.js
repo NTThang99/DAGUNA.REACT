@@ -24,7 +24,7 @@ export default function BookingService() {
 
   const [showDetails, setShowDetails] = useState(-1);
   const [showAddon, setShowAddon] = useState(-1);
-  
+
   const [showDetailsBill, setShowDetailsBill] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
@@ -70,7 +70,7 @@ export default function BookingService() {
   const handleNavigateBookingBack = () => {
     navigate(`/booking`);
   };
-  const handleEdit = () =>{
+  const handleEdit = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     handleNavigateBookingEdit();
 

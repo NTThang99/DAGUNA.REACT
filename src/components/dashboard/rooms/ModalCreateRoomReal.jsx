@@ -75,7 +75,7 @@ export default function ModalCreateRoomReal({
         //estatusName estatusTitle
         setSttRoom(sttRes?.data);
       } catch (error) {
-        console.log("error getStatusRoom", error);
+        toast.error("error getStatusRoom");
       }
       setLoading(false);
     }
@@ -86,14 +86,12 @@ export default function ModalCreateRoomReal({
       ...values,
       roomId: idRoomDetail,
     };
-    console.log("values", values);
     try {
       let updateRoomRealRes = await RoomService.patchUpdateRoomReal(
         idRoomDetail,
         values
       );
       let result = updateRoomRealRes?.data;
-      console.log("result", result);
       if (result) {
         reset();
         handleCloseModel();
@@ -168,9 +166,6 @@ export default function ModalCreateRoomReal({
   useEffect(() => {
     setNewRoomRealList([...roomRealList]);
   }, [roomRealList]);
-  console.log("roomRealList", roomRealList);
-  console.log("newRoomRealList", newRoomRealList);
-  console.log("errors", errors);
 
   return (
     <div>

@@ -16,8 +16,8 @@ export const getAllReceptionistsAPI = createAsyncThunk(
       let res = await ReceptionistService.getAllReceptionists(arg);
       console.log("res", res);
       return res;
-      
-        } catch (err) {
+
+    } catch (err) {
       return rejectWithValue("Error getting all receptionists");
     }
   }

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import ImageService from "../../../services/ImageService";
@@ -12,9 +12,10 @@ import ReceptionistService from "../../../services/ReceptionistService";
 
 
 const schema = yup.object({
+  receptionistName: yup.string().required(`Vui lòng nhập tên lễ tân`),
   dob: yup.string().required(`Vui lòng nhập ngày tháng năm sinh`),
   email: yup.string().required(`Vui lòng nhập email`),
-
+  phone: yup.string().required('Vui lòng nhập số điện thoại').matches(/^[0-9]+$/, 'Vui lòng nhập số điện thoại').typeError(`Vui lòng nhập số điện thoại`),
   address: yup.string().required(`Vui lòng nhập địa chỉ`),
   receptionistInfo: yup.string().required(`Vui lòng nhập tiểu sử của lễ tân`),
 
@@ -27,12 +28,12 @@ export default function CreateReceptionist() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
+  const inputElement = useRef();
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
   }, [])
-
-  const [selectedfile, SetSelectedFile] = useState([]);
+  const [selectedfile, SetSelectedFile] = useState(null);
   const [Files, SetFiles] = useState([]);
   const filesizes = (bytes, decimals = 2) => {
     if (bytes === 0) return '0 Bytes';
@@ -43,56 +44,49 @@ export default function CreateReceptionist() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
   const InputChange = (e) => {
-    // --For Multiple File Input
-    let images = [];
-    for (let i = 0; i < e.target.files.length; i++) {
-      images.push((e.target.files[i]));
-      let reader = new FileReader();
-      let file = e.target.files[i];
-      reader.onloadend = () => {
-        //goi upload api
-        setLoading(true)
-        let formData = new FormData();
-        formData.append("file", file);
-        ImageService.saveImage(formData).then(response => {
-          SetSelectedFile((preValue) => {
-            return [
-              ...preValue,
-              {
-                id: response.data.id,
-                filename: e.target.files[i].name,
-                filetype: e.target.files[i].type,
-                fileimage: reader.result,
-                datetime: e.target.files[i].lastModifiedDate.toLocaleString('en-IN'),
-                filesize: filesizes(e.target.files[i].size)
-
-              }
-
-            ]
-
-          });
-          setLoading(false)
-        })
-          .catch(error => {
-            console.error(error);
-          });
-
-
-      }
-      if (e.target.files[i]) {
-        reader.readAsDataURL(file);
-      }
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(file);
     }
+    reader.onloadend = () => {
+      setLoading(true)
+      let formData = new FormData();
+      formData.append("file", file);
+      ImageService.saveImage(formData).then(response => {
+
+        console.log("response img", response);
+        SetSelectedFile((preValue) => {
+          return {
+            id: response.data.id,
+            filename: file.name,
+            filetype: file.type,
+            fileimage: reader.result,
+            datetime: file.lastModifiedDate.toLocaleString('en-IN'),
+            filesize: filesizes(file.size)
+          }
+        });
+        setLoading(false)
+      })
+        .catch(error => {
+          console.error(error);
+        });
+
+    }
+
   }
-  const DeleteSelectFile = (id) => {
+
+
+
+
+  const handleDeleteImage = (id) => {
     if (window.confirm(`Delete ${id}`)) {
       setLoading(true);
       ImageService.deleteImage(id)
         .then(() => {
           toast.success(`File with ID ${id} deleted successfully`, { theme: "light" });
-          const result = selectedfile.filter((data) => data.id !== id);
-
-          SetSelectedFile(result);
+          SetSelectedFile(null);
+          inputElement.current.value = null;
 
         })
         .finally(() => {
@@ -110,29 +104,31 @@ export default function CreateReceptionist() {
       toast.error("lỗi image", { theme: "light" });
       return
     }
-    let imageIds = selectedfile.map(sImg => sImg.id);
+    let imageIds = [selectedfile.id];
 
-    values = {
+    console.log("values:.........", values);
+    let objSend = {
       ...values,
-      imageIds: imageIds,
+      avatarImgId: imageIds,
     }
     try {
       setIsCreate(true);
-      let createReceptionistRes = await ReceptionistService.createReceptionist(values)
+
+      console.log("objSend", objSend);
+      let createReceptionistRes = await ReceptionistService.createReceptionist(objSend)
       let result = createReceptionistRes?.data;
       if (result) {
-        SetSelectedFile([])
-        reset();
+        SetSelectedFile(null)
+        inputElement.current.value = null;
         toast.success('Create receptionist success!', { theme: "light" });
+        reset()
       }
-
     } catch (error) {
       console.log("error", error);
       toast.error('Create receptionist unsuccess')
     }
     setIsCreate(false)
   }
-
 
   return (
     <div>
@@ -141,7 +137,7 @@ export default function CreateReceptionist() {
           <div className="col-md-6 col-lg-6 col-sm-12">
             <div className="form-group mb-2">
               <label className={`form-label `}>Name</label>
-              <input {...register('name')} type="text" placeholder="Name Receptionist"
+              <input {...register('receptionistName')} type="text" placeholder="Name Receptionist"
                 className={`form-control form-control-sm ${errors.receptionistName?.message ? 'is-invalid' : ''}`} />
               <span className="invalid-feedback">{errors.receptionistName?.message}</span>
             </div>
@@ -163,12 +159,7 @@ export default function CreateReceptionist() {
               <input
                 type="text"
                 placeholder="Phone"
-                {...register('phone', {
-                  pattern: {
-                    value: /^[0-9]{10}$/i, // Biểu thức chính quy để kiểm tra số điện thoại có 10 chữ số
-                    message: 'Invalid phone number'
-                  }
-                })}
+                {...register('phone')}
                 className={`form-control form-control-sm ${errors.phone?.message ? 'is-invalid' : ''}`}
               />
               <span className="invalid-feedback">{errors.phone?.message}</span>
@@ -183,46 +174,47 @@ export default function CreateReceptionist() {
           <div className="col-md-6 col-lg-6 col-sm-12">
             <div className="form-group mb-2">
               <label className="form-label">Info</label>
-              <textarea cols="30" rows="5" {...register('Receptionist Info')}
+              <textarea cols="30" rows="5" {...register('receptionistInfo')}
                 className={`form-control form-control-sm `}></textarea>
             </div>
             <div className="form-group mb-2">
               <span className="form-label">Image Receptionist</span>
               <div className="mb-3">
                 <div>
-                  <input type="file" onChange={InputChange} multiple className="form-control form-control-sm mb-3" />
+                  <input ref={inputElement} id="fileUpload" type="file" onChange={InputChange} multiple className="form-control form-control-sm mb-3" />
+                  {/*  Đây là input cho phép người dùng chọn nhiều hình ảnh từ thiết bị của họ. Khi người dùng thay đổi các tệp được chọn, hàm InputChange sẽ được gọi để xử lý việc tải lên các tệp.  */}
                   <div className="row mb-3">
-                    {selectedfile.map((data) => {
-                      const { id, filename, filetype, fileimage, datetime, filesize } = data;
-                      return (
-                        <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={id}>
+                    {
+                      console.log("selectedfile....", selectedfile)
+                    }
+                    {
+                      (selectedfile != null || selectedfile != undefined)  ? (
+                        <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={selectedfile.id}>
                           {
-                            filename.match(/.(jpg|jpeg|png|gif|svg)$/i) ?
-                              <div >
+                            selectedfile.filename.match(/.(jpg|jpeg|png|gif|svg)$/i) ?
+                              <div>
                                 <div className="mb-2 upload-icon-delete-container" >
                                   <div>
                                     <img
-                                      src={fileimage}
-                                      style={{ width: '120px', height: '100px' }}
+                                      src={selectedfile.fileimage}
+                                      style={{ width: '80px', height: '80px' }}
                                     />
                                     <FontAwesomeIcon
                                       className="upload-icon-delete"
                                       icon={faTimes}
-                                      onClick={() => DeleteSelectFile(id)}
+                                      onClick={()=> handleDeleteImage(selectedfile.id)}
                                     />
                                   </div>
                                 </div>
-
                               </div>
-
                               :
                               <div className="mb-2" >
                                 <i className="far fa-file-alt" ></i >
                               </div>
                           }
                         </div>
-                      )
-                    })}
+                      ) : null
+                    }
                     <div className="col-md-3 col-lg-3 col-sm-12 mb-3">
                       {
                         loading ? (<div>
@@ -235,9 +227,7 @@ export default function CreateReceptionist() {
                         </div>) : ""
                       }
                     </div>
-
                   </div>
-
                 </div>
               </div>
             </div>

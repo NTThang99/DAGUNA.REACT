@@ -28,7 +28,7 @@ export const mainListItems = (
       </ListItemButton>
     </NavLink> */}
 
-   {/* <NavLink to={'Customers'}>
+    {/* <NavLink to={'Customers'}>
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />

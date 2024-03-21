@@ -94,11 +94,11 @@ export default function Booking() {
         searchBar: room.searchBar,
       }))
     }
-
-
-
-
   };
+
+
+// console.log("roomdata", room.data);
+
   const handleNavigateBooking = () => {
     navigate(`/booking/addons`);
   };

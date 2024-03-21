@@ -32,6 +32,7 @@ export default function BookingEdit() {
     const [activeStep, setActiveStep] = React.useState(0);
     const dispatch = useDispatch();
     const room = useSelector((state) => state.booking.room);
+    const booking = useSelector((state) => state.booking.booking);
 
     const [value, setValue] = React.useState([
         dayjs(),
@@ -81,9 +82,9 @@ export default function BookingEdit() {
     const handleNext = (id) => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         handleNavigateBooking();
-        let bookingId = localStorage.getItem("bookingId");
+        // let bookingId = localStorage.getItem("bookingId");
         dispatch(updateBooking_EditRoom({
-            bookingId: bookingId,
+            bookingId: booking.bookingId,
             searchBar: room.searchBar,
             roomId: id
         }))

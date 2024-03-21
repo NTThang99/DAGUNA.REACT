@@ -48,7 +48,7 @@ export default function ModalCreateRoomReal({
   } = useForm({
     resolver: yupResolver(schema),
   });
-  console.log("error", errors);
+  const [oldRoomRealList, setOldRoomRealList] = useState([])
   const [newRoomRealList, setNewRoomRealList] = useState([])
   useEffect(() => {
     async function getRoomRealById() {
@@ -62,6 +62,7 @@ export default function ModalCreateRoomReal({
         setValue(`roomReals[${index}].rangeRoom`, roomReal.erangeRoom);
       });
       setRoomRealList(result);
+      setOldRoomRealList(roomRealList)
     }
     getRoomRealById();
   }, []);
@@ -84,15 +85,6 @@ export default function ModalCreateRoomReal({
     values = {
       ...values,
       roomId: idRoomDetail,
-
-      // roomReals: [
-      //     {
-      //         statusRoom: values?.statusRoom,
-      //         erangeRoom: values?.erangeRoom,
-      //         roomCode: values?.roomCode,
-      //         floor: values?.floor
-      //     }
-      // ]
     };
     console.log("values", values);
     try {
@@ -108,14 +100,14 @@ export default function ModalCreateRoomReal({
         toast.success("Create room real success!", { theme: "light" });
       }
     } catch (error) {
-      console.log("Error handleSaveRoomReal", error);
-      toast.error("Create room reals unsuccess!");
+      console.error("Error handleSaveRoomReal", error);
+      toast.error(error.response.data.message);
     }
   };
-  console.log("roomRealList", roomRealList);
   const handleCloseModel = () => {
     reset({
-      roomReals: roomRealList,
+      roomReals: oldRoomRealList,
+      newRoomRealList: oldRoomRealList
     });
     handleClose(false);
   };
@@ -131,9 +123,6 @@ export default function ModalCreateRoomReal({
       roomCode: value,
 
     }));
-    // updatedRoomRealList.forEach((item, index) => {
-    //   setValue(`roomReals[${index}].roomCode`, item.roomCode);
-    // })
     setNewRoomRealList(updatedRoomRealList);
   }
   const handleSelectFlowStatusRoom = (e) => {
@@ -142,9 +131,6 @@ export default function ModalCreateRoomReal({
       ...roomReal,
       statusRoom: value,
     }));
-    // updatedRoomRealList.forEach((item, index) => {
-    //   setValue(`roomReals[${index}].statusRoom`, item.statusRoom);
-    // })
     setNewRoomRealList(updatedRoomRealList);
   }
   const handleInputFlowRoomFloor = (e) => {
@@ -153,9 +139,6 @@ export default function ModalCreateRoomReal({
       ...roomReal,
       floor: value
     }));
-    // updatedRoomRealList.forEach((item, index) => {
-    //   setValue(`roomReals[${index}].floor`, item.floor);
-    // })
     setNewRoomRealList(updatedRoomRealList);
   }
   const handleSelectFlowRangeRoom = (e) => {
@@ -164,27 +147,30 @@ export default function ModalCreateRoomReal({
       ...roomReal,
       erangeRoom: value
     }));
-    // updatedRoomRealList.forEach((item, index) => {
-    //   setValue(`roomReals[${index}].rangeRoom`, item.erangeRoom);
-    // }) 
     setNewRoomRealList(updatedRoomRealList);
   }
   const handleAcceptEditAll = () => {
     newRoomRealList?.forEach((item, index) => {
-      setValue(`roomReals[${index}].roomCode`, item.id);
+      setValue(`roomReals[${index}].id`, item.id);
       setValue(`roomReals[${index}].roomCode`, item.roomCode);
       setValue(`roomReals[${index}].statusRoom`, item.statusRoom);
       setValue(`roomReals[${index}].floor`, item.floor);
       setValue(`roomReals[${index}].rangeRoom`, item.erangeRoom);
     });
-    if (newRoomRealList.length === 0) {
-      return
-    } else {
+    setOldRoomRealList(roomRealList)
+    if (newRoomRealList.length > 0) {
       setRoomRealList(newRoomRealList)
     }
+    else {
+      setRoomRealList(oldRoomRealList)
+    }
   }
+  useEffect(() => {
+    setNewRoomRealList([...roomRealList]);
+  }, [roomRealList]);
+  console.log("roomRealList", roomRealList);
   console.log("newRoomRealList", newRoomRealList);
-
+  console.log("errors", errors);
 
   return (
     <div>

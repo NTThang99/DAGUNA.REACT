@@ -25,7 +25,6 @@ export default function RoomDetailDashboard() {
                 let roomDetail = await RoomService.getRoomById(idRoomDetail)
                 setRoom(roomDetail?.data)
 
-        
                 setLoading(false)
             }
             getRoomById()
@@ -34,7 +33,7 @@ export default function RoomDetailDashboard() {
         }
 
     }, [idRoomDetail])
-
+    console.log("room", room);
     const handleShowModalCreateReal = (room) => {
         setShow(true)
     }
@@ -173,28 +172,11 @@ export default function RoomDetailDashboard() {
 
                     </dir>
                 </div>
-
-
-
-
-                // <div>
-                //     <div>
-                //         <div className="d-flex flex-column justify-content-center align-items-center">
-
-                //             <AddHomeIcon className="text-success" size={22} role="button" title="add"
-                //                 onClick={() => handleShowModalCreateReal(roomReals)}
-                //             />
-                //         </div>
-                //     </div>
-
-                // </div>
             }
             <ModalCreateRoomReal
                 show={show}
                 handleClose={setShow}
-
                 idRoomDetail={idRoomDetail}
-
             />
         </>
     )

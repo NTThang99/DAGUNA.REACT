@@ -5,6 +5,9 @@ import AddHomeIcon from '@mui/icons-material/AddHome';
 import ModalCreateRoomReal from "./ModalCreateRoomReal";
 import RoomRealService from "../../../services/RoomRealService";
 import StatusRoomService from "../../../services/StatusRoomService";
+import { Button } from "react-bootstrap";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+
 
 export default function RoomDetailDashboard() {
 
@@ -13,8 +16,7 @@ export default function RoomDetailDashboard() {
     const [loading, setLoading] = useState(false)
     const [show, setShow] = useState(false)
     const [roomReals, setRoomReals] = useState({})
-    const [roomRealList, setRoomRealList] = useState([])
-    const [statusRoomList, setStatusRoomList] = useState([]);
+
 
     useEffect(() => {
         setLoading(true)
@@ -22,9 +24,11 @@ export default function RoomDetailDashboard() {
             async function getRoomById() {
                 let roomDetail = await RoomService.getRoomById(idRoomDetail)
                 setRoom(roomDetail?.data)
-                
+
                 let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api")
                 setStatusRoomList(dataStatusRoom)
+
+
                 setLoading(false)
             }
             getRoomById()
@@ -34,77 +38,169 @@ export default function RoomDetailDashboard() {
 
     }, [idRoomDetail])
 
-    const handleShowModalCreateReal = (roomReals) => {
+    const handleShowModalCreateReal = (room) => {
         setShow(true)
     }
-    useEffect(() => {
-        async function getRoomRealById() {
-            let roomRealRes = await RoomRealService.getRoomRealById(idRoomDetail)
-            setRoomRealList(roomRealRes)
+    console.log("room img", room?.imageResDTOS?.[0].fileUrl);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const nextImage = () => {
+        if (currentImageIndex < room?.imageResDTOS?.length - 1) {
+            setCurrentImageIndex(currentImageIndex + 1);
         }
-        getRoomRealById()
-    }, [])
+    };
+
+    const previousImage = () => {
+        if (currentImageIndex > 0) {
+            setCurrentImageIndex(currentImageIndex - 1);
+        }
+    };
     return (
         <>
-
+            {/* room */}
             {
+                <div className="d-flex ">
+                    <dir className="col-4" style={{ padding: '10px', position: 'relative' }}>
+                        {/* <div style={{ position: 'relative', width: '100%', height: '100%' }}> */}
+                        <button
+                            onClick={previousImage}
+                            disabled={currentImageIndex === 0}
+                            style={{
+                                position: 'absolute',
+                                top: '70%', left: '10px',
+                                transform: 'translateY(-50%)'
+                            }}
+                        >
+                            <FaAngleLeft />
+                        </button>
+                        <button
+                            onClick={nextImage}
+                            disabled={currentImageIndex === room?.imageResDTOS?.length - 1}
+                            style={{
+                                position: 'absolute',
+                                top: '70%', right: '10px',
+                                transform: 'translateY(-50%)'
+                            }}
+                        >
+                            <FaAngleRight />
+                        </button>
+                        <label >Image</label>
+                        {
+                            // room?.imageResDTOS?.map((img) =>
+                            // (<div key={img?.id} style={{ marginBottom: '10px' }}>
+                            //     <img
+                            //         src={img?.fileUrl}
+                            //         alt={img?.id}
+                            //         style={{ width: '100%', height: '100%' }}
+                            //     />
+                            // </div>)
+                            // )
+                            room?.imageResDTOS?.length > 0 && (<img
+                                src={room?.imageResDTOS[currentImageIndex]?.fileUrl}
+                                alt={room?.imageResDTOS[currentImageIndex]?.id}
+                                style={{ width: '100%', height: '100%', margin: '10px 0' }}
+                            />)
+                        }
+                        {/* </div> */}
+                    </dir>
+                    <dir className="row col-8">
+                        <div className="">
+                            <div className="">
+                                <div className="d-flex">
+                                    <div className="col-6">
+                                        <label >Name</label>
+                                        <label >{room?.name}</label>
+                                    </div>
+                                    <div className="col-6 justify-content-end algin-items-center d-flex">
+                                        <div className="d-flex my-1 ">
+                                            <button onClick={() => handleShowModalCreateReal(roomReals)}>
+                                                <AddHomeIcon className="ml-1" />
+                                                Update Room Real
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="d-flex">
+                                    <div className="col-6 row">
 
-                <div>
-                    <div className="row">
-                        <div className="col-md-6 col-lg-6 col-sm-12">
-                            <div className="d-flex justify-content-center algin-items-left">{room?.id}</div>
-                            <div className="d-flex justify-content-center algin-items-left">2</div>
+
+                                        <label >Room type</label>
+                                        <label >{room?.roomType}</label>
+                                    </div>
+                                    <div className="col-6 row">
+
+
+                                        <label >Kind of room</label>
+                                        <label >{room?.kindOfRoom?.name}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="">
+                                <div className="d-flex">
+                                    <div className="col-4 row">
+
+
+                                        <label >View type</label>
+                                        <label >{room?.viewType}</label>
+                                    </div>
+                                    <div className="col-4 row">
+
+
+                                        <label >Acreage</label>
+                                        <label >{room?.acreage}</label>
+                                    </div>
+                                    <div className="col-4 row">
+
+                                        <label >Quantity</label>
+                                        <label >{room?.quantity}</label>
+                                    </div>
+                                </div>
+                                <div className="d-flex">
+                                    <div className="col-4 row">
+
+                                        <label >PerType</label>
+                                        <label >{room?.perType?.name}</label>
+
+                                    </div>
+                                    <div className="col-4 row">
+
+
+                                        <label >Sleep</label>
+                                        <label >{room?.sleep}</label>
+                                    </div>
+                                    <div className="col-4 row">
+
+                                        <label >Price Per Night</label>
+                                        <label >{room?.pricePerNight}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="">
+                                Uilities
+                            </div>
+                            <div className="">
+                                Description
+                            </div>
                         </div>
-                        <div className="col-md-6 col-lg-6 col-sm-12">
-                            <div className="d-flex justify-content-center algin-items-right">3</div>
-                            <div className="d-flex justify-content-center algin-items-right">4</div>
-                        </div>
-                    </div>
-                    <div className="d-flex justify-content-center">
-                        IMG
-                    </div>
-                    <div className="d-flex justify-content-center">
-                        description
-                    </div>
-                    <div className="d-flex justify-content-center">
-                        utilitie
-                    </div>
-                    {/* <p>{room?.name}</p>
 
 
-                    <p>{room?.kindOfRoom?.name}</p>
-
-
-                    <p>{room?.pricePerNight}</p>
-
-                    <p>{room?.acreage}</p>
-
-
-                    <p>{room?.roomType}</p>
-
-                    {
-                    // room?.images
-                    }
-
-                    <p>{room?.statusRoom}</p>
-
-                    <p>{room?.viewType}</p>
-
-                    <p>{room?.perType?.name}</p>
-
-                    <p>{room?.description}</p>
-                    <p>{room?.utilitie}</p> */}
-
-                    <div>
-                        <div className="d-flex flex-column justify-content-center align-items-center">
-
-                            <AddHomeIcon className="text-success" size={22} role="button" title="add"
-                                onClick={() => handleShowModalCreateReal(roomReals)}
-                            />
-                        </div>
-                    </div>
-
+                    </dir>
                 </div>
+
+
+
+
+                // <div>
+                //     <div>
+                //         <div className="d-flex flex-column justify-content-center align-items-center">
+
+                //             <AddHomeIcon className="text-success" size={22} role="button" title="add"
+                //                 onClick={() => handleShowModalCreateReal(roomReals)}
+                //             />
+                //         </div>
+                //     </div>
+
+                // </div>
             }
             <ModalCreateRoomReal
                 show={show}
@@ -112,8 +208,11 @@ export default function RoomDetailDashboard() {
                 // roomReals={roomReals}
                 // setRoomReals={setRoomReals}
                 roomRealList={roomRealList}
-                 setRoomRealList={setRoomRealList}
+                setRoomRealList={setRoomRealList}
                 idRoom={room?.id}
+
+                idRoomDetail={idRoomDetail}
+
             />
         </>
     )

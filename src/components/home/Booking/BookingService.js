@@ -18,6 +18,7 @@ export default function BookingService() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [showDetails, setShowDetails] = useState(-1);
   const [showAddon, setShowAddon] = useState(-1);
+
   const [showDetailsBill, setShowDetailsBill] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [showForm, setShowForm] = useState(false);

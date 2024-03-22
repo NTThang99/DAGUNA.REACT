@@ -100,7 +100,6 @@ export default function Booking() {
     setChildQuantity(childQuantity + 1);
   };
 
-  // const handleOpen = () => setOpen(true);
 
 
   const handleOpen = async (id) => {

@@ -10,8 +10,7 @@ import {
 import { getAllRoomsAPI } from "../../home/Slide/RoomSlide";
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
-import { useDispatch, useSelector } from "react-redux";
-import { BiCommentDetail } from "react-icons/bi"; 
+import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import RoomService from "../../../services/RoomService";
 import RoomTypeService from "../../../services/RoomTypeService";
@@ -175,7 +174,7 @@ export default function RoomList() {
                                         <div className="row me-2">
                                             <div className="d-flex me-2 algin-items-center justify-content-center my-1 ">
                                                 <label className="form-label me-2 d-flex justify-content-center" style={{ marginTop: '5px' }} >Filter</label>
-                                        
+
                                                 <select defaultValue={""}
                                                     onChange={handleFilterRoomType}
                                                     className="me-1"
@@ -198,7 +197,6 @@ export default function RoomList() {
                                         <TableCell className="text-center">Id</TableCell>
                                         <TableCell className="text-center">Name</TableCell>
                                         <TableCell className="text-center">Type</TableCell>
-                                        {/* <TableCell className="text-center">Status</TableCell> */}
                                         <TableCell className="text-center">Per type</TableCell>
                                         <TableCell className="text-center">Sleeper</TableCell>
                                         <TableCell className="text-center">Price</TableCell>
@@ -210,25 +208,20 @@ export default function RoomList() {
                                         <>
 
                                             <TableRow key={`room_${room?.id}`}>
-                                                {/* <Link to={`/dashboard/rooms/${room?.id}`}> */}
                                                 <TableCell className="text-center">{room?.id}</TableCell>
                                                 <TableCell className="text-center align-middle">{room?.name}</TableCell>
                                                 <TableCell className="text-center align-middle">{room?.roomType}</TableCell>
-                                                {/* <TableCell className="text-center align-middle">{room?.statusRoom}</TableCell> */}
                                                 <TableCell className="text-center align-middle">{room?.perType?.name}</TableCell>
                                                 <TableCell className="text-center align-middle">{room?.sleep}</TableCell>
                                                 <TableCell className="text-center align-middle">{room?.pricePerNight}</TableCell>
-                                                {/* </Link> */}
                                                 <TableCell className="text-center d-flex align-items-center">
                                                     <Link className="mx-1" to={`/dashboard/rooms/${room?.id}`}>
                                                         <BiCommentDetail style={{ color: 'orange' }} size={22} title="edit" role="button"
                                                         />
-
                                                     </Link>
                                                     <div className="mx-1">
                                                         <EditIcon style={{ color: 'green' }} size={22} title="edit" role="button"
                                                             onClick={() => handleEditRoom(room)} />
-
                                                     </div>
                                                     <div className="mx-1">
                                                         <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
@@ -258,7 +251,7 @@ export default function RoomList() {
                         <li key={pageNumber} className="page-items">
                             <button
                                 onClick={() => handleClickPageNumber(pageNumber)}
-                                className={`page-link ${filters.page === pageNumber   ? 'active' : ''}`}
+                                className={`page-link ${filters.page === pageNumber ? 'active' : ''}`}
                             >{pageNumber + 1}</button>
                         </li>
                     ))}

@@ -3,7 +3,7 @@ import apiClients from "../apiClients/apiClients";
 
 class RoomService {
 
-  
+
   static async getAllRooms(url) {
     return fetch(url)
       .then((res) => res.json())
@@ -26,7 +26,7 @@ class RoomService {
     return fetch(url, {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(objSend),
     })
@@ -34,9 +34,11 @@ class RoomService {
       .then((data) => data)
       .catch((error) => error);
   }
-  static async patchUpdateRoomReal(roomId,formData){
-    console.log("formData",formData);
-    return apiClients.patch(`/rooms/${roomId}/room-reals`,formData)
+  static async patchUpdateRoomReal(roomId, formData) {
+    return apiClients.patch(`/rooms/${roomId}/room-reals`, formData)
+  }
+  static async postUpdateRoom(roomId, formData) {
+    return apiClients.post(`/rooms/${roomId}`, formData)
   }
 }
 export default RoomService;

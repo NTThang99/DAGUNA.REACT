@@ -14,16 +14,16 @@ import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import RoomService from "../../../services/RoomService";
 import RoomTypeService from "../../../services/RoomTypeService";
-import StatusRoomService from "../../../services/StatusRoomService";
 import SearchIcon from '@mui/icons-material/Search';
-import { Margin } from "@mui/icons-material";
+import ModalEditRoom from "./ModalEditRoom";
+import { toast } from "react-toastify";
 
 
 export default function RoomList() {
     const [roomList, setRoomList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false)
-    const [room, setRoom] = useState(null)
+    const [roomInfo, setRoomInfo] = useState({})
     const [filters, setFilters] = useState({
         direction: '',
         page: 0,
@@ -74,6 +74,7 @@ export default function RoomList() {
 
             } catch (error) {
                 console.log(error);
+                toast.error('Lỗi dữ liệu/ hệ thống')
             }
         }
         getAllRoomFilter()
@@ -103,9 +104,9 @@ export default function RoomList() {
             page: Number(pageNumber)
         })
     }
-    const handleEditRoom = (room) => {
+    const handleShowModalEditRoom = (roomInfo) => {
         setShow(true)
-        setRoom(room)
+        setRoomInfo(roomInfo)
     }
     const handleRemoveRoom = () => { }
 
@@ -117,12 +118,6 @@ export default function RoomList() {
         setFilters({
             ...filters,
             kw: keyword
-        })
-    }
-    const handleFilterStatusRoom = (e) => {
-        setFilters({
-            ...filters,
-            statusRoom: e.target.value
         })
     }
     const handleFilterRoomType = (e) => {
@@ -204,33 +199,40 @@ export default function RoomList() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {roomList?.map((room) => (
-                                        <>
+                                    {
 
-                                            <TableRow key={`room_${room?.id}`}>
-                                                <TableCell className="text-center">{room?.id}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.name}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.roomType}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.perType?.name}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.sleep}</TableCell>
-                                                <TableCell className="text-center align-middle">{room?.pricePerNight}</TableCell>
-                                                <TableCell className="text-center d-flex align-items-center">
-                                                    <Link className="mx-1" to={`/dashboard/rooms/${room?.id}`}>
-                                                        <BiCommentDetail style={{ color: 'orange' }} size={22} title="edit" role="button"
-                                                        />
-                                                    </Link>
-                                                    <div className="mx-1">
-                                                        <EditIcon style={{ color: 'green' }} size={22} title="edit" role="button"
-                                                            onClick={() => handleEditRoom(room)} />
-                                                    </div>
-                                                    <div className="mx-1">
-                                                        <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
-                                                            onClick={() => handleRemoveRoom(room)} />
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        </>
-                                    ))}
+                                        roomList?.map((room) => (
+                                            <>
+
+                                                <TableRow key={`room_${room?.id}`}>
+                                                    <TableCell className="text-center">{room?.id}</TableCell>
+                                                    <TableCell className="text-center align-middle">{room?.name}</TableCell>
+                                                    <TableCell className="text-center align-middle">{room?.roomType}</TableCell>
+                                                    <TableCell className="text-center align-middle">{room?.perType?.name}</TableCell>
+                                                    <TableCell className="text-center align-middle">{room?.sleep}</TableCell>
+                                                    <TableCell className="text-center align-middle">{room?.pricePerNight}</TableCell>
+                                                    <TableCell className="text-center d-flex align-items-center">
+                                                        <Link className="mx-1" to={`/dashboard/rooms/${room?.id}`}>
+                                                            <BiCommentDetail style={{ color: 'orange' }} size={22} title="detail" role="button"
+                                                            />
+                                                        </Link>
+                                                        <div className="mx-1">
+                                                            <div onClick={() => handleShowModalEditRoom(room)} role="button">
+                                                                <EditIcon
+                                                                    style={{ color: 'green' }}
+                                                                    size={22} title="edit"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="mx-1">
+                                                            <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
+                                                                onClick={() => handleRemoveRoom(room)} />
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </>
+
+                                        ))}
                                 </TableBody>
                             </Table >
                         </>
@@ -302,6 +304,7 @@ export default function RoomList() {
                     </div>
                 </div>
             </div>
+            <ModalEditRoom show={show} handleClose={setShow} roomInfo={roomInfo} setRoomInfo={setRoomInfo} />
         </>
     );
 }

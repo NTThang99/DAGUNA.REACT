@@ -20,7 +20,15 @@ import { toast } from "react-toastify";
 const schema = yup.object({
   roomReals: yup.array().of(
     yup.object({
-      roomCode: yup.string().required(`Không được để trống`),
+      roomCode: yup.string().required(`Không được để trống`).test({
+        name:'exists',
+        message: 'Code is exists',
+        test: (value) => {
+          //call api
+          
+          //return true false;
+        }
+      }),
       floor: yup
         .number()
         .nullable()

@@ -42,7 +42,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
     } = useForm({
         resolver: yupResolver(schema),
     });
-    console.log("check", roomInfo);
     useEffect(() => {
         setLoading(true);
         async function loadData() {
@@ -104,8 +103,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                 setUtilitiesCheck(result?.utilitie)
 
 
-                // console.log("result.imageResDTOS", result.imageResDTOS);
-
                 for(let i = 0; i< result.imageResDTOS.length;i++){
                     let fileExtension = result.imageResDTOS[i].fileUrl.split('.').pop();
                     var fileNameWithExtension = result.imageResDTOS[i].fileUrl.split('/').pop();
@@ -160,11 +157,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
         setUtilityList(utilityListCopy)
     }
 
-    // useEffect(() => {
-
-    // console.log("aaaaa", roomInfo?.utilitie);
-
-    // },[])
     const handleCloseModal = () => {
         handleClose(false)
     }
@@ -233,8 +225,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
             .then(() => {
                 toast.success(`File with ID ${idToDelete} deleted successfully`, { theme: "light" });
                 const result = selectedfile.filter((data) => data.id !== idToDelete);
-                console.log("selectedfile", selectedfile);
-                console.log("adsadsad", result);
                 SetSelectedFile(result);
 
             })
@@ -449,7 +439,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                                                 {
                                                     selectedfile.map((data) => {
                                                         const { id, filename, fileimage } = data;
-                                                        console.log("Adada",fileimage);
                                                         return (
                                                             <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={id}>
                                                                 {

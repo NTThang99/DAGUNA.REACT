@@ -207,9 +207,9 @@ export default function RoomDetailDashboard() {
                 handleClose={setShow}
                 // roomReals={roomReals}
                 // setRoomReals={setRoomReals}
-                roomRealList={roomRealList}
-                setRoomRealList={setRoomRealList}
-                idRoom={room?.id}
+                // roomRealList={roomRealList}
+                // setRoomRealList={setRoomRealList}
+                // idRoom={room?.id}
 
                 idRoomDetail={idRoomDetail}
 

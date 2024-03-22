@@ -82,22 +82,12 @@ export default function RoomDetailDashboard() {
                         </button>
                         <label >Image</label>
                         {
-                            // room?.imageResDTOS?.map((img) =>
-                            // (<div key={img?.id} style={{ marginBottom: '10px' }}>
-                            //     <img
-                            //         src={img?.fileUrl}
-                            //         alt={img?.id}
-                            //         style={{ width: '100%', height: '100%' }}
-                            //     />
-                            // </div>)
-                            // )
                             room?.imageResDTOS?.length > 0 && (<img
                                 src={room?.imageResDTOS[currentImageIndex]?.fileUrl}
                                 alt={room?.imageResDTOS[currentImageIndex]?.id}
                                 style={{ width: '100%', height: '100%', margin: '10px 0' }}
                             />)
                         }
-                        {/* </div> */}
                     </dir>
                     <dir className="row col-8">
                         <div className="">

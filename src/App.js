@@ -37,7 +37,7 @@ import CreateReceptionist from "./components/dashboard/receptionists/CreateRecep
 
 import RoomDetailDashboard from "./components/dashboard/rooms/RoomDetailDashboard";
 import ReceptionistDetailDashboard from "./components/dashboard/receptionists/ReceptionistDetailDashboard";
-import EditRoom from "./components/dashboard/rooms/EditRoom";
+import ModalEditRoom from "./components/dashboard/rooms/ModalEditRoom";
 import EditReceptionist from "./components/dashboard/receptionists/EditReceptionist";
 
 export default function App() {
@@ -71,7 +71,7 @@ export default function App() {
                 <Route path=":idRoomDetail" element={<RoomDetailDashboard />}>
                   <Route path="room-reals"></Route>
                 </Route>
-                <Route path=":idRoomEdit" element={<EditRoom />} />
+                <Route path=":idRoomEdit" element={<ModalEditRoom />} />
               </Route>
 
               <Route path="receptionists" element={<ReceptionistPage/>}>

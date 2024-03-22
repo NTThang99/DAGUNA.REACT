@@ -88,6 +88,20 @@ class BookingService {
         throw error;
       });
   }
+  static async updateBooking_DeleteRoomAPI(url) {
+    return fetch(url, {
+      method: 'DELETE'})
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.json()
+      })
+      .then((data) => data)
+      .catch((error) => {
+        throw error;
+      });
+  }
   static async getBookingById(url) {
     return fetch(url)
       .then((res) => {

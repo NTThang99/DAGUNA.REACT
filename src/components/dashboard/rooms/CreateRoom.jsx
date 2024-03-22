@@ -335,9 +335,9 @@ export default function CreateRoom() {
                                     <input type="file" onChange={InputChange} multiple className="form-control form-control-sm mb-3" />
                                     <div className="row mb-3">
                                         {selectedfile.map((data) => {
-                                            const { id, filename, filetype, fileimage, datetime, filesize } = data;
+                                            // const { id, filename, filetype, fileimage, datetime, filesize } = data;
 
-                                            console.log("data....", data);
+                                            // console.log("data....", data);
 
                                             const { id, filename, fileimage } = data;
 

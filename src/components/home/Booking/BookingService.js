@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../../../css/booking.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
-import { roomItems } from "../../data/Data";
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import { useNavigate } from "react-router-dom";
-import { getBookingByIdAPI, getAllBookingServiceAPI, updateBooking_AddBookingService } from "../BookingSlide";
+import { getBookingByIdAPI, getAllBookingServiceAPI, updateBooking_AddBookingService, updateBooking_DeleteRoomAPI } from "../BookingSlide";
 import { useDispatch, useSelector } from "react-redux";
 import BookingDetail from "./BookingDetail";
+import HeaderBooking from "./HeaderBooking";
 
 const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
 
@@ -21,14 +16,13 @@ export default function BookingService() {
   const [childQuantity, setChildQuantity] = useState(2);
   const [perCarQuantity, setPerCarQuantity] = useState(1);
   const [activeStep, setActiveStep] = React.useState(0);
-  // const [loadng,setLoading] =useState(fai  l)
   const [showDetails, setShowDetails] = useState(-1);
   const [showAddon, setShowAddon] = useState(-1);
 
   const [showDetailsBill, setShowDetailsBill] = useState(false);
-
   const [expanded, setExpanded] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const dispatch = useDispatch();
   const bookingServices = useSelector((state) => state.booking.addOns.data);
@@ -40,12 +34,15 @@ export default function BookingService() {
 
   const handleNext = (id, bookingServiceType, bookindDetailId) => {
     setShowAddon(bookindDetailId);
+    setLoading(true);
+    handleNavigateBooking();
     dispatch(updateBooking_AddBookingService({
       bookingDetailId: booking.bookingDetailChoosen,
       bookingServiceId: id,
       bookingServiceType: bookingServiceType,
-
-    }))
+    })).then(() => {
+      setLoading(true);
+    });
   };
 
   const decreasePerCardQuantity = () => {
@@ -78,6 +75,17 @@ export default function BookingService() {
 
   const handleNavigateBookingEdit = () => {
     navigate(`/booking/edit`);
+  };
+
+  const handleDeleteBookingDetail = (bookingDetailId) => {
+    setLoading(true);
+    let bookingId = localStorage.getItem("bookingId");
+    dispatch(updateBooking_DeleteRoomAPI(
+      { bookingId, bookingDetailId }
+    ))
+      .then(() => {
+        setLoading(true);
+      });
   };
 
   const toggleForm = () => {
@@ -116,34 +124,18 @@ export default function BookingService() {
     }
   }, [])
 
-console.log("bookingServices",bookingServices);
+  console.log("bookingServices", bookingServices);
 
   return (
     <>
       <div className="app_container">
         <div className="app_row">
           <main className="app_col-sm-12 app_col-md-12 app_col-lg-8">
-            <header>
-              <div className="breadcrumbs_wrapper">
-                <div
-                  className="breadcrumbs_header "
-                  data-testid="breadcrumbs-header"
-                >
-                  <div className="breadcrumbs_headerWithArrow">
-                    <h1 className="app_pageTitle">Enhance Your Stay</h1>
-                  </div>
-                </div>
-                <Box sx={{ width: '100%' }}>
-                  <Stepper alternativeLabel activeStep={1}>
-                    {steps.map((label) => (
-                      <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
-                      </Step>
-                    ))}
-                  </Stepper>
-                </Box>
-              </div>
-            </header>
+            <HeaderBooking
+              adultQuantity={adultQuantity}
+              childQuantity={childQuantity}
+              steps={steps}
+            />
             <div>
               <div>
                 <div>
@@ -305,6 +297,7 @@ console.log("bookingServices",bookingServices);
             </div>
           </main>
           <aside className="app_col-sm-12 app_col-md-12 app_col-lg-4">
+
             <BookingDetail
               showDetailsBill={showDetailsBill}
               setShowDetailsBill={setShowDetailsBill}
@@ -318,6 +311,8 @@ console.log("bookingServices",bookingServices);
               handleChooseBookingDetail={handleChooseBookingDetail}
               showAddon={showAddon}
               handleEdit={handleEdit}
+              handleDeleteBookingDetail={handleDeleteBookingDetail}
+              loading={loading}
             />
           </aside>
         </div>

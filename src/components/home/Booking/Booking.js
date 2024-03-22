@@ -2,28 +2,33 @@ import React, { useEffect, useState } from "react";
 import "../../../css/booking.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { searchRoomsAPI } from "../BookingSlide";
 import { updateSearchBar, createBookingAPI, getBookingByIdAPI, updateBooking_AddRoomAPI } from "../BookingSlide";
 import BookingDetail from "./BookingDetail";
+import HeaderBooking from "./HeaderBooking";
+import RoomService from "../../../services/RoomService";
 
 const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
-
 
 export default function Booking() {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFocusedView, setIsFocusedView] = useState(false);
+  const [isFocusedSort, setIsFocusedSort] = useState(false);
+  const [isFocusedFilter, setIsFocusedFilter] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [openView, setOpenView] = React.useState(null);
+  const [openSort, setOpenSort] = React.useState(null);
+  const [openFilter, setOpenFilter] = React.useState(null);
+
   const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(2);
@@ -33,7 +38,9 @@ export default function Booking() {
   const dispatch = useDispatch();
   const room = useSelector((state) => state.booking.room);
   const booking = useSelector((state) => state.booking.booking);
+  const loading = useSelector((state) => state.loading);
 
+  const [roomModal, setRoomModal] = useState(null);
   const [value, setValue] = React.useState([
     dayjs(),
     dayjs().add(1, 'day'),
@@ -49,6 +56,34 @@ export default function Booking() {
     if (adultQuantity > 0) {
       setAdultQuantity(adultQuantity - 1);
     }
+  };
+  const openViews = Boolean(openView);
+  const openSorts = Boolean(openSort);
+  const openFilters = Boolean(openFilter);
+
+  const handleClickView = (event) => {
+    setIsFocusedView(true);
+    setOpenView(event.currentTarget);
+  };
+  const handleCloseView = () => {
+    setIsFocusedView(false);
+    setOpenView(null);
+  };
+  const handleClickSort = (event) => {
+    setIsFocusedSort(true);
+    setOpenSort(event.currentTarget);
+  };
+  const handleCloseSort = () => {
+    setIsFocusedSort(false);
+    setOpenSort(null);
+  };
+  const handleClickFilter = (event) => {
+    setIsFocusedFilter(true);
+    setOpenFilter(event.currentTarget);
+  };
+  const handleCloseFilter = () => {
+    setIsFocusedFilter(false);
+    setOpenFilter(null);
   };
 
   const increaseAdultQuantity = () => {
@@ -66,6 +101,15 @@ export default function Booking() {
   };
 
 
+
+  const handleOpen = async (id) => {
+    // lay room theo id => room
+    let room = await RoomService.getRoomById(id);
+    setRoomModal(room)
+
+    setOpen(true);
+  }
+  const handleClose = () => setOpen(false);
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -86,18 +130,18 @@ export default function Booking() {
       dispatch(createBookingAPI({
         searchBar: room.searchBar,
         roomId: id
-      }))
+      }));
     } else {
       dispatch(updateBooking_AddRoomAPI({
         bookingId: booking.bookingId,
         roomId: id,
         searchBar: room.searchBar,
-      }))
+      }));
     }
   };
 
 
-// console.log("roomdata", room.data);
+  // console.log("roomdata", room.data);
 
   const handleNavigateBooking = () => {
     navigate(`/booking/addons`);
@@ -125,202 +169,29 @@ export default function Booking() {
       dispatch(getBookingByIdAPI(bookingId))
     }
   }, [])
+
+  // console.log("handleNext(item.id)", handleNext(item.id));
+  // console.log("handleChooseBookingDetail(item.id)", handleChooseBookingDetail(item.id));
   return (
     <>
       <div className="app_container">
         <div className="app_row">
           <main className="app_col-sm-12 app_col-md-12 app_col-lg-8">
-            <header>
-              <div className="container_wrapper">
-                <div className="container_inner">
-                  <div className="container_top">
-                    <div className="container_guestsWrapper">
-                      <button
-                        className="container_guests"
-                        aria-expanded={isExpanded}
-                        aria-controls="guests-selection-flyout"
-                        onClick={toggleFlyout}
-                      >
-                        <i className="containerIcon fa-regular fa-user"></i>
-                        <span className="container_label">
-                          <span>Guests</span>
-                        </span>
-                        <span>{adultQuantity} Adult</span>,{" "}
-                        <span>{childQuantity} Children</span>
-                      </button>
-                      {isExpanded && (
-                        <div className="container_form_guests">
-                          <fieldset>
-                            <legend>
-                              <div className="guestHeading">
-                                <h2 className="app_subheading2">
-                                  <span>Select Guests</span>
-                                </h2>
-                              </div>
-                            </legend>
-                            <button
-                              className="closeButton"
-                              aria-label="Close"
-                              onClick={toggleFlyout}
-                            >
-                              <i className="fa-solid fa-xmark"></i>
-                            </button>
-                            <div
-                              className="selection_container"
-                              role="presentation"
-                            >
-                              <div>
-                                <div className="quantity_container">
-                                  <span>Adults</span>
-                                  <div
-                                    className="quantity_wrapper"
-                                    style={{ left: "14px" }}
-                                  >
-                                    <button
-                                      className="button_btn button_primary button_md"
-                                      aria-label="Remove one Adult"
-                                      onClick={decreaseAdultQuantity}
-                                    >
-                                      <span>
-                                        <i className="button_subtract fa-solid fa-minus" />
-                                      </span>
-                                    </button>
-                                    <div
-                                      className="field_container"
-                                      data-error="false"
-                                      data-warning="false"
-                                    >
-                                      <label>
-                                        <span className="input-field_label">
-                                          Adults
-                                        </span>
-                                        <input
-                                          type="text"
-                                          placeholder=""
-                                          aria-label="Adults"
-                                          data-error="false"
-                                          value={adultQuantity}
-                                          onChange={handleAdultsChange}
-                                          readOnly
-                                        />
-                                      </label>
-                                    </div>
-                                    <button
-                                      className="button_btn button_primary button_md"
-                                      aria-label="Add one Adult"
-                                      onClick={increaseAdultQuantity}
-                                    >
-                                      <span>
-                                        <i className="fa-solid fa-plus"></i>
-                                      </span>
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                              <div>
-                                <div className="quantity_container">
-                                  <span>Children</span>
-                                  <div className="quantity_wrapper">
-                                    <button
-                                      className="button_btn button_primary button_md"
-                                      aria-label="Remove one Adult"
-                                      onClick={decreaseChildQuantity}
-                                    >
-                                      <span>
-                                        <i className="button_subtract fa-solid fa-minus" />
-                                      </span>
-                                    </button>
-                                    <div
-                                      className="field_container"
-                                      data-error="false"
-                                      data-warning="false"
-                                    >
-                                      <label>
-                                        <span className="input-field_label">
-                                          Children
-                                        </span>
-                                        <input
-                                          type="text"
-                                          placeholder=""
-                                          aria-label="Children"
-                                          data-error="false"
-                                          value={childQuantity}
-                                          onChange={handleAdultsChange}
-                                          readOnly
-                                        />
-                                      </label>
-                                    </div>
-                                    <button
-                                      className="button_btn button_primary button_md"
-                                      aria-label="Add one Adult"
-                                      onClick={increaseChildQuantity}
-                                    >
-                                      <span>
-                                        <i className="fa-solid fa-plus"></i>
-                                      </span>
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="button_group">
-                              <button
-                                className="btn button_link"
-                                datatest="Button"
-                                onClick={toggleFlyout}
-                              >
-                                <span>Cancel</span>
-                              </button>
-                              <button
-                                className="btn button_btn button_primary button_sm"
-                                datatest="Button"
-                                onClick={handleApplyChanges}
-                              >
-                                <span>Apply</span>
-                              </button>
-                            </div>
-                          </fieldset>
-                        </div>
-                      )}
-                    </div>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['DateRangePicker']}>
-                        <DateRangePicker
-                          value={value}
-                          onChange={(newValue) => setValue(newValue)}
-                          localeText={{ start: 'Check-in', end: 'Check-out' }} />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                    <div
-                      className="date"
-                      id="date2"
-                      data-target-input="nearest"
-                    ></div>
-                  </div>
-                  <div className="container_advancedSearch"></div>
-                  <div className="container_mobileSearch"></div>
-                </div>
-              </div>
-              <div className="breadcrumbs_wrapper">
-                <div
-                  className="breadcrumbs_header "
-                  data-testid="breadcrumbs-header"
-                >
-                  <div className="breadcrumbs_headerWithArrow">
-                    <h1 className="app_pageTitle">Select a Room</h1>
-                  </div>
-                </div>
-                <Box sx={{ width: '100%' }}>
-                  <Stepper alternativeLabel activeStep={0}>
-                    {steps.map((label) => (
-                      <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
-                      </Step>
-                    ))}
-                  </Stepper>
-                </Box>
-              </div>
-            </header>
+            <HeaderBooking
+              isExpanded={isExpanded}
+              toggleFlyout={toggleFlyout}
+              decreaseAdultQuantity={decreaseAdultQuantity}
+              adultQuantity={adultQuantity}
+              childQuantity={childQuantity}
+              decreaseChildQuantity={decreaseChildQuantity}
+              handleAdultsChange={handleAdultsChange}
+              increaseAdultQuantity={increaseAdultQuantity}
+              handleApplyChanges={handleApplyChanges}
+              increaseChildQuantity={increaseChildQuantity}
+              value={value}
+              setValue={setValue}
+              steps={steps}
+            />
             <div className="filter-bar_container">
               <div className="filter-bar_box">
                 <div className="filter-bar_options">
@@ -331,19 +202,19 @@ export default function Booking() {
                       datatest="room_layout"
                     >
                       <div
-                        className="select_container select_hasValue"
+                        className={`select_container select_hasValue ${isFocusedView ? 'focused' : ''}`}
                         data-error="false"
                       >
                         <button
-                          aria-expanded="false"
-                          aria-controls="select-dropdown-wrapper-view-results-by-room-rate"
+                          aria-controls={openViews ? 'select-dropdown-wrapper-view-results-by-room-rate' : undefined}
+                          aria-expanded={openViews ? 'true' : undefined}
                           className="select_hiddenInput"
                           aria-labelledby="view-results-by-room-rate"
                           value="room"
-                          data-error="false"
                           tabindex="0"
+                          onClick={handleClickView}
                         ></button>
-                        <div className="select_input" data-selector="true">
+                        <div className="select_input" data-selector={openView ? 'false' : undefined}>
                           <label
                             className="select_label"
                             id="view-results-by-room-rate"
@@ -355,6 +226,15 @@ export default function Booking() {
                             <i className="select_caret_icon fa-solid fa-caret-down"></i>
                           </span>
                         </div>
+                        <Menu
+                          anchorEl={openView}
+                          showView={openViews}
+                          open={openView}
+                          onClose={handleCloseView}
+                        >
+                          <MenuItem onClick={handleClose}>Rooms</MenuItem>
+                          <MenuItem onClick={handleClose}>Rates</MenuItem>
+                        </Menu>
                         <div role="alert"></div>
                       </div>
                     </div>
@@ -363,43 +243,183 @@ export default function Booking() {
                       datatest="sort-by-select"
                     >
                       <div
-                        className="select_container select_hasValue"
+                        className={`select_container select_hasValue ${isFocusedSort ? 'focused' : ''}`}
                         data-error="false"
                       >
                         <button
-                          aria-expanded="false"
-                          aria-controls="select-dropdown-wrapper-filter-bar-sort-by"
+                          aria-controls={openSorts ? 'select-dropdown-wrapper-s' : undefined}
+                          aria-expanded={openSorts ? 'true' : undefined}
                           className="select_hiddenInput"
-                          aria-labelledby="filter-bar-sort-by"
-                          value="priceLowestToHighest"
-                          data-error="false"
+                          aria-labelledby="Sort By"
+                          value="sort"
                           tabindex="0"
+                          onClick={handleClickSort}
                         ></button>
-                        <div className="select_input" data-selector="true">
-                          <label className="select_label" id="filter-bar-sort-by">
+                        <div className="select_input" data-selector={openSort ? 'false' : undefined}>
+                          <label
+                            className="select_label"
+                          >
                             Sort By{" "}
                           </label>
                           <span className="select_value">Lowest Price</span>
                           <span className="select_caret" aria-hidden="true">
-                            <i className="select_caret_icon fa-solid fa-caret-down "></i>
+                            <i className="select_caret_icon fa-solid fa-caret-down"></i>
                           </span>
                         </div>
+                        <Menu
+                          anchorEl={openSort}
+                          showView={openSorts}
+                          open={openSort}
+                          onClose={handleCloseSort}
+                        >
+                          <MenuItem onClick={handleClose}>Recommended</MenuItem>
+                          <MenuItem onClick={handleClose}>Lowest Price</MenuItem>
+                          <MenuItem onClick={handleClose}>Highest Price</MenuItem>
+                        </Menu>
                         <div role="alert"></div>
                       </div>
                     </div>
-                    <div className="filter-bar_filterLink">
-                      <a
-                        href="#"
-                        aria-expanded="false"
-                        aria-controls="filter-bar-filters-wrapper"
+                    <div
+                      className="filter-bar_filterLink"
+                      datatest="sort-by-select"
+                    >
+                      <div
+                        className={`select_container select_hasValue ${isFocusedFilter ? 'focused' : ''}`}
+                        data-error="false"
                       >
-                        <span>Show Filters</span>
-                        <i className="fa-solid fa-caret-down"></i>
-                      </a>
+                        <button
+                          aria-controls={openFilters ? 'select-dropdown-wrapper-s' : undefined}
+                          aria-expanded={openFilters ? 'true' : undefined}
+                          className="select_hiddenInput"
+                          aria-labelledby="Show Filters"
+                          value="filter"
+                          tabindex="0"
+                          onClick={handleClickFilter}
+                        ></button>
+                        <div className="select_input" data-selector={openFilter ? 'false' : undefined}>
+                          <span className="select_value">Show Filters</span>
+                          <span className="select_caret" aria-hidden="true">
+                            <i className="select_caret_icon fa-solid fa-caret-down"></i>
+                          </span>
+                        </div>
+                        <Menu
+                          className="show_filter"
+                          anchorEl={openFilter}
+                          showView={openFilters}
+                          open={openFilter}
+                          onClose={handleCloseFilter}
+                        >
+                          <div className="filter-bar_flyoutHeader" >
+                            <h3 className="app_heading1" >
+                              <span>Filters</span>
+                            </h3>
+                          </div>
+                          <div className="filter-bar_flyoutBodyWrapper">
+                            <div className="filter-bar_flyoutBody">
+                              <div className="filter-bar_filterBox">
+                                <div className="filter-bar_header">
+                                  <h4 className="app_heading2">
+                                    <span>Sort By</span>
+                                  </h4>
+                                </div>
+                                <div className="filter-bar_checkbox">
+                                  <input data-error="false" className="input_radio" type="radio" value="" />
+                                  <label className="label_filter" for="recommended">
+                                    <span className="app_radioBox"></span>
+                                    <span>Recommended</span>
+                                  </label>
+                                </div>
+                                <div className="filter-bar_checkbox">
+                                  <input data-error="false" className="input_radio" type="radio" value="" checked="" />
+                                  <label className="label_filter">
+                                    <span className="app_radioBox"></span>
+                                    <span>Lowest Price</span>
+                                  </label>
+                                </div>
+                                <div className="filter-bar_checkbox">
+                                  <input data-error="false" className="input_radio" type="radio" value="" />
+                                  <label className="label_filter">
+                                    <span className="app_radioBox"></span>
+                                    <span>Highest Price</span>
+                                  </label>
+                                </div>
+                              </div>
+                              <div className="filter-bar_filterBox">
+                                <div className="filter-bar_header">
+                                  <h4 className="app_heading2">
+                                    <span>View</span>
+                                  </h4>
+                                </div>
+                                <div>
+                                  <div class="filter-bar_checkbox ">
+                                    <input className="input_radio" type="checkbox" value="" />
+                                    <label className="label_filter_right" tabindex="-1" >
+                                      <span>Other</span>
+                                    </label>
+                                  </div>
+                                  <div class="filter-bar_checkbox ">
+                                    <input className="input_radio" type="checkbox" value="" />
+                                    <label className="label_filter_right" tabindex="-1" >
+                                      <span>Garden view</span>
+                                    </label>
+                                  </div>
+                                  <div class="filter-bar_checkbox ">
+                                    <input className="input_radio" type="checkbox" value="" />
+                                    <label className="label_filter_right" tabindex="-1" >
+                                      <span>Sea view</span>
+                                    </label>
+                                  </div>
+                                </div>
+                                <div className="filter-bar_optionsFooter">
+                                  <div className="filter-bar_clear app_small">
+                                    <a tabindex="0" role="button" aria-label="Clear View Filter">
+                                      <span>Clear</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="filter-bar_filterBox">
+                                <div className="filter-bar_header">
+                                  <h4 className="app_heading2">
+                                    <span>View</span>
+                                  </h4>
+                                </div>
+                                <div>
+                                  <div class="filter-bar_checkbox ">
+                                    <input className="input_radio" type="checkbox" value="" />
+                                    <label className="label_filter_right" tabindex="-1" >
+                                      <span>Other</span>
+                                    </label>
+                                  </div>
+                                  <div class="filter-bar_checkbox ">
+                                    <input className="input_radio" type="checkbox" value="" />
+                                    <label className="label_filter_right" tabindex="-1" >
+                                      <span>Garden view</span>
+                                    </label>
+                                  </div>
+                                  <div class="filter-bar_checkbox ">
+                                    <input className="input_radio" type="checkbox" value="" />
+                                    <label className="label_filter_right" tabindex="-1" >
+                                      <span>Sea view</span>
+                                    </label>
+                                  </div>
+                                </div>
+                                <div className="filter-bar_optionsFooter">
+                                  <div className="filter-bar_clear app_small">
+                                    <a tabindex="0" role="button" aria-label="Clear View Filter">
+                                      <span>Clear</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Menu>
+                        <div role="alert"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="filter-bar_tagsWrapper"></div>
               </div>
             </div>
             <div>
@@ -439,6 +459,9 @@ export default function Booking() {
 
                                 </div>
                                 <div className="thumb-cards_roomShortDesc">{item.description}</div>
+                              </div>
+                              <div className="thumb-cards_detailsLink">
+                                <Button className="roomdetails" onClick={() => handleOpen(item.id)}>Room details</Button>
                               </div>
                               <div className="thumb-cards_rate thumb-cards_show">
                                 <div className="thumb-cards_cardItem">
@@ -480,6 +503,89 @@ export default function Booking() {
                       </div>
                     </div>
                   ))}
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <div className="modal-message_modalMessage ">
+                      <div className="modal-message_closeButtonWrapper">
+                        <div className="fa-solid fa-xmark modal-message_closeButton " onClick={handleClose}></div>
+                      </div>
+                      <div className="modal-message_contentWrapper">
+                        <div className="app_container">
+                          <div className="app_row">
+                            <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_push-md-6 app_push-lg-6">
+                              <div className="thumb-cards_imgWrapper thumb-cards_hasMultipleImages">
+                                <button className="thumb-cards_openImage"></button>
+                                <img className="thumb-cards_image" src={roomModal?.imageResDTOS.length == 0 ? "" : roomModal?.imageResDTOS[0].fileUrl} />
+                              </div>
+                            </div>
+                            <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_pull-md-6 app_pull-lg-6">
+                              <h2 className="detail-view-room_roomName app_modalTitle">{roomModal?.name}</h2>
+                              <div className="guests-and-roomsize_roomProperties guests-and-roomsize_bold">
+                                <div className="guests-and-roomsize_item guests-and-roomsize_guests">
+                                  <span>Guests {roomModal?.sleep}</span>
+                                </div>
+                                <div className="guests-and-roomsize_item guests-and-roomsize_bed">
+                                  <span>1 King</span>
+                                </div>
+                                <div className="guests-and-roomsize_item guests-and-roomsize_size">53 <span aria-hidden="true" for="room-size-meters-sreader-undefined">
+                                  <span>m²</span>
+                                </span>
+                                  <span className="sr-only" id="room-size-meters-sreader-undefined">square meters</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="app_col-sm-12 app_col-md-12 app_col-lg-12">
+                              <hr className="detail-view-room_line" />
+                              <div className="detail-view-room_shortDescription">{roomModal?.description}</div>
+                              <div className="detail-view-room_longDescription">
+                                <p>Wake up refreshed to breathtaking views of the Truong Son mountain range from the comfort of your king-size bed, and step out onto your private balcony to enjoy the fresh air. Our Garden Balcony King Grand rooms feature a mix of traditional Vietnamese accents with the convenience of modern amenities, such as satellite TV channels, rain showers and complimentary Wi-Fi</p>
+                                <br />
+                                <strong>Amenities</strong>
+                                <br />
+                                <em>Connectivity &amp; Entertainment</em>
+                                <ul>
+                                  <li>Wi-Fi </li>
+                                  <li>Television</li>
+                                  <li>IDD telephone</li>
+                                  <li>Audio system </li>
+                                </ul>
+                                <br />
+                                <em>Bathroom</em>
+                                <ul>
+                                  <li>Toiletries</li>
+                                  <li>Dressing robes</li>
+                                  <li>Hairdryer</li>
+                                </ul>
+                                <br />
+                                <em>Other Services, features &amp; Amenities</em>
+                                <ul>
+                                  <li>Air-conditioning</li>
+                                  <li>Coffee/ tea making facilities replenished daily</li>
+                                  <li>In-room safe</li>
+                                </ul>
+                              </div>
+                              <div className="thumb-cards_button">
+                                <div style={{ textAlign: 'end' }}>
+                                  <button className="btn button_btn button_primary button_sm" style={{ height: '35px' }} datatest="Button">
+                                    <span onClick={() => {
+                                      handleNext(roomModal.id);
+                                      handleChooseBookingDetail(roomModal.id);
+                                    }}>
+                                      {activeStep === steps.length - 1 ? 'Finish' : 'Book Now'}
+                                    </span>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Modal>
                 </div>
               </div>
             </div>
@@ -495,6 +601,7 @@ export default function Booking() {
               childQuantity={childQuantity}
               handleNext={handleNext}
               handleChooseBookingDetail={handleChooseBookingDetail}
+              loading={loading}
             />
           </aside>
         </div>

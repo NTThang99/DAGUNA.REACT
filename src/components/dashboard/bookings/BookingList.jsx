@@ -9,11 +9,11 @@ import {
 import { getAllBookingServiceAPI } from "../../home/BookingSlide";
 
 import EditIcon from '@mui/icons-material/Edit';
-import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import BookingSevrice from "../../../services/BookingService";
 import SearchIcon from '@mui/icons-material/Search';
+import BlockIcon from '@mui/icons-material/Block';
 
 export default function BookingList() {
     const [bookingList, setBookingList] = useState([]);
@@ -74,7 +74,7 @@ export default function BookingList() {
                                     <form className="d-flex align-items-center " onSubmit={handleSearch}>
                                         <input
                                             type="text"
-                                            placeholder="Search Booking By Name"
+                                            placeholder="Search Booking By Code"
                                             className="form-control form-control-sm"
                                             style={{ width: '230px' }}
                                             onInput={handleSearchText}
@@ -104,22 +104,18 @@ export default function BookingList() {
                                                 <TableCell className="text-center">{new Date(booking?.bookingDetails[0]?.checkIn).toLocaleTimeString('en-GB', {hour12: false}) + ' ' + new Date(booking?.bookingDetails[0]?.checkIn).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'})}</TableCell> 
                                                 <TableCell className="text-center">{new Date(booking?.bookingDetails[0]?.checkOut).toLocaleTimeString('en-GB', {hour12: false}) + ' ' + new Date(booking?.bookingDetails[0]?.checkOut).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'})}</TableCell> 
                                                 <TableCell className="text-center">{booking?.bookingDetails[0]?.total}</TableCell> 
-                                                <TableCell className="text-center d-flex align-items-center">
-                                                   
-                                                        <BiCommentDetail style={{ color: 'orange' }} size={22} title="edit" role="button"
-                                                        />
-                                                    <div className="mx-1">
-                                                        <EditIcon style={{ color: 'green' }} size={22} title="edit" role="button"
-                                                           />
-
-                                                    </div>
-                                                    <div className="mx-1">
-                                                        <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
-                                                            />
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
+                                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             
+                                                    <Link className="mx-1" to={`/dashboard/bookings/detail/${booking?.bookingId}`}>
+                                                            <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button" />
+                                                        </Link>
+                                                        <div className="mx-1">
+                                                            <BlockIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="block" role="button" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </TableRow>
                                         </>
                                     ))}
                                 </TableBody>

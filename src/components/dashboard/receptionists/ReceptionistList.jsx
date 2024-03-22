@@ -9,11 +9,14 @@ import {
 
 import { getAllReceptionistsAPI } from "../../home/Slide/ReceptionistSlide";
 import EditIcon from '@mui/icons-material/Edit';
-import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import ReceptionistSevrice from "../../../services/ReceptionistService";
+import ReceptionistService from "../../../services/ReceptionistService";
 import SearchIcon from '@mui/icons-material/Search';
+import BlockIcon from '@mui/icons-material/Block';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { toast } from "react-toastify";
+
 
 
 export default function ReceptionistList() {
@@ -32,22 +35,21 @@ export default function ReceptionistList() {
     const [totalPages, setTotalPages] = useState(0)
     const [keyword, setKeyword] = useState(null)
 
+    const getAllReceptionistFilter = async () => {
+        try {
+            let receptionistFilters = await ReceptionistService.getAllReceptionists(`http://localhost:8080/api/receptionists`);
+            let result = receptionistFilters?.content;
+            let totalPage = receptionistFilters?.totalPages;
+            setTotalPages(totalPage);
+            setReceptionistList(result);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
-        async function getAllReceptionistFilter() {
-            try {
-                let receptionistFilters = await ReceptionistSevrice.getAllReceptionists(`http://localhost:8080/api/receptionists`)
-                let result = receptionistFilters?.content
-                let totalPage = receptionistFilters?.totalPages
-                setTotalPages(totalPage)
-                setReceptionistList(result)
-
-            } catch (error) {
-                // console.log(error);
-            }
-        }
-        getAllReceptionistFilter()
-    }, [filters, totalPages])
+        getAllReceptionistFilter();
+    }, [filters, totalPages]);
 
     const handleClickNextPage = () => {
         if (Number(filters.page) < totalPages) {
@@ -73,7 +75,33 @@ export default function ReceptionistList() {
             page: Number(pageNumber)
         })
     }
-   
+
+    const handleLockReceptionist = async (receptionistId) => {
+        try {
+            await ReceptionistService.lockReceptionist(receptionistId);
+            toast.error('Locking receptionist success!', { theme: "light" });
+            // alert('Receptionist locked successfully!');
+            getAllReceptionistFilter();
+        } catch (error) {
+            console.error('Error locking receptionist:', error);
+            toast.error('Locking receptionist success!', { theme: "light" });
+        }
+    };
+    
+    const handleOpenReceptionist = async (receptionistId) => {
+        try {
+            await ReceptionistService.openReceptionist(receptionistId);
+            toast.success('Opening receptionist success!', { theme: "light" });
+            // alert('Receptionist opened successfully!');
+            getAllReceptionistFilter();
+        } catch (error) {
+            console.error('Error opening receptionist:', error);
+            // alert('Error opening receptionist');
+            toast.error('Opening receptionist success!', { theme: "light" });
+        }
+    };
+    
+
     const handleRemoveReceptionist = () => { }
 
     const handleSearchText = (e) => {
@@ -135,6 +163,7 @@ export default function ReceptionistList() {
                                         <TableCell className="text-center">Phone</TableCell>
                                         <TableCell className="text-center">Address</TableCell>
                                         <TableCell className="text-center">Avatar</TableCell>
+                                        <TableCell className="text-center">Status</TableCell>
                                         <TableCell className="text-center">Receptionist Info</TableCell>
                                         <TableCell className="text-center">Action</TableCell>
                                     </TableRow>
@@ -149,26 +178,32 @@ export default function ReceptionistList() {
                                                 <TableCell className="text-center align-middle">{receptionist?.dob}</TableCell>
                                                 <TableCell className="text-center align-middle">{receptionist?.email}</TableCell>
                                                 <TableCell className="text-center align-middle">{receptionist?.phone}</TableCell>
+                                                
                                                 <TableCell className="text-center align-middle">{receptionist?.address}</TableCell>
+
                                                 <TableCell className="text-center align-middle">
                                                     <img width={"80px"} height={"80px"} src={receptionist?.avatarImgResDTO} />
                                                 </TableCell>
+                                                <TableCell className="text-center align-middle">{receptionist?.elockStatus}</TableCell>
+
                                                 <TableCell className="text-center align-middle">{receptionist?.receptionistInfo}</TableCell>
                                                 {/* </Link> */}
-                                                <TableCell style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                    <div>
-                                                        <Link className="mx-1" to={`/dashboard/receptionists/${receptionist?.id}`}>
-                                                            <EditIcon style={{ color: 'orange', marginRight: '10px' }} size={22} title="edit" role="button"/>
+                                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <Link className="mx-1" to={`/dashboard/receptionists/edit/${receptionist?.id}`}>
+                                                            <EditIcon style={{ color: 'orange', marginRight: '10px' }} size={22} title="edit" role="button" />
                                                         </Link>
-                                                        <Link className="mx-1" to={`/dashboard/receptionists/${receptionist?.id}`}>
-                                                            <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button"  />
+                                                        <Link className="mx-1" to={`/dashboard/receptionists/detail/${receptionist?.id}`}>
+                                                            <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button" />
                                                         </Link>
                                                         <div className="mx-1">
-                                                            <PlaylistRemoveIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="remove" role="button" onClick={() => handleRemoveReceptionist(receptionist)} />
+                                                            <LockOpenIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="block" role="button" onClick={() => handleLockReceptionist(receptionist.id)} />
+                                                        </div>
+                                                        <div className="mx-1">
+                                                            <BlockIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="open" role="button" onClick={() => handleOpenReceptionist(receptionist.id)} />
                                                         </div>
                                                     </div>
-                                                </TableCell>
-
+                                                </div>
                                             </TableRow>
                                         </>
                                     ))}

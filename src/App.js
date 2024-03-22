@@ -38,9 +38,12 @@ import CreateRoom from "./components/dashboard/rooms/CreateRoom";
 import CreateReceptionist from "./components/dashboard/receptionists/CreateReceptionist";
 
 import RoomDetailDashboard from "./components/dashboard/rooms/RoomDetailDashboard";
-import ReceptionistDetailDashboard from "./components/dashboard/receptionists/ReceptionistDetailDashboard";
+import ReceptionistDetail from "./components/dashboard/receptionists/ReceptionistDetail";
+import BookingDetailDashboard from "./components/dashboard/bookings/BookingDetail";
 import ModalEditRoom from "./components/dashboard/rooms/ModalEditRoom";
 import EditReceptionist from "./components/dashboard/receptionists/EditReceptionist";
+import { ImportExportOutlined } from "@mui/icons-material";
+import BookingDetail from "./components/home/Booking/BookingDetail";
 
 export default function App() {
   return (
@@ -62,7 +65,7 @@ export default function App() {
             <Route path="/rooms" element={<Room />} />
             <Route path="/receptionists" element={<Receptionist />} />
             <Route path="/rooms/:roomName" element={<RoomDetail />} />
-            <Route path="/receptionists/:receptionistName" element={<ReceptionistDetailDashboard />} />
+            <Route path="/receptionists/:receptionistName" element={<ReceptionistDetail />} />
             <Route path="/services" element={<Services />} />
             <Route path="/dashboard" element={<Dashboard />}>
 
@@ -77,16 +80,20 @@ export default function App() {
               </Route>
 
               <Route path="receptionists" element={<ReceptionistPage />}>
-                {/* <Route index element={<RoomList />} /> */}
+                {/* <Route index element={<RoomList />} /> 
+                http://localhost:3000/dashboard/receptionists/5
+                */}
                 <Route path="list" index element={<ReceptionistList />} />
                 <Route path="add" element={<CreateReceptionist />} />
-                <Route path=":receptionistId" element={<EditReceptionist />} />
-                <Route path=":idReceptionistDetail" element={<ReceptionistDetailDashboard />}/>
-                
+                <Route path="edit/:receptionistId" element={<EditReceptionist />} />
+                <Route path="detail/:receptionistId" element={<ReceptionistDetail />}/> 
+
               </Route>
 
               <Route path="bookings" element={<BookingPage />}>
               <Route path="list" index element={<BookingList />} />
+                {/* <Route path="add" element={<CreateReceptionist />} /> */}
+              <Route path="detail/:bookingId" element={<BookingDetailDashboard />}/> 
               </Route>
 
             </Route>

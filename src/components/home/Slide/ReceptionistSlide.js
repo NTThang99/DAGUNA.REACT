@@ -2,10 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import ReceptionistService from "../../../services/RoomService";
+import ELockService from "../../../services/ELockService";
 
 const inItState = {
   data: [],
 };
+const inItStateELock = {
+  data: []
+}
 
 
 
@@ -40,3 +44,30 @@ const receptionistReducer = createSlice({
 });
 
 export default receptionistReducer;
+
+export const getAllELockAPI = createAsyncThunk(
+  "getAllELockAPI",
+  async (arg, { rejectWithValue }) => {
+    try {
+      let res = await ELockService.getAllELock(arg)
+      return res
+    } catch (error) {
+      return rejectWithValue("Error getting all e role");
+    }
+  }
+)
+export const eLockReducer = createSlice({
+  name: "eLock",
+  initialState: inItStateELock,
+  reducers: {
+    getAll: (state, action) => {
+      state.data = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getAllELockAPI.pending, (state, action) => { });
+    builder.addCase(getAllELockAPI.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
+  },
+});

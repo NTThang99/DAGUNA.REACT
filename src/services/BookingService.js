@@ -120,5 +120,12 @@ class BookingService {
         throw error;
       });
   }
+
+
+  static async getBookingsById(bookingId) {
+    console.log("bookingId", bookingId);
+    return apiClients.get(`/bookings/${bookingId}`)
+    
+  }
 }
 export default BookingService;

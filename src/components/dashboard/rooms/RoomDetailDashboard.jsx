@@ -25,10 +25,7 @@ export default function RoomDetailDashboard() {
                 let roomDetail = await RoomService.getRoomById(idRoomDetail)
                 setRoom(roomDetail?.data)
 
-                let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api")
-                setStatusRoomList(dataStatusRoom)
-
-
+        
                 setLoading(false)
             }
             getRoomById()

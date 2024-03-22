@@ -40,25 +40,24 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
     } = useForm({
         resolver: yupResolver(schema),
     });
-
     useEffect(() => {
         setLoading(true);
         async function loadData() {
             try {
-                let dataViewType = await ViewTypeService.getAllViewType(`http://localhost:8080/api/eview-types`);
-                setViewTypeList(dataViewType);
+                let dataViewType = await ViewTypeService.getAllViewType();
+                setViewTypeList(dataViewType?.data);
 
-                let dataKindOfRoom = await KindOfRoomService.getAllKindOfRoom("http://localhost:8080/api/kindofroom")
-                setKindOfRoomList(dataKindOfRoom)
+                let dataKindOfRoom = await KindOfRoomService.getAllKindOfRoom()
+                setKindOfRoomList(dataKindOfRoom?.data)
 
-                let dataPerType = await PerTypeService.getAllPerType("http://localhost:8080/api/pertype")
-                setPerTypeList(dataPerType)
+                let dataPerType = await PerTypeService.getAllPerType()
+                setPerTypeList(dataPerType?.data)
 
-                let dataRoomType = await RoomTypeService.getAllRoomType("http://localhost:8080/api/erooms")
-                setRoomTypeList(dataRoomType)
+                let dataRoomType = await RoomTypeService.getAllRoomType()
+                setRoomTypeList(dataRoomType?.data)
 
-                let dataUtility = await UtilityService.getAllUtility("http://localhost:8080/api/utility")
-                setUtilityList(dataUtility)
+                let dataUtility = await UtilityService.getAllUtility()
+                setUtilityList(dataUtility?.data)
 
             } catch (error) {
                 toast.error("Error get data")
@@ -93,7 +92,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                 setValue("imageResDTOS", result.imageResDTOS)
                 setRoomInfo(result)
                 setLoading(false)
-                console.log("result",result);
             }
             getRoomById()
         } catch (error) {
@@ -103,6 +101,7 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
         }
 
     }, [roomInfo?.id])
+    console.log("utilitie",roomInfo?.utilitie);
     const handleCloseModal = () => {
         handleClose(false)
     }
@@ -228,7 +227,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
         }
         setIsCreate(false)
     }
-console.log("eroors",errors);
     return (
         <div>
             {/* <Modal show={setShowModalConfirmImg} onHide={handleModalClose}

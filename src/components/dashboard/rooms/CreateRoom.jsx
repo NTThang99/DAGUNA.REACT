@@ -48,20 +48,20 @@ export default function CreateRoom() {
         setLoading(true);
         async function loadData() {
             try {
-                let dataViewType = await ViewTypeService.getAllViewType(`http://localhost:8080/api/eview-types`);
-                setViewTypeList(dataViewType);
+                let dataViewType = await ViewTypeService.getAllViewType();
+                setViewTypeList(dataViewType?.data);
 
-                let dataKindOfRoom = await KindOfRoomService.getAllKindOfRoom("http://localhost:8080/api/kindofroom")
-                setKindOfRoomList(dataKindOfRoom)
+                let dataKindOfRoom = await KindOfRoomService.getAllKindOfRoom()
+                setKindOfRoomList(dataKindOfRoom?.data)
 
-                let dataPerType = await PerTypeService.getAllPerType("http://localhost:8080/api/pertype")
-                setPerTypeList(dataPerType)
+                let dataPerType = await PerTypeService.getAllPerType()
+                setPerTypeList(dataPerType?.data)
 
-                let dataRoomType = await RoomTypeService.getAllRoomType("http://localhost:8080/api/erooms")
-                setRoomTypeList(dataRoomType)
+                let dataRoomType = await RoomTypeService.getAllRoomType()
+                setRoomTypeList(dataRoomType?.data)
 
-                let dataUtility = await UtilityService.getAllUtility("http://localhost:8080/api/utility")
-                setUtilityList(dataUtility)
+                let dataUtility = await UtilityService.getAllUtility()
+                setUtilityList(dataUtility?.data)
 
             } catch (error) {
                 // console.log(error);

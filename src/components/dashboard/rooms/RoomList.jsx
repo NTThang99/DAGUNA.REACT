@@ -57,8 +57,8 @@ export default function RoomList() {
 
     useEffect(() => {
         async function getFilter() {
-            let dataRoomType = await RoomTypeService.getAllRoomType("http://localhost:8080/api/erooms")
-            setRoomTypeList(dataRoomType)
+            let dataRoomType = await RoomTypeService.getAllRoomType()
+            setRoomTypeList(dataRoomType?.data)
 
         }
         getFilter()
@@ -213,14 +213,14 @@ export default function RoomList() {
                                                     <TableCell className="text-center align-middle">{room?.pricePerNight}</TableCell>
                                                     <TableCell className="text-center d-flex align-items-center">
                                                         <Link className="mx-1" to={`/dashboard/rooms/${room?.id}`}>
-                                                            <BiCommentDetail style={{ color: 'orange' }} size={22} title="detail" role="button"
+                                                            <BiCommentDetail style={{ color: 'orange' }} size={22} title={room?.id} role="button"
                                                             />
                                                         </Link>
                                                         <div className="mx-1">
-                                                            <div onClick={() => handleShowModalEditRoom(room)} role="button">
+                                                            <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
                                                                 <EditIcon
                                                                     style={{ color: 'green' }}
-                                                                    size={22} title="edit"
+                                                                    size={22} 
                                                                 />
                                                             </div>
                                                         </div>

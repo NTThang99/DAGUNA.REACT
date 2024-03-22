@@ -1,8 +1,8 @@
+import apiClients from "../apiClients/apiClients";
 
 class KindOfRoomService {
-    static async getAllKindOfRoom(url) {
-        return fetch(url)
-          .then((res) => res.json());
+    static async getAllKindOfRoom() {
+        return apiClients.get(`/kindofroom`)
       }
 }
 export default KindOfRoomService;

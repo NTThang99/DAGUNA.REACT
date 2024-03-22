@@ -4,19 +4,15 @@ import apiClients from "../apiClients/apiClients";
 class RoomService {
 
 
-  static async getAllRooms(url) {
-    return fetch(url)
-      .then((res) => res.json())
+  static async getAllRooms() {
+    return apiClients.get(`/rooms`)
   }
   static async createRoom(formData) {
     return apiClients.post('/rooms', formData)
   }
   static async getRoomById(roomId) {
-    // console.log("`http:/localhost/api/rooms/${roomId}`", `http:/localhost:8080/api/rooms/${roomId}`);
-    return fetch(`http://localhost:8080/api/rooms/${roomId}`)
-      .then((res) => res.json())
-      .then((data) => data)
-      .catch((error) => error);
+    return apiClients.get(`/rooms/${roomId}`)
+   
   }
   
   static async getAllRoomByFilter(url) {

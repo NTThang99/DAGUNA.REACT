@@ -1,8 +1,8 @@
+import apiClients from "../apiClients/apiClients";
 
 class  UtilityService {
     static async getAllUtility(url) {
-        return fetch(url)
-          .then((res) => res.json());
+        return apiClients.get(`/utility`)
       }
 }
 export default UtilityService;

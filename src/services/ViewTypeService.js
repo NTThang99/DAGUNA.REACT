@@ -1,8 +1,8 @@
+import apiClients from "../apiClients/apiClients";
 
 class ViewTypeService {
-    static async getAllViewType(url) {
-        return fetch(url)
-          .then((res) => res.json());
+    static async getAllViewType() {
+        return apiClients.get(`/eview-types`)
       }
 }
 export default ViewTypeService;

@@ -6,6 +6,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 import { Link, NavLink } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 export const mainListItems = (
   <React.Fragment>
@@ -52,6 +53,16 @@ export const mainListItems = (
           <GroupIcon />
         </ListItemIcon>
         <ListItemText primary="Receptionists" />
+      </ListItemButton>
+    </NavLink>
+
+    
+    <NavLink to={'bookings/list'} >
+      <ListItemButton>
+        <ListItemIcon>
+          <CalendarMonthIcon />
+        </ListItemIcon>
+        <ListItemText primary="Bookings" />
       </ListItemButton>
     </NavLink>
 

@@ -64,7 +64,7 @@ export default function EditReceptionist() {
 
 
         // Xử lý khi hình ảnh được đọc
-        reader.onload = function(event) {
+        reader.onload = function (event) {
           let imageContent = event.target.result;
           SetSelectedFile((preValue) => {
             return {
@@ -84,15 +84,15 @@ export default function EditReceptionist() {
           .then(blob => reader.readAsDataURL(blob))
           .catch(error => console.log(error));
 
-          // console.log("get image", {
-          //   id: data.id,
-          //   filename: data.avatarImgResDTO,
-          //   filetype: fileExtension,
-          //   fileimage: dataBlob,
-          //   datetime: null,
-          //   filesize: filesizes(dataBlob.size)
-          // });
-          
+        // console.log("get image", {
+        //   id: data.id,
+        //   filename: data.avatarImgResDTO,
+        //   filetype: fileExtension,
+        //   fileimage: dataBlob,
+        //   datetime: null,
+        //   filesize: filesizes(dataBlob.size)
+        // });
+
 
       } catch (error) {
         console.error('Error fetching receptionist detail:', error);
@@ -125,15 +125,15 @@ export default function EditReceptionist() {
       let formData = new FormData();
       formData.append("file", file);
       ImageService.deleteImage(selectedfile.id)
-      .then(() => {
-        toast.success(`File with ID ${selectedfile.id} deleted successfully`, { theme: "light" });
-        SetSelectedFile(null);
-        inputElement.current.value = null;
+        .then(() => {
+          toast.success(`File with ID ${selectedfile.id} deleted successfully`, { theme: "light" });
+          SetSelectedFile(null);
+          inputElement.current.value = null;
 
-      }).catch(error => {
-        console.error(`Error deleting file with ID ${selectedfile.id}`, error);
-        toast.error(`Error deleting file`, { theme: "light" })
-      })
+        }).catch(error => {
+          console.error(`Error deleting file with ID ${selectedfile.id}`, error);
+          toast.error(`Error deleting file`, { theme: "light" })
+        })
       ImageService.saveImage(formData).then(response => {
 
         console.log("response img", response);
@@ -233,6 +233,7 @@ export default function EditReceptionist() {
             <div className="form-group mb-2">
               <label className="form-label">Email</label>
               <input type="text" placeholder="email"  {...register('email')}
+                readOnly
                 className={`form-control form-control-sm ${errors.email?.message ? 'is-invalid' : ''}`} />
               <span className="invalid-feedback">{errors.email?.message}</span>
             </div>

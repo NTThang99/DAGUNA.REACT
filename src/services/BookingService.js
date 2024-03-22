@@ -69,6 +69,7 @@ class BookingService {
       .then((data) => data)
       .catch((error) => error);
   }
+  
   static async updateBooking_AddRoom(url, objSend) {
     return fetch(url, {
       method: 'PATCH',
@@ -118,6 +119,13 @@ class BookingService {
       .catch((error) => {
         throw error;
       });
+  }
+
+
+  static async getBookingsById(bookingId) {
+    console.log("bookingId", bookingId);
+    return apiClients.get(`/bookings/${bookingId}`)
+    
   }
 }
 export default BookingService;

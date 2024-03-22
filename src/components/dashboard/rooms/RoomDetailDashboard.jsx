@@ -195,11 +195,6 @@ export default function RoomDetailDashboard() {
             <ModalCreateRoomReal
                 show={show}
                 handleClose={setShow}
-                // roomReals={roomReals}
-                // setRoomReals={setRoomReals}
-                roomRealList={roomRealList}
-                setRoomRealList={setRoomRealList}
-                idRoom={room?.id}
 
                 idRoomDetail={idRoomDetail}
 

@@ -25,6 +25,10 @@ export default function RoomDetailDashboard() {
                 let roomDetail = await RoomService.getRoomById(idRoomDetail)
                 setRoom(roomDetail?.data)
 
+                let dataStatusRoom = await StatusRoomService.getAllStatusRoom("http://localhost:8080/api")
+                setStatusRoomList(dataStatusRoom)
+
+
                 setLoading(false)
             }
             getRoomById()
@@ -191,7 +195,14 @@ export default function RoomDetailDashboard() {
             <ModalCreateRoomReal
                 show={show}
                 handleClose={setShow}
+                // roomReals={roomReals}
+                // setRoomReals={setRoomReals}
+                roomRealList={roomRealList}
+                setRoomRealList={setRoomRealList}
+                idRoom={room?.id}
+
                 idRoomDetail={idRoomDetail}
+
             />
         </>
     )

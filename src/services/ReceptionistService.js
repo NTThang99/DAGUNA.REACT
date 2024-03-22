@@ -11,12 +11,13 @@ class ReceptionistService {
   static async createReceptionist(formData) {
     return apiClients.post('/receptionists', formData)
   }
-  static async getReceptionistById(roomId) {
-    return apiClients.get(`/receptionists/${roomId}`)
+  static async editReceptionist(receptionistId, formData) {
+    return apiClients.put(`/receptionists/${receptionistId}`, formData)
   }
-  static async getAllReceptionistByFilter(url) {
-    return apiClients.get(`${url}`)
+  static async getReceptionistById(receptionistId) {
+    return apiClients.get(`/receptionists/${receptionistId}`)
   }
+
   static async searchReceptionists(url, objSend) {
     return fetch(url, {
       method: 'POST',

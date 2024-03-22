@@ -26,19 +26,19 @@ const inItState = {
     data: []
   },
   guest: {
-
   },
   booking: {
     bookingId: null,
     bookingDetailChoosen: null,
     bookingDetails: [
     ]
-  }
+  },
+  loading: false,
 };
 export const searchRoomsAPI = createAsyncThunk(
   "searchRoomsAPI",
   async (arg, { rejectWithValue }) => {
-    console.log("arg", arg);
+    // console.log("arg", arg);
 
     let objSend = {
       guest: {
@@ -104,7 +104,7 @@ export const createBookingAPI = createAsyncThunk(
       let res = await BookingService.createBooking("http://localhost:8080/api/bookings", objSend);
 
 
-      console.log("objSend", objSend);
+      // console.log("objSend", objSend);
       return res;
     } catch (err) {
       return rejectWithValue("Error getting all rooms");
@@ -129,7 +129,7 @@ export const updateBooking_EditRoom = createAsyncThunk(
         }
         // dateChooseService: arg?.dateChooseService
       };
-      console.log("objSend", objSend);
+      // console.log("objSend", objSend);
       let res = await BookingService.updateBooking_EditRooms("http://localhost:8080/api/bookings/rooms/edit", objSend);
 
       return res;
@@ -202,6 +202,19 @@ export const updateBooking_AddRoomAPI = createAsyncThunk(
 );
 
 
+export const updateBooking_DeleteRoomAPI = createAsyncThunk(
+  "updateBooking_DeleteRoomAPI",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const res = await BookingService.updateBooking_DeleteRoomAPI(`http://localhost:8080/api/bookings/${arg.bookingId}/rooms/${arg.bookingDetailId}/delete`);
+      return res;
+    } catch (err) {
+      // Trả về lỗi nếu không thể xóa
+      return rejectWithValue("Error deleting booking detail");
+    }
+  }
+);
+
 
 const bookingReducer = createSlice({
   name: "booking",
@@ -241,36 +254,54 @@ const bookingReducer = createSlice({
           state.booking.bookingDetailChoosen = action.payload.bookingDetails[action.payload.bookingDetails.length - 1].bookingDetailId;
         }
       }
-
-
-      // console.log("action.payload.bookingDetails", action.payload.bookingDetails);
-
     });
-    builder.addCase(updateBooking_AddRoomAPI.pending, (state, action) => { });
+    builder.addCase(updateBooking_AddRoomAPI.pending, (state, action) => {
+      state.loading = true;
+    });
     builder.addCase(updateBooking_AddRoomAPI.fulfilled, (state, action) => {
 
-      // console.log("booking", action.payload);
+      state.loading = true;
+
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
       state.booking.bookingDetailChoosen = action.payload.bookingDetails[action.payload.bookingDetails.length - 1].bookingDetailId;
     });
-    builder.addCase(updateBooking_AddBookingService.pending, (state, action) => { });
+    builder.addCase(updateBooking_AddBookingService.pending, (state, action) => {
+      state.loading = true;
+    });
     builder.addCase(updateBooking_AddBookingService.fulfilled, (state, action) => {
 
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
-      // state.booking.bookingDetailChoosen = action.payload.bookingDetails[action.payload.bookingDetails.length - 1].bookingDetailId;
+      state.loading = true;
     });
     builder.addCase(getAllBookingServiceAPI.pending, (state, action) => { });
     builder.addCase(getAllBookingServiceAPI.fulfilled, (state, action) => {
 
       state.addOns.data = action.payload;
     });
-    builder.addCase(updateBooking_EditRoom.pending, (state, action) => { });
+    builder.addCase(updateBooking_EditRoom.pending, (state, action) => {
+      state.loading = true;
+    });
     builder.addCase(updateBooking_EditRoom.fulfilled, (state, action) => {
 
-      // console.log("booking", action.payload);
-      state.addOns.data = action.payload;
+      state.loading = true;
+      state.booking.bookingDetails = action.payload.bookingDetails;
+    });
+    builder.addCase(updateBooking_DeleteRoomAPI.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updateBooking_DeleteRoomAPI.fulfilled, (state, action) => {
+
+      state.loading = true;
+      state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.bookingId = action.payload.bookingId;
+      if (action.payload.bookingDetails.length == 0) {
+        state.booking.bookingDetailChoosen = null;
+      } else {
+        state.booking.bookingDetailChoosen = action.payload.bookingDetails[action.payload.bookingDetails.length - 1].bookingDetailId;
+      }
+
     });
   },
 });

@@ -185,7 +185,7 @@ export default function ModalCreateRoomReal({
         size="xl"
       >
         <ModalHeader>
-          <ModalTitle>Add Room Real</ModalTitle>
+          <ModalTitle>Add Room</ModalTitle>
           <input type="button" value="Edit All" onClick={handleEditAllClick} />
         </ModalHeader>
         {loading ? (

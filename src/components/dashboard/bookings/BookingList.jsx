@@ -89,8 +89,9 @@ export default function BookingList() {
                                     <TableRow className="table-secondary">
                                         <TableCell className="text-center">Id</TableCell>
                                         <TableCell className="text-center">Code</TableCell>
-                                        <TableCell className="text-center">Check In</TableCell>
-                                        <TableCell className="text-center">Check Out</TableCell>
+                                   
+                                        <TableCell className="text-center">Check In Day</TableCell>
+                                        <TableCell className="text-center">Check Out Day</TableCell>
                                         <TableCell className="text-center">Total</TableCell>
                                         <TableCell className="text-center">Action</TableCell>
                                     </TableRow>

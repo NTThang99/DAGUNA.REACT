@@ -16,7 +16,7 @@ export default function RoomPage() {
                         <TableCell className="nav-link ">
                             <NavLink to={'/dashboard/rooms/list'}>
                                 <ListAltIcon />
-                                List Room
+                                List Room Common
                             </NavLink>
                         </TableCell>
                         <TableCell className="nav-link ">
@@ -29,20 +29,20 @@ export default function RoomPage() {
                             <TableCell className="nav-link ">
                                 <NavLink to={`/dashboard/rooms/${idRoomDetail}`}>
                                     <InfoIcon />
-                                    Room Detail
+                                    Room Common Detail
                                 </NavLink>
                             </TableCell>
                              : '' 
                         } 
-                           {idRoomEdit ?
+                           {/* {idRoomEdit ?
                             <TableCell className="nav-link ">
                                 <NavLink to={`/dashboard/rooms/${idRoomEdit}`}>
                                     <InfoIcon />
-                                    Edit Room
+                                    Edit Room 
                                 </NavLink>
                             </TableCell>
                              : '' 
-                        } 
+                        }  */}
                     </TableRow>
                 </TableHead>
             </Table>

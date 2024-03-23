@@ -197,10 +197,10 @@ export default function ReceptionistList() {
                                                             <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button" />
                                                         </Link>
                                                         <div className="mx-1">
-                                                            <LockOpenIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="block" role="button" onClick={() => handleLockReceptionist(receptionist.id)} />
+                                                            <LockOpenIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="block" role="button" onClick={() =>  handleOpenReceptionist(receptionist.id)} />
                                                         </div>
                                                         <div className="mx-1">
-                                                            <BlockIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="open" role="button" onClick={() => handleOpenReceptionist(receptionist.id)} />
+                                                            <BlockIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="open" role="button" onClick={() => handleLockReceptionist(receptionist.id)} />
                                                         </div>
                                                     </div>
                                                 </div>

@@ -33,8 +33,8 @@ class RoomService {
   static async patchUpdateRoomReal(roomId, formData) {
     return apiClients.patch(`/rooms/${roomId}/room-reals`, formData)
   }
-  static async postUpdateRoom(roomId, formData) {
-    return apiClients.post(`/rooms/${roomId}`, formData)
+  static async patchUpdateRoom(roomId, formData) {
+    return apiClients.patch(`/rooms/${roomId}`, formData)
   }
 }
 export default RoomService;

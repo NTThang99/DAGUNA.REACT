@@ -14,6 +14,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { json } from 'react-router-dom';
 
 const schema = yup.object(
 
@@ -28,9 +29,10 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
     const [utilityList, setUtilityList] = useState([]);
     const [utilitiesCheck, setUtilitiesCheck] = useState([]);
     const [selectedfile, SetSelectedFile] = useState([]);
+    //modal img
     const [showModalConfirmImg, setShowModalConfirmImg] = useState(false)
     const [idToDelete, setIdToDelete] = useState(null);
-    const [isCreate, setIsCreate] = useState(false)
+    const [isEdit, setIsEdit] = useState(false)
     const {
         register,
         handleSubmit,
@@ -57,7 +59,16 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                 setRoomTypeList(dataRoomType?.data)
 
                 let dataUtility = await UtilityService.getAllUtility()
-                setUtilityList(dataUtility?.data)
+
+                let utilitieUI = dataUtility?.data.map((dU) => {
+                    return {
+                        id: dU.id,
+                        name: dU.name,
+                        check: false
+                    }
+                })
+                setUtilityList(utilitieUI);
+
 
             } catch (error) {
                 toast.error("Error get data")
@@ -66,7 +77,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
         }
         loadData();
     }, [])
-
     useEffect(() => {
         setLoading(true)
         try {
@@ -82,15 +92,55 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                 setValue("roomType", result.roomType)
                 setValue("quantity", result.quantity)
                 setValue("viewType", result.viewType)
-                setValue("kindOfRoom", result.kindOfRoom)
-                setValue("perType", result.perType)
+                setValue("kindOfRoomId", result.kindOfRoom.id)
+                setValue("perTypId", result.perType.id)
                 setValue("pricePerNight", result.pricePerNight)
                 setValue("acreage", result.acreage)
                 setValue("sleep", result.sleep)
                 setValue("description", result.description)
-                setValue("utilitie", result.utilitie)
+                setValue("utilitie", result?.utilitie)
                 setValue("imageResDTOS", result.imageResDTOS)
+                setUtilitiesCheck(result?.utilitie)
+                console.log("result.imageResDTOS", result.imageResDTOS);
+
+                async function loadImages(index) {
+                    if (index < result.imageResDTOS.length) {
+                        let fileExtension = result.imageResDTOS[index].fileUrl.split('.').pop();
+                        var fileNameWithExtension = result.imageResDTOS[index].fileUrl.split('/').pop();
+                        var idImage = fileNameWithExtension.split('.').slice(0, -1).join('.');
+                
+                        let resBlob = await fetch(result?.imageResDTOS[index].fileUrl);
+                        let dataBlob = await resBlob.blob();
+                
+                        let reader = new FileReader();
+                        reader.readAsDataURL(dataBlob);
+                        reader.onload = function (event) {
+                            let imageContent = event.target.result;
+                
+                            SetSelectedFile((preValue) => [
+                                ...preValue,
+                                {
+                                    id: idImage,
+                                    filename: fileNameWithExtension,
+                                    filetype: fileExtension,
+                                    fileimage: imageContent,
+                                    datetime: null,
+                                    filesize: null
+                                }
+                            ]);
+                
+                            // Gọi đệ quy để tải ảnh tiếp theo
+                            loadImages(index + 1);
+                        };
+                    }
+                }
+                
+                // Bắt đầu tải ảnh từ index 0
+                loadImages(0);
+                
+
                 setRoomInfo(result)
+                checkUtilities();
                 setLoading(false)
             }
             getRoomById()
@@ -101,11 +151,26 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
         }
 
     }, [roomInfo?.id])
-    console.log("utilitie",roomInfo?.utilitie);
+    const checkUtilities = () => {
+        const str = roomInfo?.utilitie;         // [1,2] 
+
+        let arrUtilities = JSON.parse(str);
+
+        let utilityListCopy = [...utilityList];
+
+        for (let i = 0; i < utilityListCopy.length; i++) {
+            if (arrUtilities.includes(utilityListCopy[i].id)) {
+                utilityListCopy[i].check = true;
+            }
+        }
+        setUtilityList(utilityListCopy)
+    }
+
     const handleCloseModal = () => {
         handleClose(false)
     }
     let handleClickRadio = (evt, id) => {
+
         let newArray = [...utilitiesCheck, id];
         if (utilitiesCheck.includes(id)) {
             newArray = newArray.filter(day => day !== id);
@@ -169,7 +234,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
             .then(() => {
                 toast.success(`File with ID ${idToDelete} deleted successfully`, { theme: "light" });
                 const result = selectedfile.filter((data) => data.id !== idToDelete);
-
                 SetSelectedFile(result);
 
             })
@@ -188,8 +252,10 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
         DeleteSelectFile(idToDelete);
     };
     const handleModalClose = () => {
-        setShowModalConfirmImg(false);
+        SetSelectedFile([])
         setIdToDelete(null)
+        setShowModalConfirmImg(false)
+        // reset({ roomInfo: roomInfo })
     };
     const handleEditRoom = async (values) => {
 
@@ -205,32 +271,34 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
 
         values = {
             ...values,
-            pricePerNight: values.pricePerNight,
             utilitie: JSON.stringify(utilitiesCheck),
             imageIds: imageIds,
             roomType: values.roomType,
             viewType: values.viewType,
+            kindOfRoom: values.kindOfRoom,
+            perType: values.perType
         }
         try {
-            setIsCreate(true);
-            let updateRoomRes = await RoomService.postUpdateRoom(roomInfo?.id,values)
+            setIsEdit(true);
+            let updateRoomRes = await RoomService.patchUpdateRoom(roomInfo?.id, values)
             let result = updateRoomRes?.data;
             if (result) {
                 SetSelectedFile([])
                 reset();
                 toast.success('Update room success!', { theme: "light" });
+                handleCloseModal()
             }
 
         } catch (error) {
             console.log("error", error);
             toast.error('Update room unsuccess')
         }
-        setIsCreate(false)
+        setIsEdit(false)
     }
     return (
         <div>
-            {/* <Modal show={setShowModalConfirmImg} onHide={handleModalClose}
-            // style={{ zIndex: '1001' }}
+            <Modal show={showModalConfirmImg} onHide={handleModalClose}
+                style={{ zIndex: '1003' }}
             >
                 <Modal.Dialog  >
                     <Modal.Header closeButton>
@@ -244,16 +312,16 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                         <Button variant="secondary" onClick={handleModalClose}>No</Button>
                     </Modal.Footer>
                 </Modal.Dialog>
-            </Modal> */}
+            </Modal>
             <Modal
-                // style={{ zIndex: '1002' }}
+                style={{ zIndex: '1002' }}
                 show={show}
                 onHide={handleClose}
                 backdrop="static"
                 className="custom-modal-room-real"
                 size="xl"
             >
-                <ModalHeader>
+                <ModalHeader closeButton>
                     <ModalTitle>Edit Room Detail</ModalTitle>
                 </ModalHeader>
 
@@ -360,6 +428,7 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                                                     <input
                                                         type="checkbox"
                                                         value={u?.id}
+                                                        checked={u?.check}
                                                         className={`form-check-input`}
                                                         onChange={(evt) => handleClickRadio(evt, u?.id)}
                                                     />
@@ -376,31 +445,10 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                                         <div>
                                             <input type="file" onChange={InputChange} multiple className="form-control form-control-sm mb-3" />
                                             <div className='row mb-3'>
-                                                {/* <div> */}
-                                                    {roomInfo?.imageResDTOS && roomInfo?.imageResDTOS.map((image, index) => (
-                                                        <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={index}>
-                                                            <div className="mb-2 upload-icon-delete-container">
-                                                                <div>
-                                                                    <img src={image.fileUrl} alt={`Uploaded Image ${index}`} style={{ width: '120px', height: '100px' }} />
-                                                                    <FontAwesomeIcon
-                                                                        className="upload-icon-delete"
-                                                                        icon={faTimes}
-                                                                        // onClick={() => ModalDeleteSelectFile(idDelete)}
-                                                                        style={{ hover: { cursor: 'point' } }}
-                                                                        onClick={() => {
-                                                                            setIdToDelete(index);
-                                                                            setShowModalConfirmImg(true)
-                                                                        }}
-                                                                    />
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    ))}
-                                                {/* </div> */}
                                                 {
                                                     selectedfile.map((data) => {
                                                         const { id, filename, fileimage } = data;
+                                                        console.log("fileimage", fileimage);
                                                         return (
                                                             <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={id}>
                                                                 {

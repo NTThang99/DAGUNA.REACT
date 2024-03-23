@@ -78,7 +78,7 @@ export default function RoomList() {
             }
         }
         getAllRoomFilter()
-    }, [filters, totalPages])
+    }, [filters, totalPages, roomInfo])
 
     const handleClickNextPage = () => {
         if (Number(filters.page) < totalPages) {
@@ -220,7 +220,7 @@ export default function RoomList() {
                                                             <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
                                                                 <EditIcon
                                                                     style={{ color: 'green' }}
-                                                                    size={22} 
+                                                                    size={22}
                                                                 />
                                                             </div>
                                                         </div>

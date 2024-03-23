@@ -6,15 +6,15 @@ import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
 
 export default function RoomPage() {
-    const { roomId } = useParams()
+    const { idRoomDetail } = useParams()
+    const { idRoomEdit } = useParams()
     return (
-      
         <>
             <Table>
                 <TableHead>
                     <TableRow className="nav-item">
                         <TableCell className="nav-link ">
-                            <NavLink to={'/dashboard/rooms'}>
+                            <NavLink to={'/dashboard/rooms/list'}>
                                 <ListAltIcon />
                                 List Room
                             </NavLink>
@@ -25,21 +25,30 @@ export default function RoomPage() {
                                 Create Room
                             </NavLink>
                         </TableCell>
-                        {roomId ?
+                        {idRoomDetail ?
                             <TableCell className="nav-link ">
-                                <NavLink to={`//dashboard/rooms/${roomId}`}>
+                                <NavLink to={`/dashboard/rooms/${idRoomDetail}`}>
                                     <InfoIcon />
                                     Room Detail
                                 </NavLink>
                             </TableCell>
-                            : ''
-                        }
+                             : '' 
+                        } 
+                           {idRoomEdit ?
+                            <TableCell className="nav-link ">
+                                <NavLink to={`/dashboard/rooms/${idRoomEdit}`}>
+                                    <InfoIcon />
+                                    Edit Room
+                                </NavLink>
+                            </TableCell>
+                             : '' 
+                        } 
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                    <Outlet />
-                </TableBody>
             </Table>
+            <TableBody>
+                <Outlet />
+            </TableBody>
         </>
     )
 }

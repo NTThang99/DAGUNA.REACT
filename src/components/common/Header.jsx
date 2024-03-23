@@ -60,9 +60,8 @@ export default function Header() {
                             {item.text}
                           </Link>
                           <div
-                            className={`dropdown-menu rounded-0 m-0 ${
-                              activeDropdown === item.id ? "show" : ""
-                            }`}
+                            className={`dropdown-menu rounded-0 m-0 ${activeDropdown === item.id ? "show" : ""
+                              }`}
                           >
                             {item.subItems.map((sub) => (
                               <Link to={sub.path} className="dropdown-item">

@@ -20,3 +20,23 @@
 .bg-image {
     background-image: url('../public/assets/img/carousel-1.jpg');
 }
+.upload-icon-delete-container{
+    position: relative;
+}
+.upload-icon-delete{
+    position: absolute;
+    right: -1px;
+    top: 2px;
+    color: red !important;
+}
+.active{
+    color: red !important;
+    border-color: #fea116 !important;
+}
+.custom-modal-room-real{
+    margin-left: 90px;
+    border-color: hide;
+}
+.modal-backdrop{
+    background-color: rgba(0,0,0,0.8);
+}

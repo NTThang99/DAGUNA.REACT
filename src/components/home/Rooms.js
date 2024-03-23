@@ -36,8 +36,8 @@ export default function Rooms() {
     navigate(`/rooms/${roomName}`);
   };
 
-  const handleNavigateBooking = (roomName) => {
-    navigate(`/booking/${roomName}`);
+  const handleNavigateBooking = () => {
+    navigate(`/booking`);
   }
 
   const settings = {

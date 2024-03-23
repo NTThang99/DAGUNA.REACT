@@ -3,16 +3,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import LayersIcon from '@mui/icons-material/Layers';
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import GroupIcon from '@mui/icons-material/Group';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 export const mainListItems = (
   <React.Fragment>
-    <NavLink to={''}>
+    {/* <Link to={'/dashboard'}>
       <ListItemButton >
         
         <ListItemIcon>
@@ -20,7 +18,7 @@ export const mainListItems = (
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
-    </NavLink>
+    </Link> */}
 
     {/* <NavLink to={'Orders'}>
       <ListItemButton>
@@ -29,9 +27,9 @@ export const mainListItems = (
         </ListItemIcon>
         <ListItemText primary="Orders" />
       </ListItemButton>
-    </NavLink>
+    </NavLink> */}
 
-    <NavLink to={'Customers'}>
+    {/* <NavLink to={'Customers'}>
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />
@@ -46,6 +44,25 @@ export const mainListItems = (
           <HolidayVillageIcon />
         </ListItemIcon>
         <ListItemText primary="Rooms" />
+      </ListItemButton>
+    </NavLink>
+
+    <NavLink to={'receptionists/list'} >
+      <ListItemButton>
+        <ListItemIcon>
+          <GroupIcon />
+        </ListItemIcon>
+        <ListItemText primary="Receptionists" />
+      </ListItemButton>
+    </NavLink>
+
+    
+    <NavLink to={'bookings/list'} >
+      <ListItemButton>
+        <ListItemIcon>
+          <CalendarMonthIcon />
+        </ListItemIcon>
+        <ListItemText primary="Bookings" />
       </ListItemButton>
     </NavLink>
 

@@ -101,34 +101,43 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                 setValue("utilitie", result?.utilitie)
                 setValue("imageResDTOS", result.imageResDTOS)
                 setUtilitiesCheck(result?.utilitie)
+                console.log("result.imageResDTOS", result.imageResDTOS);
 
-
-                for(let i = 0; i< result.imageResDTOS.length;i++){
-                    let fileExtension = result.imageResDTOS[i].fileUrl.split('.').pop();
-                    var fileNameWithExtension = result.imageResDTOS[i].fileUrl.split('/').pop();
-                    var idImage = fileNameWithExtension.split('.').slice(0, -1).join('.');
-
-                    let reader = new FileReader();
-                    fetch(result?.imageResDTOS[i].fileUrl)
-                    .then(response => response.blob())
-                    .then(blob => reader.readAsDataURL(blob))
-                    .catch(error => console.log(error));
-                    reader.onload = function (event) {
-                        let imageContent = event.target.result;
-                       
-                        SetSelectedFile((preValue) => [
-                            ...selectedfile,
-                            {
+                async function loadImages(index) {
+                    if (index < result.imageResDTOS.length) {
+                        let fileExtension = result.imageResDTOS[index].fileUrl.split('.').pop();
+                        var fileNameWithExtension = result.imageResDTOS[index].fileUrl.split('/').pop();
+                        var idImage = fileNameWithExtension.split('.').slice(0, -1).join('.');
+                
+                        let resBlob = await fetch(result?.imageResDTOS[index].fileUrl);
+                        let dataBlob = await resBlob.blob();
+                
+                        let reader = new FileReader();
+                        reader.readAsDataURL(dataBlob);
+                        reader.onload = function (event) {
+                            let imageContent = event.target.result;
+                
+                            SetSelectedFile((preValue) => [
+                                ...preValue,
+                                {
                                     id: idImage,
                                     filename: fileNameWithExtension,
                                     filetype: fileExtension,
                                     fileimage: imageContent,
                                     datetime: null,
                                     filesize: null
-                            }
-                        ]);
-                    };
+                                }
+                            ]);
+                
+                            // Gọi đệ quy để tải ảnh tiếp theo
+                            loadImages(index + 1);
+                        };
+                    }
                 }
+                
+                // Bắt đầu tải ảnh từ index 0
+                loadImages(0);
+                
 
                 setRoomInfo(result)
                 checkUtilities();
@@ -439,6 +448,7 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                                                 {
                                                     selectedfile.map((data) => {
                                                         const { id, filename, fileimage } = data;
+                                                        console.log("fileimage", fileimage);
                                                         return (
                                                             <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={id}>
                                                                 {

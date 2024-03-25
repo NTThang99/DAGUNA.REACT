@@ -87,6 +87,7 @@ export const getAllBookingServiceAPI = createAsyncThunk(
     }
   }
 );
+
 export const createBookingAPI = createAsyncThunk(
   "createBookingAPI",
   async (arg, { rejectWithValue }) => {
@@ -112,6 +113,30 @@ export const createBookingAPI = createAsyncThunk(
   }
 );
 
+export const createBookingUser = createAsyncThunk(
+  "createBookingAPI",
+  async (arg, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+      let objSend = {
+        bookingDetail: {
+          checkIn: arg.searchBar.checkIn,
+          checkOut: arg.searchBar.checkOut,
+          roomId: arg.roomId,
+          numberAdult: arg.searchBar.guests.numberAdult,
+          numberChildren: arg.searchBar.guests.numberChildren
+        }
+      };
+      let res = await BookingService.createBooking("http://localhost:8080/api/bookings", objSend);
+
+
+      // console.log("objSend", objSend);
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error getting all rooms");
+    }
+  }
+);
 
 export const updateBooking_EditRoom = createAsyncThunk(
   "updateBooking_EditRoom",

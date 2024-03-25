@@ -381,26 +381,32 @@ export default function Booking() {
                               <div className="filter-bar_filterBox">
                                 <div className="filter-bar_header">
                                   <h4 className="app_heading2">
-                                    <span>View</span>
+                                    <span>Bed Type</span>
                                   </h4>
                                 </div>
                                 <div>
                                   <div class="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
                                     <label className="label_filter_right" tabindex="-1" >
-                                      <span>Other</span>
+                                      <span>Double</span>
                                     </label>
                                   </div>
                                   <div class="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
                                     <label className="label_filter_right" tabindex="-1" >
-                                      <span>Garden view</span>
+                                      <span>King</span>
                                     </label>
                                   </div>
                                   <div class="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
                                     <label className="label_filter_right" tabindex="-1" >
-                                      <span>Sea view</span>
+                                      <span>Twin</span>
+                                    </label>
+                                  </div>
+                                  <div class="filter-bar_checkbox ">
+                                    <input className="input_radio" type="checkbox" value="" />
+                                    <label className="label_filter_right" tabindex="-1" >
+                                      <span>Various Bed Types</span>
                                     </label>
                                   </div>
                                 </div>
@@ -410,6 +416,11 @@ export default function Booking() {
                                       <span>Clear</span>
                                     </a>
                                   </div>
+                                </div>
+                              </div>
+                              <div className="filter-bar_filterBox">
+                                <div className="filter-bar_header">
+                                  <h4 className="app_heading2">Price (avg./night)</h4>
                                 </div>
                               </div>
                             </div>

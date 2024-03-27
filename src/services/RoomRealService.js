@@ -8,6 +8,10 @@ class RoomRealService {
     static getRoomRealById(roomId) {
         return apiClients.get(`/room-reals/${roomId}`)
     }
+    static postFindAvailableRoomReal(objDate){
+        console.log("objDate aaaaaa",objDate);
+        return apiClients.post(`/room-reals/findAvailableRoomReal`,objDate)
+    }
     
 }
 

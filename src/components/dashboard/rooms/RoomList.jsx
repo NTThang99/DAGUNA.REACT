@@ -5,9 +5,9 @@ import {
     TableCell,
     TableHead,
     TableRow,
+    TextField,
 } from "@mui/material";
 
-import { getAllRoomsAPI } from "../../home/Slide/RoomSlide";
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { BiCommentDetail } from "react-icons/bi";
@@ -17,7 +17,12 @@ import RoomTypeService from "../../../services/RoomTypeService";
 import SearchIcon from '@mui/icons-material/Search';
 import ModalEditRoom from "./ModalEditRoom";
 import { toast } from "react-toastify";
-
+import dayjs from 'dayjs';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import RoomRealService from "../../../services/RoomRealService";
 
 export default function RoomList() {
     const [roomList, setRoomList] = useState([]);
@@ -32,11 +37,35 @@ export default function RoomList() {
         roomType: "",
         sortByField: "id",        // name, price
         orderBySort: "asc",        // desc, asc
+        minPrice: "",
+        maxPrice: "",
     })
     const [totalPages, setTotalPages] = useState(0)
     const [roomTypeList, setRoomTypeList] = useState([]);
     const [keyword, setKeyword] = useState(null)
-
+    const [selectDate, setSelectDate] = useState([
+        dayjs(),
+        dayjs().add(1, 'day')
+    ])
+    const [loadingSelectDay,setLoadingSelectDay] = useState(false)
+    const selectFirstDay = selectDate[0];
+    const selectLastDay = selectDate[1];
+    console.log("selectDate", selectDate);
+    const [objSelectDay, setObjSelectDay] = useState({
+        selectFirstDay: selectFirstDay.toDate(),
+        selectLastDay: selectLastDay.toDate()
+    })
+    console.log("objSelectDay", objSelectDay);
+    const handleClickSelectDay = (newDates) => {
+        setSelectDate(newDates)
+        const [firstDay, lastDay] = newDates;
+        setObjSelectDay({
+            selectFirstDay: firstDay.toDate(),
+            selectLastDay: lastDay.toDate()
+        });
+        setLoadingSelectDay(true)
+        console.log("load",loadingSelectDay);
+    }
     function calculateUrl(filters) {
         let urlArray = [];
         if (filters.kw !== "") {
@@ -56,10 +85,11 @@ export default function RoomList() {
     }
 
     useEffect(() => {
+        setLoading(true)
         async function getFilter() {
             let dataRoomType = await RoomTypeService.getAllRoomType()
             setRoomTypeList(dataRoomType?.data)
-
+            setLoading(false)
         }
         getFilter()
     }, [])
@@ -71,15 +101,31 @@ export default function RoomList() {
                 let totalPage = roomFilters?.data?.totalPages
                 setTotalPages(totalPage)
                 setRoomList(result)
-
             } catch (error) {
-                console.log(error);
+                console.log("error", error);
                 toast.error('Lỗi dữ liệu/ hệ thống')
             }
         }
         getAllRoomFilter()
     }, [filters, totalPages, roomInfo])
+    useEffect(() => {
+        setLoading(true)
+        async function postFindAvailableRoomRealNoRoomId() {
+            try {
+                console.log("objSelectDayobjSelectDay",objSelectDay);
+                let roomrealRes = await RoomRealService.postFindAvailableRoomReal(objSelectDay)
+                let result = roomrealRes?.data
+                console.log("roomrealRes result", result);
+                setLoading(false)
 
+            } catch (error) {
+                console.log("error", error);
+                toast.error('Lỗi dữ liệu/ hệ thống')
+                setLoading(false)
+            }
+        }
+        postFindAvailableRoomRealNoRoomId()
+    }, [objSelectDay])
     const handleClickNextPage = () => {
         if (Number(filters.page) < totalPages) {
             setFilters({
@@ -144,6 +190,8 @@ export default function RoomList() {
             sortByField: e.target.value
         })
     }
+
+
     return (
         <>
 
@@ -151,7 +199,24 @@ export default function RoomList() {
                 loading ? (<span className="spinner-border text-primary spinner-border-sm" role="status" aria-hidden="true"></span>) :
                     (
                         <>
+                            <div className="d-flex justify-content-center">
+                                <div className="d-flex me-2 algin-items-center my-2 justify-content-center ">
+
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['DateRangePicker']}>
+                                            <DateRangePicker
+                                                value={selectDate}
+                                                onChange={handleClickSelectDay}
+                                                localeText={{ start: 'From', end: 'To' }}
+
+                                            />
+
+                                        </DemoContainer>
+                                    </LocalizationProvider>
+                                </div>
+                            </div>
                             <div className="d-flex justify-content-between">
+
                                 <div className="d-flex me-2 algin-items-center my-2 justify-content-center ">
                                     <form className="d-flex align-items-center " onSubmit={handleSearch}>
                                         <input
@@ -164,6 +229,7 @@ export default function RoomList() {
                                         <input type="button" value="search" style={{ marginLeft: '5px' }} />
                                     </form>
                                 </div>
+
                                 <div className="d-flex me-2 algin-items-center my-2 justify-content-end">
                                     <div className="d-flex me-2 algin-items-center ">
                                         <div className="row me-2">
@@ -186,7 +252,9 @@ export default function RoomList() {
                                     </div>
                                 </div>
                             </div>
-                            <Table size="small" className="table table-bordered table-striped table-hover rounded-3 overflow-hidden">
+                           {
+                            loadingSelectDay? <button onClick={setLoadingSelectDay(false)}></button>:(
+                                <Table size="small" className="table table-bordered table-striped table-hover rounded-3 overflow-hidden">
                                 <TableHead >
                                     <TableRow className="table-secondary">
                                         <TableCell className="text-center">Id</TableCell>
@@ -235,17 +303,19 @@ export default function RoomList() {
                                         ))}
                                 </TableBody>
                             </Table >
+                            )
+                           }
                         </>
                     )
             }
             <div className="d-flex align-items-center justify-content-between">
                 <ul className="pagination">
                     {
-                        filters.page <= 1 ? "" :
+                        filters.page < 1 ? "" :
                             (<li className="page-items">
                                 <button
                                     onClick={handleClickPrevPage}
-                                    className={`page-link ${filters.page <= 1 ? 'disabled' : (filters.direction !== "prev" ? ' ' : 'active')}`}
+                                    className={`page-link ${filters.page >= 1 ? 'disabled' : (filters.direction !== "prev" ? ' ' : 'active')}`}
                                 >prev</button>
                             </li>)
                     }

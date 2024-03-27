@@ -11,6 +11,7 @@ const inItStateELock = {
   data: []
 }
 
+
 export const getAllReceptionistsAPI = createAsyncThunk(
   "getAllReceptionistsAPI",
   async (arg, { rejectWithValue }) => {

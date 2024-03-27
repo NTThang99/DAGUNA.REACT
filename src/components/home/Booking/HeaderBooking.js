@@ -8,10 +8,16 @@ import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
-export default function HeaderBooking({ isExpanded, toggleFlyout, decreaseAdultQuantity, adultQuantity, childQuantity, decreaseChildQuantity, handleAdultsChange, increaseAdultQuantity, increaseChildQuantity, handleApplyChanges, value, setValue,steps  }) {
+export default function HeaderBooking({ isExpanded, shrink, handleInputClick, toggleFlyout, decreaseAdultQuantity, adultQuantity, childQuantity, decreaseChildQuantity, handleAdultsChange, increaseAdultQuantity, increaseChildQuantity, handleApplyChanges, value, setValue, steps, handleChange, age, }) {
+
     const location = useLocation();
     const currentPath = location.pathname;
+
 
     if (currentPath === '/booking') {
         return (
@@ -145,6 +151,36 @@ export default function HeaderBooking({ isExpanded, toggleFlyout, decreaseAdultQ
                                                                 </span>
                                                             </button>
                                                         </div>
+                                                    </div>
+                                                    <div className='guests-selection-flyout_childField'>
+                                                        <FormControl variant="standard"
+                                                            data-shrink={shrink ? "true" : "false"}
+                                                            className="childAge">
+                                                            <InputLabel className='labelAge' >Child 1 Age</InputLabel>
+                                                            <Select
+                                                                labelId="demo-simple-select-standard-label"
+                                                                id="demo-simple-select-standard"
+                                                                value={age}
+                                                                onChange={handleChange}
+                                                                label="Age"
+                                                                onClick={handleInputClick}
+                                                            >
+                                                                <MenuItem value="">
+                                                                    <em>None</em>
+                                                                </MenuItem>
+                                                                <MenuItem value={1}>1</MenuItem>
+                                                                <MenuItem value={2}>2</MenuItem>
+                                                                <MenuItem value={3}>3</MenuItem>
+                                                                <MenuItem value={4}>4</MenuItem>
+                                                                <MenuItem value={5}>5</MenuItem>
+                                                                <MenuItem value={6}>6</MenuItem>
+                                                                <MenuItem value={7}>7</MenuItem>
+                                                                <MenuItem value={8}>8</MenuItem>
+                                                                <MenuItem value={9}>9</MenuItem>
+                                                                <MenuItem value={10}>10</MenuItem>
+                                                                <MenuItem value={11}>11</MenuItem>
+                                                            </Select>
+                                                        </FormControl>
                                                     </div>
                                                 </div>
                                             </div>

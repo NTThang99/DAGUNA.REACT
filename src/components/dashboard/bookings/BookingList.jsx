@@ -6,8 +6,8 @@ import {
     TableHead,
     TableRow,
 } from "@mui/material";
-import { getAvailableRoomAPI } from "../../home/BookingSlide";
 
+import { getAllBookingServiceAPI ,getAvailableRoomAPI} from "../../home/BookingSlide";
 
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -50,6 +50,8 @@ export default function BookingList() {
         getAllBookingFilter()
     }, [filters, totalPages])
 
+
+    const handleRemoveBooking = () => { }
 
     const handleSearchText = (e) => {
         setKeyword(e.target.value)

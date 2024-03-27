@@ -51,30 +51,6 @@ export default function ReceptionistList() {
         getAllReceptionistFilter();
     }, [filters, totalPages]);
 
-    const handleClickNextPage = () => {
-        if (Number(filters.page) < totalPages) {
-            setFilters({
-                ...filters,
-                page: Number(filters.page) + 1,
-                direction: 'next'
-            })
-        }
-    }
-    const handleClickPrevPage = () => {
-        if (Number(filters.page) > 0) {
-            setFilters({
-                ...filters,
-                page: Number(filters.page) - 1,
-                direction: 'prev'
-            })
-        }
-    }
-    const handleClickPageNumber = (pageNumber) => {
-        setFilters({
-            ...filters,
-            page: Number(pageNumber)
-        })
-    }
 
     const handleLockReceptionist = async (receptionistId) => {
         try {
@@ -101,9 +77,6 @@ export default function ReceptionistList() {
         }
     };
     
-
-    const handleRemoveReceptionist = () => { }
-
     const handleSearchText = (e) => {
         setKeyword(e.target.value)
     }
@@ -114,24 +87,7 @@ export default function ReceptionistList() {
             kw: keyword
         })
     }
-    const handleSelectLimit = (e) => {
-        setFilters({
-            ...filters,
-            size: e.target.value
-        })
-    }
-    const handleClickOrder = (e) => {
-        setFilters({
-            ...filters,
-            orderBySort: e.target.value
-        })
-    }
-    const handleClickSort = (e) => {
-        setFilters({
-            ...filters,
-            sortByField: e.target.value
-        })
-    }
+
     return (
         <>
             {

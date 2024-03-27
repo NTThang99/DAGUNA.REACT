@@ -6,7 +6,9 @@ import {
     TableHead,
     TableRow,
 } from "@mui/material";
-import { getAllBookingServiceAPI } from "../../home/BookingSlide";
+import { getAvailableRoomAPI } from "../../home/BookingSlide";
+
+
 
 import EditIcon from '@mui/icons-material/Edit';
 import { BiCommentDetail } from "react-icons/bi";
@@ -48,9 +50,6 @@ export default function BookingList() {
         getAllBookingFilter()
     }, [filters, totalPages])
 
-    
-
-    const handleRemoveBooking = () => { }
 
     const handleSearchText = (e) => {
         setKeyword(e.target.value)
@@ -89,9 +88,8 @@ export default function BookingList() {
                                     <TableRow className="table-secondary">
                                         <TableCell className="text-center">Id</TableCell>
                                         <TableCell className="text-center">Code</TableCell>
-                                   
-                                        <TableCell className="text-center">Check In Day</TableCell>
-                                        <TableCell className="text-center">Check Out Day</TableCell>
+                                        <TableCell className="text-center">Check In</TableCell>
+                                        <TableCell className="text-center">Check Out</TableCell>
                                         <TableCell className="text-center">Total</TableCell>
                                         <TableCell className="text-center">Action</TableCell>
                                     </TableRow>

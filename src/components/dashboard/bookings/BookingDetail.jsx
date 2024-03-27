@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import BookingService from "../../../services/BookingService";
 import UtilityService from "../../../services/UtilityService";
 import { useParams } from "react-router-dom";
-import { toast } from 'react-toastify'
 import { Button, Modal } from "react-bootstrap";
+import { TextField } from "@mui/material";
+import Autocomplete from '@mui/material/Autocomplete';
+import RoomRealService from "../../../services/RoomRealService";
+
+
 
 export default function BookingDetail() {
   const { bookingId } = useParams();
@@ -12,6 +16,12 @@ export default function BookingDetail() {
   const [utilityList, setUtilityList] = useState([]);
   const [utilitiesCheck, setUtilitiesCheck] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [availableRooms, setAvailableRooms] = useState([]);
+  const [value, setValue] = React.useState(null);
+  const [inputValue, setInputValue] = React.useState('');
+
+  const [bookingDetailSelected, setBookingDetailSelected] = useState(null);
+
 
   useEffect(() => {
     setLoading(true);
@@ -47,9 +57,23 @@ export default function BookingDetail() {
         setLoading(false);
       }
     }
+
     getBookingDetail();
+
   }, [bookingId]);
 
+  useEffect(() => {
+    if (bookingDetailSelected != null) {
+      getAvailableRoom();
+    }
+
+  }, [bookingDetailSelected?.bookingDetailId])
+
+
+  const handleSave = () => {
+      RoomRealService.getUpdateBooking_UpdateBookingDetail_UpdateRoomReal(bookingDetailSelected.bookingDetailId,value.id);
+      setShowModal(false);
+  };
   let handleClickRadio = (evt, id) => {
     let newArray = [...utilitiesCheck, id];
     if (utilitiesCheck.includes(id)) {
@@ -58,8 +82,30 @@ export default function BookingDetail() {
     setUtilitiesCheck(newArray);
   }
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (bookingDetailSelected) => {
+    setBookingDetailSelected(bookingDetailSelected);
     setShowModal(true);
+  };
+
+
+  const getAvailableRoom = async () => {
+
+    const objSend = {
+      checkIn: new Date(booking?.bookingDetails?.[0]?.checkIn),
+      checkOut: new Date(booking?.bookingDetails?.[0]?.checkOut),
+      roomId: bookingDetailSelected.room.id
+    };
+
+
+    const availableRooms = await RoomRealService.getAvailableRoom(objSend);
+
+    let data = availableRooms?.data.map(r => {
+      return {
+        "label": r.roomCode,
+        "id": r.id
+      }
+    })
+    setAvailableRooms(data);
   };
 
 
@@ -106,26 +152,65 @@ export default function BookingDetail() {
                   <p>View Type: {detail?.room.viewType}</p>
                   <p>Kind Of Room: {detail?.room.kindOfRoom.name}</p>
                   <div>
-                    <p>Status Checkin: {detail?.room.checkInStatus == true ? "CHECKIN" : "UN CHECKIN"}</p>
-                  <button onClick={handleOpenModal}>Status Checkin</button>
-                  <Modal show={showModal} onHide={handleCloseModal}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Status Checkin</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <p>
-                        
-                      </p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                    <Button variant="primary" onClick={handleCloseModal}>
-                        Save
-                      </Button>
-                      <Button variant="secondary" onClick={handleCloseModal}>
-                        Close
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
+                    <p>Status Checkin: {detail?.checkInStatus == true ? "CHECKIN" : "UN CHECKIN"}</p>
+                    <button onClick={() => handleOpenModal(detail)}>Status Checkin</button>
+                    <Modal show={showModal} onHide={handleCloseModal}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Status Checkin</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <TextField
+                              id="start-date"
+                              label="Check In Date"
+                              type="date"
+                              defaultValue={booking?.bookingDetails?.length > 0 ? new Date(booking?.bookingDetails[0]?.checkIn).toISOString().substr(0, 10) : ''}
+                              InputLabelProps={{ shrink: true }}
+                              disabled
+                            />
+                            <TextField
+                              id="end-date"
+                              label="Check Out Date"
+                              type="date"
+                              defaultValue={booking?.bookingDetails?.length > 0 ? new Date(booking?.bookingDetails[0]?.checkOut).toISOString().substr(0, 10) : ''}
+                              InputLabelProps={{ shrink: true }}
+                              disabled
+                            />
+                          </div>
+                          <div>
+                            <div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div>
+                            <div>{`inputValue: '${inputValue}'`}</div>
+                            <br />
+                            <Autocomplete
+                              value={value}
+                              onChange={(event, newValue) => {
+                                setValue(newValue);
+                              }}
+                              inputValue={inputValue}
+                              onInputChange={(event, newInputValue) => {
+                                setInputValue(newInputValue);
+                              }}
+                              id="controllable-states-demo"
+                              options={availableRooms}
+                              sx={{ width: 300 }}
+                              renderInput={(params) => <TextField {...params} label="Controllable" />}
+                            />
+                          </div>
+                        </div>
+                        {/* Danh sách phòng đang trống */}
+
+                      </Modal.Body>
+
+                      <Modal.Footer>
+                        <Button variant="primary" onClick={()=> handleSave()}>
+                          Save
+                        </Button>
+                        <Button variant="secondary" onClick={handleCloseModal}>
+                          Close
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
                   </div>
                   <p>Per Type: {detail?.room.perType.name}</p>
                   <p>Price Per Night: {detail?.room.pricePerNight}</p>

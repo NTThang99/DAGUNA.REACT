@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import RoomService from "../../services/RoomService";
 import BookingService from "../../services/BookingService";
+import RoomRealService from "../../services/RoomRealService";
+
 const inItState = {
   room: {
     searchBar: {
@@ -33,6 +35,8 @@ const inItState = {
   },
   loading: false,
 };
+
+
 export const searchRoomsAPI = createAsyncThunk(
   "searchRoomsAPI",
   async (arg, { rejectWithValue }) => {
@@ -61,6 +65,10 @@ export const searchRoomsAPI = createAsyncThunk(
     }
   }
 );
+
+
+
+
 export const changeGuestInSearchBarAPI = createAsyncThunk(
   "changeGuestInSearchBarAPI",
   async (arg, { rejectWithValue }) => {
@@ -211,6 +219,10 @@ export const getBookingByIdAPI = createAsyncThunk(
   }
 );
 
+
+
+
+
 export const updateBooking_AddRoomAPI = createAsyncThunk(
   "updateBooking_AddRoomAPI",
   async (arg, { rejectWithValue }) => {
@@ -264,22 +276,22 @@ const bookingReducer = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(searchRoomsAPI.pending, (state, action) => {});
+    builder.addCase(searchRoomsAPI.pending, (state, action) => { });
     builder.addCase(searchRoomsAPI.fulfilled, (state, action) => {
       state.room.data = action.payload.content;
     });
-    builder.addCase(changeGuestInSearchBarAPI.pending, (state, action) => {});
+    builder.addCase(changeGuestInSearchBarAPI.pending, (state, action) => { });
     builder.addCase(changeGuestInSearchBarAPI.fulfilled, (state, action) => {
       state.room.data = action.payload;
     });
 
-    builder.addCase(createBookingAPI.pending, (state, action) => {});
+    builder.addCase(createBookingAPI.pending, (state, action) => { });
     builder.addCase(createBookingAPI.fulfilled, (state, action) => {
       localStorage.setItem("bookingId", action.payload.bookingId);
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
     });
-    builder.addCase(getBookingByIdAPI.pending, (state, action) => {});
+    builder.addCase(getBookingByIdAPI.pending, (state, action) => { });
     builder.addCase(getBookingByIdAPI.fulfilled, (state, action) => {
       if (action.payload != null) {
         state.booking.bookingDetails = action.payload.bookingDetails;
@@ -319,7 +331,7 @@ const bookingReducer = createSlice({
         state.loading = true;
       }
     );
-    builder.addCase(getAllBookingServiceAPI.pending, (state, action) => {});
+    builder.addCase(getAllBookingServiceAPI.pending, (state, action) => { });
     builder.addCase(getAllBookingServiceAPI.fulfilled, (state, action) => {
       state.addOns.data = action.payload;
     });

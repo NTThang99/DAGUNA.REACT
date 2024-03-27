@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import RoomService from "../../services/RoomService";
 import BookingService from "../../services/BookingService";
+import RoomRealService from "../../services/RoomRealService";
+
 const inItState = {
   room: {
     searchBar: {
@@ -33,6 +35,8 @@ const inItState = {
   },
   loading: false,
 };
+
+
 export const searchRoomsAPI = createAsyncThunk(
   "searchRoomsAPI",
   async (arg, { rejectWithValue }) => {
@@ -61,6 +65,10 @@ export const searchRoomsAPI = createAsyncThunk(
     }
   }
 );
+
+
+
+
 export const changeGuestInSearchBarAPI = createAsyncThunk(
   "changeGuestInSearchBarAPI",
   async (arg, { rejectWithValue }) => {
@@ -134,8 +142,10 @@ export const createBookingUser = createAsyncThunk(
           numberChildren: arg.searchBar.guests.numberChildren
         }
       };
-      let res = await BookingService.createBooking("http://localhost:8080/api/bookings", objSend);
-
+      let res = await BookingService.createBooking(
+        "http://localhost:8080/api/bookings",
+        objSend
+      );
 
       // console.log("objSend", objSend);
       return res;
@@ -236,6 +246,10 @@ export const getBookingByIdAPI = createAsyncThunk(
     }
   }
 );
+
+
+
+
 
 export const updateBooking_AddRoomAPI = createAsyncThunk(
   "updateBooking_AddRoomAPI",

@@ -12,13 +12,11 @@ const inItStateELock = {
 }
 
 
-
 export const getAllReceptionistsAPI = createAsyncThunk(
   "getAllReceptionistsAPI",
   async (arg, { rejectWithValue }) => {
     try {
       let res = await ReceptionistService.getAllReceptionists(arg);
-      console.log("res", res);
       return res;
 
     } catch (err) {

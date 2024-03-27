@@ -838,11 +838,6 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                             </div>
                         ))}
                     </div >
-                    <div className="add-ons-container_rightContinue">
-                        <button className="btn button_btn button_primary button_md button_block" datatest="Button" onClick={() => handleNext()}>
-                            <span>Continue</span>
-                        </button>
-                    </div>
                 </>
             )
         );

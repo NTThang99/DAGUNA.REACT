@@ -100,6 +100,7 @@ export const getAllBookingServiceAPI = createAsyncThunk(
     }
   }
 );
+
 export const createBookingAPI = createAsyncThunk(
   "createBookingAPI",
   async (arg, { rejectWithValue }) => {
@@ -113,6 +114,33 @@ export const createBookingAPI = createAsyncThunk(
           numberAdult: arg.searchBar.guests.numberAdult,
           numberChildren: arg.searchBar.guests.numberChildren,
         },
+      };
+      let res = await BookingService.createBooking(
+        "http://localhost:8080/api/bookings",
+        objSend
+      );
+
+      // console.log("objSend", objSend);
+      return res;
+    } catch (err) {
+      return rejectWithValue("Error getting all rooms");
+    }
+  }
+);
+
+export const createBookingUser = createAsyncThunk(
+  "createBookingAPI",
+  async (arg, { rejectWithValue }) => {
+    try {
+      // tùy vào arg để gửi thông tin lên cho phù hợp
+      let objSend = {
+        bookingDetail: {
+          checkIn: arg.searchBar.checkIn,
+          checkOut: arg.searchBar.checkOut,
+          roomId: arg.roomId,
+          numberAdult: arg.searchBar.guests.numberAdult,
+          numberChildren: arg.searchBar.guests.numberChildren
+        }
       };
       let res = await BookingService.createBooking(
         "http://localhost:8080/api/bookings",
@@ -263,6 +291,21 @@ export const updateBooking_DeleteRoomAPI = createAsyncThunk(
     } catch (err) {
       // Trả về lỗi nếu không thể xóa
       return rejectWithValue("Error deleting booking detail");
+    }
+  }
+);
+
+export const updateBooking_Complete = createAsyncThunk(
+  "updateBooking_Complete",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const res = await BookingService.updateBooking_Complete(
+        `http://localhost:8080/api/bookings/${arg.bookingId}/complete`
+      );
+      return res;
+    } catch (err) {
+      // Trả về lỗi nếu không thể xóa
+      return rejectWithValue("Error Complete booking detail");
     }
   }
 );

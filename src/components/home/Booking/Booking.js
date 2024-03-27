@@ -8,8 +8,14 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { searchRoomsAPI } from "../BookingSlide";
-import { updateSearchBar, createBookingAPI, getBookingByIdAPI, updateBooking_AddRoomAPI } from "../BookingSlide";
+import {
+  updateSearchBar,
+  createBookingAPI,
+  getBookingByIdAPI,
+  updateBooking_AddRoomAPI,
+  searchRoomsAPI,
+  changeGuestInSearchBarAPI,
+} from "../BookingSlide";
 import BookingDetail from "./BookingDetail";
 import HeaderBooking from "./HeaderBooking";
 import RoomService from "../../../services/RoomService";
@@ -23,22 +29,23 @@ export default function Booking() {
   const [isFocusedSort, setIsFocusedSort] = useState(false);
   const [isFocusedFilter, setIsFocusedFilter] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [shrink, setShrink] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [openView, setOpenView] = React.useState(null);
   const [openSort, setOpenSort] = React.useState(null);
   const [openFilter, setOpenFilter] = React.useState(null);
-
   const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(2);
-
+  const [age, setAge] = React.useState('');
   // const [selectedDate, setSelectedDate] = useState(dayjs());
   const [activeStep, setActiveStep] = React.useState(0);
   const dispatch = useDispatch();
   const room = useSelector((state) => state.booking.room);
   const booking = useSelector((state) => state.booking.booking);
   const loading = useSelector((state) => state.loading);
+  const searchBar = useSelector((state) => state.room.searchBar);
 
   const [roomModal, setRoomModal] = useState(null);
   const [value, setValue] = React.useState([
@@ -85,44 +92,34 @@ export default function Booking() {
     setIsFocusedFilter(false);
     setOpenFilter(null);
   };
-
   const increaseAdultQuantity = () => {
     setAdultQuantity(adultQuantity + 1);
   };
-
   const decreaseChildQuantity = () => {
     if (childQuantity > 0) {
       setChildQuantity(childQuantity - 1);
     }
   };
-
   const increaseChildQuantity = () => {
     setChildQuantity(childQuantity + 1);
   };
-
-
-
   const handleOpen = async (id) => {
     // lay room theo id => room
     let room = await RoomService.getRoomById(id);
-    setRoomModal(room)
+    setRoomModal(room.data)
 
     setOpen(true);
   }
   const handleClose = () => setOpen(false);
-
   const toggleForm = () => {
     setShowForm(!showForm);
   };
-
   const handleChooseBookingDetail = (bookingDetailId) => {
     setBookingDetailChoosen(bookingDetailId);
   };
-
   const cancelForm = () => {
     setShowForm(false);
   };
-
   const handleNext = (id) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     handleNavigateBooking();
@@ -139,10 +136,6 @@ export default function Booking() {
       }));
     }
   };
-
-
-  // console.log("roomdata", room.data);
-
   const handleNavigateBooking = () => {
     navigate(`/booking/addons`);
   };
@@ -160,6 +153,12 @@ export default function Booking() {
       }
     }));
     toggleFlyout();
+  };
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+  const handleInputClick = () => {
+    setShrink(true);
   };
 
   useEffect(() => {
@@ -191,6 +190,10 @@ export default function Booking() {
               value={value}
               setValue={setValue}
               steps={steps}
+              age={age}
+              handleChange={handleChange}
+              handleInputClick={handleInputClick}
+              shrink={shrink}
             />
             <div className="filter-bar_container">
               <div className="filter-bar_box">
@@ -213,6 +216,7 @@ export default function Booking() {
                           value="room"
                           tabindex="0"
                           onClick={handleClickView}
+                        // onClick={handleSearchRooms}
                         ></button>
                         <div className="select_input" data-selector={openView ? 'false' : undefined}>
                           <label
@@ -381,26 +385,32 @@ export default function Booking() {
                               <div className="filter-bar_filterBox">
                                 <div className="filter-bar_header">
                                   <h4 className="app_heading2">
-                                    <span>View</span>
+                                    <span>Bed Type</span>
                                   </h4>
                                 </div>
                                 <div>
                                   <div class="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
                                     <label className="label_filter_right" tabindex="-1" >
-                                      <span>Other</span>
+                                      <span>Double</span>
                                     </label>
                                   </div>
                                   <div class="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
                                     <label className="label_filter_right" tabindex="-1" >
-                                      <span>Garden view</span>
+                                      <span>King</span>
                                     </label>
                                   </div>
                                   <div class="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
                                     <label className="label_filter_right" tabindex="-1" >
-                                      <span>Sea view</span>
+                                      <span>Twin</span>
+                                    </label>
+                                  </div>
+                                  <div class="filter-bar_checkbox ">
+                                    <input className="input_radio" type="checkbox" value="" />
+                                    <label className="label_filter_right" tabindex="-1" >
+                                      <span>Various Bed Types</span>
                                     </label>
                                   </div>
                                 </div>
@@ -410,6 +420,11 @@ export default function Booking() {
                                       <span>Clear</span>
                                     </a>
                                   </div>
+                                </div>
+                              </div>
+                              <div className="filter-bar_filterBox">
+                                <div className="filter-bar_header">
+                                  <h4 className="app_heading2">Price (avg./night)</h4>
                                 </div>
                               </div>
                             </div>

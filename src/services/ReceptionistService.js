@@ -30,6 +30,14 @@ class ReceptionistService {
       .then((data) => data)
       .catch((error) => error);
   }
+  static async lockReceptionist(receptionistId) {
+    return apiClients.patch(`/receptionists/lock/${receptionistId}`);
+  }
+
+  static async openReceptionist(receptionistId) {
+    return apiClients.patch(`/receptionists/open/${receptionistId}`);
+  }
+  
 }
 export default ReceptionistService;
 

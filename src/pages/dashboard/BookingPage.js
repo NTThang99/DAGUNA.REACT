@@ -5,44 +5,44 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
 
-export default function RoomPage() {
-    const { idRoomDetail } = useParams()
-    const { idRoomEdit } = useParams()
+export default function BookingPage() {
+    const { idBookingDetail } = useParams()
+    const { idBookingEdit } = useParams()
     return (
         <>
             <Table>
                 <TableHead>
                     <TableRow className="nav-item">
                         <TableCell className="nav-link ">
-                            <NavLink to={'/dashboard/rooms/list'}>
+                            <NavLink to={'/dashboard/bookings/list'}>
                                 <ListAltIcon />
-                                List Room Common
+                                List Bookings
                             </NavLink>
                         </TableCell>
                         <TableCell className="nav-link ">
-                            <NavLink to={'/dashboard/rooms/add'}>
+                            <NavLink to={'/dashboard/bookings/add'}>
                                 <AddIcon />
-                                Create Room
+                                Create Bookings
                             </NavLink>
                         </TableCell>
-                        {idRoomDetail ?
+                        {idBookingDetail ?
                             <TableCell className="nav-link ">
-                                <NavLink to={`/dashboard/rooms/${idRoomDetail}`}>
+                                <NavLink to={`/dashboard/bookings/${idBookingDetail}`}>
                                     <InfoIcon />
-                                    Room Common Detail
+                                    Bookings Detail
                                 </NavLink>
                             </TableCell>
                              : '' 
                         } 
-                           {/* {idRoomEdit ?
+                           {idBookingEdit ?
                             <TableCell className="nav-link ">
-                                <NavLink to={`/dashboard/rooms/${idRoomEdit}`}>
+                                <NavLink to={`/dashboard/bookings/${idBookingEdit}`}>
                                     <InfoIcon />
-                                    Edit Room 
+                                    Edit Bookings
                                 </NavLink>
                             </TableCell>
                              : '' 
-                        }  */}
+                        } 
                     </TableRow>
                 </TableHead>
             </Table>

@@ -10,8 +10,8 @@ import { useNavigate } from "react-router-dom";
 import {
   getBookingByIdAPI,
   getAllBookingServiceAPI,
-  updateBooking_AddBookingCustomer,
   updateBooking_DeleteRoomAPI,
+  updateBooking_Complete,
 } from "../BookingSlide";
 import { useDispatch, useSelector } from "react-redux";
 import BookingDetail from "./BookingDetail";
@@ -67,21 +67,21 @@ const prefixs = [
 
 export default function BookingCheckout() {
   const navigate = useNavigate();
-  const [customerInfo, setCustomerInfo] = useState({
-    ePrefix: "MR",
-    firstName: "Dang",
-    lastName: "Quang",
-    phone: "0399578134",
-    email: "quang.dang@codegym.vn",
-    country: "Viet nam",
-    address: "mmm",
-    zipCode: "53000",
-    cardType: "MASTERCARD",
-    cardNumber: "zxcvbnm",
-    expirationDate: "2025-05-08",
-    cvv: "048",
-    nameCard: "DANG VAN QUANG",
-  });
+  // const [customerInfo, setCustomerInfo] = useState({
+  //   ePrefix: "MR",
+  //   firstName: "Dang",
+  //   lastName: "Quang",
+  //   phone: "0399578134",
+  //   email: "quang.dang@codegym.vn",
+  //   country: "Viet nam",
+  //   address: "mmm",
+  //   zipCode: "53000",
+  //   cardType: "MASTERCARD",
+  //   cardNumber: "zxcvbnm",
+  //   expirationDate: "2025-05-08",
+  //   cvv: "048",
+  //   nameCard: "DANG VAN QUANG",
+  // });
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(2);
   const [activeStep, setActiveStep] = React.useState(0);
@@ -92,10 +92,11 @@ export default function BookingCheckout() {
   const [loading, setLoading] = useState(false);
   const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const dispatch = useDispatch();
-  const bookingServices = useSelector((state) => state.booking.addOns.data);
+  // const bookingServices = useSelector((state) => state.booking.addOns.data);
   const booking = useSelector((state) => state.booking.booking);
   const [showCouponField, setShowCouponField] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleAddCouponClick = () => {
     setShowCouponField(true);
@@ -108,27 +109,33 @@ export default function BookingCheckout() {
 
   const handleClose = () => setOpen(false);
 
-  const handleNext = (id, bookingServiceType, bookindDetailId) => {
-    setShowAddon(bookindDetailId);
-    handleCustomerInfoChange();
-    setLoading(true);
-    handleNavigateBooking();
+  const handleOpenModal = () => setOpenModal(true);
+
+  const handleCloseModal = () => setOpenModal(false);
+
+  const handleNext = () => {
+    // setShowAddon(bookindDetailId);
+    // handleCustomerInfoChange();
+    // setLoading(true);
+    // handleNavigateBooking();
+    handleBookingHome()
+    // console.log("aaaaaaa", handleNext);
     dispatch(
-      updateBooking_AddBookingCustomer({
+      updateBooking_Complete({
         bookingId: booking.bookingId,
-        customerInfo: customerInfo,
+        // customerInfo: customerInfo,
       })
     ).then(() => {
-      setLoading(true);
+      // setLoading(true);
     });
   };
 
-  const handleCustomerInfoChange = (updatedCustomerInfo) => {
-    setCustomerInfo(updatedCustomerInfo);
-  };
+  // const handleCustomerInfoChange = (updatedCustomerInfo) => {
+  //   setCustomerInfo(updatedCustomerInfo);
+  // };
 
-  const handleNavigateBooking = () => {
-    navigate(`/booking/checkout`);
+  const handleBookingHome = () => {
+    navigate(`/`);
   };
 
   const handleBack = () => {
@@ -827,6 +834,7 @@ export default function BookingCheckout() {
               <button
                 className="btn button_btn button_primary button_md"
                 datatest="Button"
+                onClick={() => { handleOpenModal(); }}
               >
                 <span>
                   <span>Complete Booking</span>
@@ -845,7 +853,7 @@ export default function BookingCheckout() {
               adultQuantity={adultQuantity}
               childQuantity={childQuantity}
               handleBack={handleBack}
-              handleNext={handleNext}
+              // handleNext={handleNext}
               handleChooseBookingDetail={handleChooseBookingDetail}
               showAddon={showAddon}
               handleEdit={handleEdit}
@@ -887,10 +895,7 @@ export default function BookingCheckout() {
                 </div>
                 <div className="guest-policies_perRoom">
                   <h3 className="app_subheading1">
-                    <span>
-                      Room 1 <span>GARDEN BALCONY GRAND</span>,{" "}
-                      <span>Garden Balcony King Grand</span>
-                    </span>
+                    <span>Room 1: <span>GARDEN BALCONY GRAND</span>{" "} </span>
                   </h3>
                   <div className="guest-policies_guaranteePolicy">
                     <h4 className="app_subheading2">
@@ -948,8 +953,263 @@ export default function BookingCheckout() {
               </div>
             </div>
           </Modal>
+          <Modal
+            open={openModal}
+            onClose={handleCloseModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <div className="modal-message_modalMessage ">
+              <div className="modal-message_closeButtonWrapper">
+                <div className="fa-solid fa-xmark modal-message_closeButton " onClick={handleCloseModal}></div>
+              </div>
+              <div className="modal-message_contentWrapper">
+                <h2 className="app_modalTitle guest-policies_policiesModalHeading">
+                  <span>Booking Detail</span>
+                </h2>
+                <div className="guest-policies_hotelDetails" style={{ display: "flex", justifyContent: "space-between" }} >
+                  <div className="guest-policies_checkIn">
+                    <b>
+                      <span>Check-in</span>
+                    </b>
+                    <span>After 3:00 PM</span>
+                  </div>
+                  <div className="guest-policies_checkOut">
+                    <b>
+                      <span>Check-out</span>
+                    </b>
+                    <span>Before 12:00 PM</span>
+                  </div>
+                  <div className="guest-policies_Adult">
+                    <b>
+                      <span>Number Adult</span>
+                    </b>
+                    <span>2</span>
+                  </div>
+                  <div className="guest-policies_Children">
+                    <b>
+                      <span>Number Children</span>
+                    </b>
+                    <span>0</span>
+                  </div>
+                </div>
+                <div>
+                  <h2 className="app_modalTitle guest-policies_policiesModalHeading">
+                    <span>Room 1:</span>
+                  </h2>
+                  <div className="app_row">
+                    <h2 className="detail-view-room_roomName app_modalTitle" style={{ paddingLeft: "8px", fontSize: "20px" }}>GARDEN BALCONY GRAND</h2>
+                    <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_pull-md-6 app_pull-6" style={{ height: "150px" }}>
+                      <div style={{ display: "flex" }}>
+                        <div className="guests-and-roomsize_roomProperties app_pull_room-6">
+                          <div className="guest-policies_hotelDetails" style={{ paddingLeft: "25px" }}>
+                            <div className="guest-policies_View">
+                              <b>
+                                <span>View </span>
+                              </b>
+                              <span>GARDEN_VIEW</span>
+                            </div>
+                            <div className="guest-policies_Type">
+                              <b>
+                                <span>Type </span>
+                              </b>
+                              <span>SUPERIOR</span>
+                            </div>
+                            <div className="guest-policies_Guests">
+                              <b>
+                                <span>Guests</span>
+                              </b>
+                              <span>2</span>
+                            </div>
+                            <div className="guest-policies_King">
+                              <b>
+                                <span>King</span>
+                              </b>
+                              <span>1</span>
+                            </div>
+                            <div className="guest-policies_Size">
+                              <b>
+                                <span>Size</span>
+                              </b>
+                              <span>53 m²</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="thumb-cards_imgWrapper thumb-cards_hasMultipleImages app_push_room-6">
+                          <img style={{ height: "104px" }} className="thumb-cards_image" src="https://reservations.angsana.com/shs-ngbe-image-resizer/images/hotel/64294/images/room/angsana_langco_garden_balcony_king_grand_2__2022.jpg" />
+                        </div>
+                      </div>
+                      <div className="guest-policies_hotelDetails">
+                        <div className="guest-policies_View" style={{ paddingLeft: "0", marginRight: "0" }}>
+                          <span style={{ fontSize: "1rem" }}>Its area is 53sqm. Every room in this category has a private balcony</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_push-md-6 app_push-6">
+                      <div className="cart-container_room" style={{ paddingBottom: "5px" }}>
+                        <div className="cart-container_roomRate">
+                          <a className="cart_name" >Price:</a>
+                        </div>
+                        <div className="cart-container_price">
+                          <span>₫5,000,000</span>
+                        </div>
+                      </div>
+                      <div className="cart-container_taxesAndFees" style={{ marginBottom: "0" }}>
+                        <div className="cart-container_headerWithPrice">
+                          <div className="cart-container_taxesAndFeesHeader">
+                            <span>Taxes and Fees:</span>
+                          </div>
+                          <span className="cart-container_price">
+                            <span>₫394,753</span>
+                          </span>
+                        </div>
+                        <div className="display-prices_wrapper">
+                          <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
+                            <span>{showDetailsBill ? "Details" : "Details"}</span>
+                          </button>
+                          {showDetailsBill && (
+                            <div className="display-prices_breakdown" style={{ paddingLeft: "0" }}>
+                              <div className="display-prices_row">
+                                <div className="display-prices_label">8% Government Tax</div>
+                                <div className="display-prices_price">
+                                  <span>₫235,673</span>
+                                </div>
+                              </div>
+                              <div className="display-prices_row">
+                                <div className="display-prices_label">5% Service Charge</div>
+                                <div className="display-prices_price">
+                                  <span>₫159,080</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ paddingLeft: "519px", marginBottom: "-12px" }}>
+                      <hr className="detail-view-room_line" />
+                      <div className="cart-container_addon" style={{ paddingBottom: "0" }}>
+                        <div className="cart-container_addonNameInfo" style={{ paddingLeft: "20px", paddingRight: "81px" }}>
+                          <h2 className="app_modalTitle guest-policies_policiesModalHeading" style={{ fontSize: "20px" }}>
+                            <span>Total:</span>
+                          </h2>
+                        </div>
+                        <div className="cart-container_price" style={{ fontSize: "15px" }}>
+                          <span>₫1,105,298</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="app_row">
+                      <h2 className="detail-view-room_roomName app_modalTitle" style={{ paddingLeft: "8px", fontSize: "22px" }}>Arrival Transfer - SUV</h2>
+                      <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_pull-md-6 app_pull-6" style={{ height: "150px" }}>
+                        <div style={{ display: "flex" }}>
+                          <div className="guests-and-roomsize_roomProperties app_pull_room-6">
+                            <div className="guest-policies_hotelDetails">
+                              <div className="guest-policies_View">
+                                <b>
+                                  <span> <span>Mar 14 </span>/ Per Car: 1</span>
+                                </b>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="thumb-cards_imgWrapper thumb-cards_hasMultipleImages app_push_room-6">
+                            <img style={{ height: "104px" }} className="thumb-cards_image" src="https://reservations.angsana.com/shs-ngbe-image-resizer/images/hotel/64294/images/room/angsana_langco_garden_balcony_king_grand_2__2022.jpg" />
+                          </div>
+                        </div>
+                        <div className="guest-policies_hotelDetails" style={{ paddingTop: "15px" }}>
+                          <div className="guest-policies_View" style={{ paddingLeft: "0", marginRight: "0" }}>
+                            <span style={{ fontSize: "1rem" }}>Arrive in style via one-way car transfer (SUV max 3 persons)</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_push-md-6 app_push-6">
+                        <div className="cart-container_room" style={{ paddingBottom: "5px" }}>
+                          <div className="cart-container_roomRate">
+                            <a className="cart_name" >Price:</a>
+                          </div>
+                          <div className="cart-container_price">
+                            <span>₫500,000</span>
+                          </div>
+                        </div>
+                        <div className="cart-container_taxesAndFees" style={{ marginBottom: "0" }}>
+                          <div className="cart-container_headerWithPrice">
+                            <div className="cart-container_taxesAndFeesHeader">
+                              <span>Taxes and Fees:</span>
+                            </div>
+                            <span className="cart-container_price">
+                              <span>₫39,475</span>
+                            </span>
+                          </div>
+                          <div className="display-prices_wrapper">
+                            <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
+                              <span>{showDetailsBill ? "Details" : "Details"}</span>
+                            </button>
+                            {showDetailsBill && (
+                              <div className="display-prices_breakdown" style={{ paddingLeft: "0" }}>
+                                <div className="display-prices_row">
+                                  <div className="display-prices_label">8% Government Tax</div>
+                                  <div className="display-prices_price">
+                                    <span>₫23,567</span>
+                                  </div>
+                                </div>
+                                <div className="display-prices_row">
+                                  <div className="display-prices_label">5% Service Charge</div>
+                                  <div className="display-prices_price">
+                                    <span>₫15,908</span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ paddingLeft: "519px" }}>
+                        <hr className="detail-view-room_line" />
+                        <div className="cart-container_addon">
+                          <div className="cart-container_addonNameInfo" style={{ paddingLeft: "20px", paddingRight: "81px" }}>
+                            <h2 className="app_modalTitle guest-policies_policiesModalHeading" style={{ fontSize: "20px" }}>
+                              <span>Total:</span>
+                            </h2>
+                          </div>
+                          <div className="cart-container_price" style={{ fontSize: "15px" }}>
+                            <span>₫539,475</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <hr className="detail-view-room_line" />
+                    <div className="cart-container_addon">
+                      <div className="cart-container_addonNameInfo">
+                        <h2 className="app_modalTitle guest-policies_policiesModalHeading" style={{ fontSize: "2rem" }}>
+                          <span>Total:</span>
+                        </h2>
+                      </div>
+                      <div className="cart-container_price" style={{ fontSize: "1.5rem" }}>
+                        <span>₫1,105,298</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="guest-info-container_bottomContinue button_group">
+                  <button
+                    className="btn button_btn button_primary button_md"
+                    datatest="Button"
+                    onClick={handleNext}
+                  >
+                  <span>
+                    <span>Complete</span>
+                  </span>
+                </button>
+              </div>
+            </div>
         </div>
-      </div>
+      </Modal>
+    </div >
+      </div >
     </>
   );
 }

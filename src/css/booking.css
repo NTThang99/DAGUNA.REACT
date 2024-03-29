@@ -304,6 +304,31 @@
     font-size: 16px;
 }
 
+ .childAge {
+    left: 84px;
+    border: 1px solid black !important;
+    width: 217px;
+}
+
+[data-shrink="true"] .childAge {
+    left: 84px;
+    border: 2px solid rgba(181, 82, 25, 1) !important;
+    width: 217px;
+    background: rgba(246, 224, 193, 1);
+}
+
+[data-shrink="false"] .labelAge {
+    top: -9px;
+    left: 2px;
+}
+
+[data-shrink="true"] .labelAge {
+    left: 2px;
+    /* border: 2px solid rgba(181, 82, 25, 1);
+    background: rgba(246, 224, 193, 1); */
+}
+
+
 .input-field_label {
     display: block;
     position: absolute;
@@ -848,6 +873,10 @@
 
 .guests-and-roomsize_roomProperties {
     font-size: 0.875rem;
+}
+
+.guests-and-roomsize_bold {
+    font-weight: 700;
 }
 
 .guests-and-roomsize_bed,
@@ -2212,20 +2241,64 @@ label+.css-uhyr2s-MuiInputBase-root-MuiInput-root {
     display: block;
 }
 
-.guest-policies_checkIn {
-    margin-right: 3rem;
-}
-
 .guest-policies_checkIn,
-.guest-policies_checkOut {
+.guest-policies_checkOut,
+.guest-policies_Adult,
+.guest-policies_Children {
     display: inline-block;
     vertical-align: top;
     margin-bottom: 1rem;
 }
 
 .guest-policies_checkIn b,
-.guest-policies_checkOut b {
+.guest-policies_checkOut b,
+.guest-policies_Adult b,
+.guest-policies_Children b {
     display: block;
+}
+
+.guest-policies_checkIn span,
+.guest-policies_checkOut span,
+.guest-policies_Adult span,
+.guest-policies_Children span {
+    display: flex;
+    justify-content: center;
+}
+
+.guest-policies_View,
+.guest-policies_Type,
+.guest-policies_Guests,
+.guest-policies_King,
+.guest-policies_Size {
+    margin-right: 2rem;
+}
+
+.guest-policies_View,
+.guest-policies_Type,
+.guest-policies_Guests,
+.guest-policies_King,
+.guest-policies_Size {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 1rem;
+}
+
+.guest-policies_View b,
+.guest-policies_Type b,
+.guest-policies_Guests b,
+.guest-policies_King b,
+.guest-policies_Size b {
+    display: block;
+    font-size: 18px
+}
+
+.guest-policies_View span,
+.guest-policies_Type span,
+.guest-policies_Guests span,
+.guest-policies_King span,
+.guest-policies_Size span {
+    display: flex;
+    justify-content: center;
 }
 
 .guest-policies_perRoom {
@@ -2435,4 +2508,34 @@ small {
     cursor: pointer;
     transition: color 150ms;
     text-decoration: none;
+}
+
+.checkout_image {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.app_push-6 {
+    left: 0;
+    flex: 0 0 30%;
+    max-width: 30%;
+    padding-left: 20px;
+    padding-right: 0px;
+}
+
+.app_pull-6 {
+    right: 0;
+    flex: 0 0 70%;
+    max-width: 70%;
+    border-right: 3px solid #ccc;
+}
+
+.app_pull_room-6 {
+    flex: 0 0 60%;
+    max-width: 60%;
+}
+
+.app_push_room-6 {
+    flex: 0 0 40%;
+    max-width: 40%;
 }

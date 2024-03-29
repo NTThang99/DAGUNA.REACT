@@ -294,7 +294,7 @@ export default function RoomList() {
                                                                     <TableCell className="text-center">Room</TableCell>
                                                                     <TableCell className="text-center">Available/Total</TableCell>
                                                                     <TableCell className="text-center">Sleep</TableCell>
-                                                                    <TableCell className="text-center">Price</TableCell>
+                                                                    <TableCell className="text-center">Price (VNĐ)</TableCell>
                                                                     <TableCell className="text-center">Action</TableCell>
                                                                 </TableRow>
 
@@ -371,7 +371,7 @@ export default function RoomList() {
                                                                         <TableCell className="text-center">Type</TableCell>
                                                                         <TableCell className="text-center">Per type</TableCell>
                                                                         <TableCell className="text-center">Sleeper</TableCell>
-                                                                        <TableCell className="text-center">Price</TableCell>
+                                                                        <TableCell className="text-center">Price (VNĐ)</TableCell>
                                                                         <TableCell className="text-center">Action</TableCell>
                                                                     </TableRow>
                                                                 </TableHead>

@@ -89,14 +89,16 @@ export default function BookingDetail() {
 
   const getAvailableRoom = async () => {
 
-    const objSend = {
+    const objDate = {
       selectFirstDay: new Date(booking?.bookingDetails?.[0]?.checkIn),
       selectLastDay: new Date(booking?.bookingDetails?.[0]?.checkOut),
     };
-    console.log("objSend", objSend);
+    console.log("objSend", objDate);
+   
 
 
-    const availableRooms = await RoomRealService.getAvailableRoom(objSend);
+    const availableRooms = await RoomRealService.postFindAvailableRoomReal(objDate);
+    console.log("availableRooms", availableRooms);
 
     let data = availableRooms?.data.map(r => {
       return {
@@ -105,6 +107,7 @@ export default function BookingDetail() {
       }
     })
     setAvailableRooms(data);
+    console.log("data", data);
   };
 
   

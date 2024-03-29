@@ -18,9 +18,7 @@ class RoomRealService {
     }
     
 
-    static async getAvailableRoom( objSend) {
-      return apiClients.post(`/room-reals/findAvailableRoomReal`, objSend);
-      }
+   
     static async getAvailableRoomHavieRoomId(roomId, objSend) {
       return apiClients.post(`/room-reals/available?roomId=${roomId}`, objSend);
       }

@@ -16,10 +16,9 @@ export default function BookingDetail() {
   const [utilityList, setUtilityList] = useState([]);
   const [utilitiesCheck, setUtilitiesCheck] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [availableRooms, setAvailableRooms] = useState([]);
+  const [ availableRooms, setAvailableRooms] = useState([]);
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState('');
-
   const [bookingDetailSelected, setBookingDetailSelected] = useState(null);
 
 
@@ -91,10 +90,10 @@ export default function BookingDetail() {
   const getAvailableRoom = async () => {
 
     const objSend = {
-      checkIn: new Date(booking?.bookingDetails?.[0]?.checkIn),
-      checkOut: new Date(booking?.bookingDetails?.[0]?.checkOut),
-      roomId: bookingDetailSelected.room.id
+      selectFirstDay: new Date(booking?.bookingDetails?.[0]?.checkIn),
+      selectLastDay: new Date(booking?.bookingDetails?.[0]?.checkOut),
     };
+    console.log("objSend", objSend);
 
 
     const availableRooms = await RoomRealService.getAvailableRoom(objSend);
@@ -107,6 +106,8 @@ export default function BookingDetail() {
     })
     setAvailableRooms(data);
   };
+
+  
 
 
   const handleCloseModal = () => {
@@ -198,8 +199,6 @@ export default function BookingDetail() {
                             />
                           </div>
                         </div>
-                        {/* Danh sách phòng đang trống */}
-
                       </Modal.Body>
 
                       <Modal.Footer>

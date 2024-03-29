@@ -13,7 +13,7 @@ class RoomRealService {
 
 
     static async getAvailableRoom( objSend) {
-      return apiClients.post(`/room-reals/available`, objSend);
+      return apiClients.post(`/room-reals/findAvailableRoomReal`, objSend);
       }
 
     static async getUpdateBooking_UpdateBookingDetail_UpdateRoomReal(bookingDetailId, roomRealId){

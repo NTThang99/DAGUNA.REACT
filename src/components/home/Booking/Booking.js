@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ImageGallery from "react-image-gallery";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,7 +14,6 @@ import {
   createBookingAPI,
   getBookingByIdAPI,
   updateBooking_AddRoomAPI,
-  searchRoomsAPI,
   findAvailableRoomHavePerAPI,
 } from "../BookingSlide";
 import BookingDetail from "./BookingDetail";
@@ -162,7 +162,7 @@ export default function Booking() {
     }
     let current = adultQuantity + mapAge.get("greatthan4") + Math.ceil(mapAge.get("lessthan4") / 2);
 
-    dispatch(findAvailableRoomHavePerAPI({ 
+    dispatch(findAvailableRoomHavePerAPI({
       current: current,
       checkIn: room.searchBar.checkIn,
       checkOut: room.searchBar.checkOut,
@@ -182,9 +182,9 @@ export default function Booking() {
     checkOut = checkOut.format('DD-MM-YYYY');
 
     dispatch(findAvailableRoomHavePerAPI({
-      checkIn: room.searchBar.checkIn, 
-      checkOut: room.searchBar.checkOut, 
-    
+      checkIn: room.searchBar.checkIn,
+      checkOut: room.searchBar.checkOut,
+
     }));
   };
   const handleChange = (index, event) => {
@@ -196,8 +196,8 @@ export default function Booking() {
 
   useEffect(() => {
     dispatch(findAvailableRoomHavePerAPI({
-      checkIn: room.searchBar.checkIn, 
-      checkOut: room.searchBar.checkOut, 
+      checkIn: room.searchBar.checkIn,
+      checkOut: room.searchBar.checkOut,
       current: 0,
     }));
     let bookingId = localStorage.getItem("bookingId");
@@ -206,8 +206,6 @@ export default function Booking() {
     }
   }, [])
 
-  // console.log("handleNext(item.id)", handleNext(item.id));
-  // console.log("handleChooseBookingDetail(item.id)", handleChooseBookingDetail(item.id));
   return (
     <>
       <div className="app_container">
@@ -555,7 +553,7 @@ export default function Booking() {
                       </div>
                     </div>
                   ))}
-                  <Modal
+                  {/* <Modal
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="modal-modal-title"
@@ -638,6 +636,33 @@ export default function Booking() {
                       </div>
                     </div>
                   </Modal>
+                  */}
+
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description">
+                    <div className="gallery_overlay">
+                      <div className="gallery_popupMainDiv">
+                        <div className="gallery_header">
+                          <h2 className="app_modalTitle gallery_imgTitle" id="gallery-header">Garden Balcony King Grand</h2>
+                          <button className="fa-regular fa-xmark gallery_closeButton" aria-label="close"></button>
+                        </div>
+                        <div className="gallery_galleryWrapper">
+                          <div class="sr-only">Garden Balcony King Grand image 4</div>
+                          <div className="slick-slider fullPageGallery slick-initialized">
+                            <button className="fa-solid fa-chevron-left slick-arrow" style={{ display: 'block' }}></button>
+                            <div className="slick-list">
+                              <div className="slick-track" style={{ width: "16709px", opacity: "1", transform: "translate3d(-4557px, 0px, 0px)" }}>
+                                <div></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Modal>
                 </div>
               </div>
             </div>
@@ -661,3 +686,4 @@ export default function Booking() {
     </>
   );
 }
+

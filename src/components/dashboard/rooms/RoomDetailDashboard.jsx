@@ -183,8 +183,8 @@ export default function RoomDetailDashboard() {
                                             <label className="ps-4">{room?.sleep} (per/room)</label>
                                         </div>
                                         <div className="col-4 row">
-                                            <label className="pb-2">Price Per Night</label>
-                                            <label className="ps-4">{room?.pricePerNight} VNĐ</label>
+                                            <label className="pb-2">Price</label>
+                                            <label className="ps-4">{room?.pricePerNight?.toLocaleString('vi-VN')} VNĐ</label>
                                         </div>
                                     </div>
                                 </div>

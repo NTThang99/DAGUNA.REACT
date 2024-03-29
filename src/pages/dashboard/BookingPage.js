@@ -19,12 +19,12 @@ export default function BookingPage() {
                                 List Bookings
                             </NavLink>
                         </TableCell>
-                        <TableCell className="nav-link ">
+                        {/* <TableCell className="nav-link ">
                             <NavLink to={'/dashboard/bookings/add'}>
                                 <AddIcon />
                                 Create Bookings
                             </NavLink>
-                        </TableCell>
+                        </TableCell> */}
                         {idBookingDetail ?
                             <TableCell className="nav-link ">
                                 <NavLink to={`/dashboard/bookings/${idBookingDetail}`}>

@@ -10,8 +10,8 @@ class RoomRealService {
     static getRoomRealById(roomId) {
         return apiClients.get(`/room-reals/${roomId}`)
     }
-    static postFindAvailableRoomReal(objDate){
-        return apiClients.post(`/room-reals/find-available-roomReal`,objDate)
+    static postFindAvailableRoomReal(objSend){
+        return apiClients.post(`/room-reals/find-available-room-real`,objSend)
     }
     static postFindAvailableRoomRealHaveRoomRealId(objDate,roomId){
         return apiClients.post(`/room-reals/find-available-room-real?roomId=${roomId}`,objDate)
@@ -21,9 +21,7 @@ class RoomRealService {
     }
     
 
-    static async getAvailableRoom( objSend) {
-      return apiClients.post(`/room-reals/available`, objSend);
-      }
+   
     static async getAvailableRoomHavieRoomId(roomId, objSend) {
       return apiClients.post(`/room-reals/available?roomId=${roomId}`, objSend);
       }

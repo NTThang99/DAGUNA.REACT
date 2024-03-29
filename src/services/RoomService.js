@@ -36,6 +36,26 @@ class RoomService {
   static async patchUpdateRoom(roomId, formData) {
     return apiClients.patch(`/rooms/${roomId}`, formData)
   }
+
+  static async updateSearchBarHeader(url, objSend) {
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(objSend),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => data)
+      .catch((error) => {
+        throw error;
+      });
+  }
 }
 export default RoomService;
 

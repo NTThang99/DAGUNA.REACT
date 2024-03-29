@@ -14,7 +14,7 @@ import {
   getBookingByIdAPI,
   updateBooking_AddRoomAPI,
   searchRoomsAPI,
-  changeGuestInSearchBarAPI,
+  findAvailableRoomHavePerAPI,
 } from "../BookingSlide";
 import BookingDetail from "./BookingDetail";
 import HeaderBooking from "./HeaderBooking";
@@ -29,23 +29,22 @@ export default function Booking() {
   const [isFocusedSort, setIsFocusedSort] = useState(false);
   const [isFocusedFilter, setIsFocusedFilter] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [shrink, setShrink] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [openView, setOpenView] = React.useState(null);
   const [openSort, setOpenSort] = React.useState(null);
   const [openFilter, setOpenFilter] = React.useState(null);
   const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const [adultQuantity, setAdultQuantity] = useState(2);
-  const [childQuantity, setChildQuantity] = useState(2);
-  const [age, setAge] = React.useState('');
+  const [childQuantity, setChildQuantity] = useState(0);
+  const [childAges, setChildAges] = useState([]);
   // const [selectedDate, setSelectedDate] = useState(dayjs());
   const [activeStep, setActiveStep] = React.useState(0);
   const dispatch = useDispatch();
   const room = useSelector((state) => state.booking.room);
   const booking = useSelector((state) => state.booking.booking);
   const loading = useSelector((state) => state.loading);
-  const searchBar = useSelector((state) => state.room.searchBar);
+  // const findAvailableRoomHavePerAPI =useSelector((state) =>state.booking.room.searchBar)
 
   const [roomModal, setRoomModal] = useState(null);
   const [value, setValue] = React.useState([
@@ -60,7 +59,7 @@ export default function Booking() {
     setIsExpanded(!isExpanded);
   };
   const decreaseAdultQuantity = () => {
-    if (adultQuantity > 0) {
+    if (adultQuantity > 1) {
       setAdultQuantity(adultQuantity - 1);
     }
   };
@@ -98,10 +97,12 @@ export default function Booking() {
   const decreaseChildQuantity = () => {
     if (childQuantity > 0) {
       setChildQuantity(childQuantity - 1);
+      setChildAges(prevAges => prevAges.slice(0, -1));
     }
   };
   const increaseChildQuantity = () => {
     setChildQuantity(childQuantity + 1);
+    setChildAges(prevAges => [...prevAges, ""]);
   };
   const handleOpen = async (id) => {
     // lay room theo id => room
@@ -146,23 +147,59 @@ export default function Booking() {
   };
   const handleApplyChanges = () => {
     // Gọi hàm dispatch để cập nhật dữ liệu vào Redux Store
-    dispatch(updateSearchBar({
-      guests: {
-        numberAdult: adultQuantity,
-        numberChildren: childQuantity
+    let mapAge = new Map();
+    mapAge.set("lessthan4", 0);
+    mapAge.set("greatthan4", 0);
+    for (let i = 0; i < childAges.length; i++) {
+      if (childAges[i] < 4) {
+        mapAge.set("lessthan4", mapAge.get("lessthan4") + 1)
+      } else {
+        mapAge.set("greatthan4", mapAge.get("greatthan4") + 1)
       }
+    }
+    if (mapAge.get("lessthan4") == 1) {
+      mapAge.set("lessthan4", 0)
+    }
+    let current = adultQuantity + mapAge.get("greatthan4") + Math.ceil(mapAge.get("lessthan4") / 2);
+
+    dispatch(findAvailableRoomHavePerAPI({ 
+      current: current,
+      checkIn: room.searchBar.checkIn,
+      checkOut: room.searchBar.checkOut,
+      numberAdult: adultQuantity,
+      childrenAges: childAges
     }));
     toggleFlyout();
   };
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const handleCheckChange = (newValue) => {
+    let checkIn = newValue[0];
+    let checkOut = newValue[1];
+
+    if (checkOut.isBefore(checkIn, 'day')) {
+      checkOut = checkIn.add(1, 'day');
+    }
+    checkIn = checkIn.format('DD-MM-YYYY');
+    checkOut = checkOut.format('DD-MM-YYYY');
+
+    dispatch(findAvailableRoomHavePerAPI({
+      checkIn: room.searchBar.checkIn, 
+      checkOut: room.searchBar.checkOut, 
+    
+    }));
   };
-  const handleInputClick = () => {
-    setShrink(true);
+  const handleChange = (index, event) => {
+    const newAges = [...childAges];
+    newAges[index] = event.target.value;
+    setChildAges(newAges);
   };
 
+
   useEffect(() => {
-    dispatch(searchRoomsAPI(room));
+    dispatch(findAvailableRoomHavePerAPI({
+      checkIn: room.searchBar.checkIn, 
+      checkOut: room.searchBar.checkOut, 
+      current: 0,
+    }));
     let bookingId = localStorage.getItem("bookingId");
     if (bookingId != null) {
       dispatch(getBookingByIdAPI(bookingId))
@@ -190,10 +227,10 @@ export default function Booking() {
               value={value}
               setValue={setValue}
               steps={steps}
-              age={age}
+              childAges={childAges}
               handleChange={handleChange}
-              handleInputClick={handleInputClick}
-              shrink={shrink}
+              handleCheckChange={handleCheckChange}
+              dayjs={dayjs}
             />
             <div className="filter-bar_container">
               <div className="filter-bar_box">
@@ -214,7 +251,7 @@ export default function Booking() {
                           className="select_hiddenInput"
                           aria-labelledby="view-results-by-room-rate"
                           value="room"
-                          tabindex="0"
+                          tabIndex="0"
                           onClick={handleClickView}
                         // onClick={handleSearchRooms}
                         ></button>
@@ -256,7 +293,7 @@ export default function Booking() {
                           className="select_hiddenInput"
                           aria-labelledby="Sort By"
                           value="sort"
-                          tabindex="0"
+                          tabIndex="0"
                           onClick={handleClickSort}
                         ></button>
                         <div className="select_input" data-selector={openSort ? 'false' : undefined}>
@@ -297,7 +334,7 @@ export default function Booking() {
                           className="select_hiddenInput"
                           aria-labelledby="Show Filters"
                           value="filter"
-                          tabindex="0"
+                          tabIndex="0"
                           onClick={handleClickFilter}
                         ></button>
                         <div className="select_input" data-selector={openFilter ? 'false' : undefined}>
@@ -355,28 +392,28 @@ export default function Booking() {
                                   </h4>
                                 </div>
                                 <div>
-                                  <div class="filter-bar_checkbox ">
+                                  <div className="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabindex="-1" >
+                                    <label className="label_filter_right" tabIndex="-1" >
                                       <span>Other</span>
                                     </label>
                                   </div>
-                                  <div class="filter-bar_checkbox ">
+                                  <div className="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabindex="-1" >
+                                    <label className="label_filter_right" tabIndex="-1" >
                                       <span>Garden view</span>
                                     </label>
                                   </div>
-                                  <div class="filter-bar_checkbox ">
+                                  <div className="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabindex="-1" >
+                                    <label className="label_filter_right" tabIndex="-1" >
                                       <span>Sea view</span>
                                     </label>
                                   </div>
                                 </div>
                                 <div className="filter-bar_optionsFooter">
                                   <div className="filter-bar_clear app_small">
-                                    <a tabindex="0" role="button" aria-label="Clear View Filter">
+                                    <a tabIndex="0" role="button" aria-label="Clear View Filter">
                                       <span>Clear</span>
                                     </a>
                                   </div>
@@ -389,34 +426,34 @@ export default function Booking() {
                                   </h4>
                                 </div>
                                 <div>
-                                  <div class="filter-bar_checkbox ">
+                                  <div className="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabindex="-1" >
+                                    <label className="label_filter_right" tabIndex="-1" >
                                       <span>Double</span>
                                     </label>
                                   </div>
-                                  <div class="filter-bar_checkbox ">
+                                  <div className="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabindex="-1" >
+                                    <label className="label_filter_right" tabIndex="-1" >
                                       <span>King</span>
                                     </label>
                                   </div>
-                                  <div class="filter-bar_checkbox ">
+                                  <div className="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabindex="-1" >
+                                    <label className="label_filter_right" tabIndex="-1" >
                                       <span>Twin</span>
                                     </label>
                                   </div>
-                                  <div class="filter-bar_checkbox ">
+                                  <div className="filter-bar_checkbox ">
                                     <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabindex="-1" >
+                                    <label className="label_filter_right" tabIndex="-1" >
                                       <span>Various Bed Types</span>
                                     </label>
                                   </div>
                                 </div>
                                 <div className="filter-bar_optionsFooter">
                                   <div className="filter-bar_clear app_small">
-                                    <a tabindex="0" role="button" aria-label="Clear View Filter">
+                                    <a tabIndex="0" role="button" aria-label="Clear View Filter">
                                       <span>Clear</span>
                                     </a>
                                   </div>
@@ -453,7 +490,7 @@ export default function Booking() {
                             </div>
                             <div className="app_col-sm-12 app_col-md-8 app_col-lg-8">
                               <div className="thumb-cards_cardHeader">
-                                <h2 class="app_heading1">{item.name}</h2>
+                                <h2 className="app_heading1">{item.name}</h2>
                                 <div className="thumb-cards_urgencyTriggerAndRoomInfo">
                                   <div className="thumb-cards_urgencyTrigger">
                                     <span>9 people booked in last 24 hours</span>

@@ -2,14 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import RoomService from "../../services/RoomService";
 import BookingService from "../../services/BookingService";
-import RoomRealService from "../../services/RoomRealService";
+import { object } from "yup";
+
 
 const inItState = {
   room: {
     searchBar: {
       guests: {
         numberAdult: 2,
-        numberChildren: 0,
+        // numberChildren: 0,
+        childrenAges: []
       },
       checkIn: new Date(),
       checkOut: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
@@ -65,9 +67,6 @@ export const searchRoomsAPI = createAsyncThunk(
     }
   }
 );
-
-
-
 
 export const changeGuestInSearchBarAPI = createAsyncThunk(
   "changeGuestInSearchBarAPI",
@@ -247,10 +246,6 @@ export const getBookingByIdAPI = createAsyncThunk(
   }
 );
 
-
-
-
-
 export const updateBooking_AddRoomAPI = createAsyncThunk(
   "updateBooking_AddRoomAPI",
   async (arg, { rejectWithValue }) => {
@@ -306,6 +301,28 @@ export const updateBooking_Complete = createAsyncThunk(
     } catch (err) {
       // Trả về lỗi nếu không thể xóa
       return rejectWithValue("Error Complete booking detail");
+    }
+  }
+);
+
+export const findAvailableRoomHavePerAPI = createAsyncThunk(
+  "findAvailableRoomHavePerAPI",
+
+  async (arg, { rejectWithValue }) => {
+    try {
+      let objSend = {
+          selectFirstDay: arg.checkIn,
+          selectLastDay: arg.checkOut,
+      }
+
+      const res = await RoomService.updateSearchBarHeader(
+        `http://localhost:8080/api/rooms/find-available-room-have-per-pageable?current=${arg.current}`, objSend
+      );
+
+      return res;
+    } catch (err) {
+      // Trả về lỗi nếu không thể xóa
+      return rejectWithValue("Error search booking detail");
     }
   }
 );
@@ -400,6 +417,17 @@ const bookingReducer = createSlice({
             action.payload.bookingDetails.length - 1
           ].bookingDetailId;
       }
+    });
+    builder.addCase(findAvailableRoomHavePerAPI.pending, (state, action) => {
+      state.loading = true;
+    });
+
+    builder.addCase(findAvailableRoomHavePerAPI.fulfilled, (state, action) => {
+      state.loading = false;
+      state.room.data = action.payload.content;
+      state.room.searchBar.guests.numberAdult = action.meta.arg.numberAdult
+      state.room.searchBar.guests.childrenAges = action.meta.arg.childrenAges
+      // console.log("action meta arg", action);
     });
   },
 });

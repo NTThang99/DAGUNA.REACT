@@ -299,16 +299,21 @@
     vertical-align: baseline;
 }
 
+.guests-selection-flyout_childField{
+    padding-bottom: 10px;
+}
+
 .field_container {
     position: relative;
     font-size: 16px;
 }
 
  .childAge {
-    left: 84px;
+    left: 91px;
     border: 1px solid black !important;
     width: 217px;
 }
+
 
 [data-shrink="true"] .childAge {
     left: 84px;

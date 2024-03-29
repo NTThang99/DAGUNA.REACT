@@ -13,10 +13,34 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function HeaderBooking({ isExpanded, shrink, handleInputClick, toggleFlyout, decreaseAdultQuantity, adultQuantity, childQuantity, decreaseChildQuantity, handleAdultsChange, increaseAdultQuantity, increaseChildQuantity, handleApplyChanges, value, setValue, steps, handleChange, age, }) {
+export default function HeaderBooking({ isExpanded, dayjs, toggleFlyout, decreaseAdultQuantity, adultQuantity, childQuantity, decreaseChildQuantity, handleAdultsChange, increaseAdultQuantity, increaseChildQuantity, handleApplyChanges, value, setValue, steps, handleChange, childAges, handleCheckChange }) {
 
     const location = useLocation();
     const currentPath = location.pathname;
+
+    const renderChildFields = () => {
+        return Array.from({ length: childQuantity }, (_, index) => (
+            <div key={index} className='guests-selection-flyout_childField'>
+                <FormControl variant="standard" className="childAge">
+                    <InputLabel className='labelAge'>Child {index + 1} Age</InputLabel>
+                    <Select
+                        labelId={`child-age-label-${index}`}
+                        id={`child-age-${index}`}
+                        value={childAges[index]}
+                        onChange={e => handleChange(index, e)}
+                        label={`Age of Child ${index + 1}`}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        {[...Array(11)].map((_, i) => (
+                            <MenuItem key={i} value={i}>{i}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </div>
+        ));
+    };
 
 
     if (currentPath === '/booking') {
@@ -152,36 +176,7 @@ export default function HeaderBooking({ isExpanded, shrink, handleInputClick, to
                                                             </button>
                                                         </div>
                                                     </div>
-                                                    <div className='guests-selection-flyout_childField'>
-                                                        <FormControl variant="standard"
-                                                            data-shrink={shrink ? "true" : "false"}
-                                                            className="childAge">
-                                                            <InputLabel className='labelAge' >Child 1 Age</InputLabel>
-                                                            <Select
-                                                                labelId="demo-simple-select-standard-label"
-                                                                id="demo-simple-select-standard"
-                                                                value={age}
-                                                                onChange={handleChange}
-                                                                label="Age"
-                                                                onClick={handleInputClick}
-                                                            >
-                                                                <MenuItem value="">
-                                                                    <em>None</em>
-                                                                </MenuItem>
-                                                                <MenuItem value={1}>1</MenuItem>
-                                                                <MenuItem value={2}>2</MenuItem>
-                                                                <MenuItem value={3}>3</MenuItem>
-                                                                <MenuItem value={4}>4</MenuItem>
-                                                                <MenuItem value={5}>5</MenuItem>
-                                                                <MenuItem value={6}>6</MenuItem>
-                                                                <MenuItem value={7}>7</MenuItem>
-                                                                <MenuItem value={8}>8</MenuItem>
-                                                                <MenuItem value={9}>9</MenuItem>
-                                                                <MenuItem value={10}>10</MenuItem>
-                                                                <MenuItem value={11}>11</MenuItem>
-                                                            </Select>
-                                                        </FormControl>
-                                                    </div>
+                                                    {renderChildFields()}
                                                 </div>
                                             </div>
                                             <div className="button_group">
@@ -208,8 +203,12 @@ export default function HeaderBooking({ isExpanded, shrink, handleInputClick, to
                                 <DemoContainer components={['DateRangePicker']}>
                                     <DateRangePicker
                                         value={value}
-                                        onChange={(newValue) => setValue(newValue)}
-                                        localeText={{ start: 'Check-in', end: 'Check-out' }} />
+                                        onChange={(newValue) => {
+                                            const correctedValue = [newValue[0], dayjs(newValue[1])];
+                                            setValue(correctedValue);
+                                            handleCheckChange(correctedValue);
+                                        }}
+                                        localeText={{ start: 'Check-in', end: 'Check-out' }}/>
                                 </DemoContainer>
                             </LocalizationProvider>
                             <div

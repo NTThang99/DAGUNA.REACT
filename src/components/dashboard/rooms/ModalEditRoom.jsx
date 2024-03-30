@@ -82,7 +82,7 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
         try {
             async function getRoomById() {
                 if (!roomInfo || !roomInfo.id) {
-                    toast.error("Invalid room information");
+                    // toast.error("Invalid room information");
                     return;
                 }
                 let roomDetail = await RoomService.getRoomById(roomInfo?.id)
@@ -448,7 +448,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                                                 {
                                                     selectedfile.map((data) => {
                                                         const { id, filename, fileimage } = data;
-                                                        console.log("fileimage", fileimage);
                                                         return (
                                                             <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={id}>
                                                                 {

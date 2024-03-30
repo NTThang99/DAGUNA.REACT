@@ -7,8 +7,6 @@ import { TextField } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
 import RoomRealService from "../../../services/RoomRealService";
 
-
-
 export default function BookingDetail() {
   const { bookingId } = useParams();
   const [booking, setBooking] = useState({});
@@ -19,8 +17,8 @@ export default function BookingDetail() {
   const [availableRooms, setAvailableRooms] = useState([]);
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState('');
-
   const [bookingDetailSelected, setBookingDetailSelected] = useState(null);
+  const [selectedRoomNames, setSelectedRoomNames] = useState({});
 
 
   useEffect(() => {
@@ -59,55 +57,62 @@ export default function BookingDetail() {
     }
 
     getBookingDetail();
-
   }, [bookingId]);
 
   useEffect(() => {
     if (bookingDetailSelected != null) {
       getAvailableRoom();
     }
+  }, [bookingDetailSelected?.bookingDetailId]);
 
-  }, [bookingDetailSelected?.bookingDetailId])
 
-
+  console.log("booking", booking);
   const handleSave = () => {
-      RoomRealService.getUpdateBooking_UpdateBookingDetail_UpdateRoomReal(bookingDetailSelected.bookingDetailId,value.id);
-      setShowModal(false);
+    RoomRealService.getUpdateBooking_UpdateBookingDetail_UpdateRoomReal(bookingDetailSelected.bookingDetailId, value.id)
+      .then(() => {
+        
+        // setSelectedRoomNames(prevState => ({
+        //   ...prevState,
+        //   [bookingDetailSelected?.bookingDetailId]: value.label 
+        // }));
+        setShowModal(false);
+
+        window.location.reload(); 
+      })
+      .catch(error => {
+        console.error('Error updating room:', error);
+      });
   };
+  
+
   let handleClickRadio = (evt, id) => {
     let newArray = [...utilitiesCheck, id];
     if (utilitiesCheck.includes(id)) {
       newArray = newArray.filter(day => day !== id);
     }
     setUtilitiesCheck(newArray);
-  }
+  };
 
   const handleOpenModal = (bookingDetailSelected) => {
     setBookingDetailSelected(bookingDetailSelected);
     setShowModal(true);
   };
 
-
   const getAvailableRoom = async () => {
-
     const objSend = {
-      checkIn: new Date(booking?.bookingDetails?.[0]?.checkIn),
-      checkOut: new Date(booking?.bookingDetails?.[0]?.checkOut),
-      roomId: bookingDetailSelected.room.id
+      selectFirstDay: new Date(booking?.bookingDetails?.[0]?.checkIn),
+      selectLastDay: new Date(booking?.bookingDetails?.[0]?.checkOut),
     };
 
-
-    const availableRooms = await RoomRealService.getAvailableRoom(objSend);
-
+    const availableRooms = await RoomRealService.postFindAvailableRoomReal(objSend);
     let data = availableRooms?.data.map(r => {
       return {
         "label": r.roomCode,
         "id": r.id
       }
-    })
+    });
     setAvailableRooms(data);
   };
-
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -135,7 +140,6 @@ export default function BookingDetail() {
               <p>Number Adult: {booking?.bookingDetails?.[0]?.numberAdult}</p>
               <p>Number Children: {booking?.bookingDetails?.[0]?.numberChildren}</p>
               <p>Discount Code: {booking?.bookingDetails?.[0]?.discountCode}</p>
-
             </div>
           </div>
           <h2 style={{ textAlign: "center" }}>Room Detail</h2>
@@ -144,7 +148,6 @@ export default function BookingDetail() {
               <div className="row">
                 <hr />
                 <div key={index} className="col-6">
-
                   <p>ID Room: {detail?.room.id}</p>
                   <p>Room Name: {detail?.room.name}</p>
                   <p>Room Type: {detail?.room.roomType}</p>
@@ -152,26 +155,33 @@ export default function BookingDetail() {
                   <p>View Type: {detail?.room.viewType}</p>
                   <p>Kind Of Room: {detail?.room.kindOfRoom.name}</p>
                   <div>
-                    <p>Status Checkin: {detail?.checkInStatus == true ? "CHECKIN" : "UN CHECKIN"}</p>
-                    <button onClick={() => handleOpenModal(detail)}>Status Checkin</button>
+                  <p>Room: {detail?.checkInStatus == true ? detail?.roomReal?.roomCode : "---"}</p>
+
+                    {
+                      detail?.checkInStatus == false ? <button onClick={() => handleOpenModal(detail)} disabled={detail?.checkInStatus}>
+                      Update Room
+                      </button> : null
+                    }
                     <Modal show={showModal} onHide={handleCloseModal}>
                       <Modal.Header closeButton>
-                        <Modal.Title>Status Checkin</Modal.Title>
+                        <Modal.Title>Please select a room</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div>
                             <TextField
                               id="start-date"
-                              label="Check In Date"
+                              label="Check In"
                               type="date"
                               defaultValue={booking?.bookingDetails?.length > 0 ? new Date(booking?.bookingDetails[0]?.checkIn).toISOString().substr(0, 10) : ''}
                               InputLabelProps={{ shrink: true }}
                               disabled
                             />
+                            <br />
+                            <br />
                             <TextField
                               id="end-date"
-                              label="Check Out Date"
+                              label="Check Out"
                               type="date"
                               defaultValue={booking?.bookingDetails?.length > 0 ? new Date(booking?.bookingDetails[0]?.checkOut).toISOString().substr(0, 10) : ''}
                               InputLabelProps={{ shrink: true }}
@@ -179,8 +189,6 @@ export default function BookingDetail() {
                             />
                           </div>
                           <div>
-                            <div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div>
-                            <div>{`inputValue: '${inputValue}'`}</div>
                             <br />
                             <Autocomplete
                               value={value}
@@ -198,12 +206,9 @@ export default function BookingDetail() {
                             />
                           </div>
                         </div>
-                        {/* Danh sách phòng đang trống */}
-
                       </Modal.Body>
-
                       <Modal.Footer>
-                        <Button variant="primary" onClick={()=> handleSave()}>
+                        <Button variant="primary" onClick={handleSave}>
                           Save
                         </Button>
                         <Button variant="secondary" onClick={handleCloseModal}>
@@ -237,34 +242,26 @@ export default function BookingDetail() {
                   </div>
                 </div>
                 <div className="col-6">
-
-                  {
-
-                    detail?.bookingDetailServiceResDTOS?.map((bds) => (
-
-                      <div>
-                        <hr />
-                        {/* <p>Id Service: {bds.bookingService.id}</p> */}
-                        <p>Name Service: {bds.bookingService.name}</p>
-
-                        <p>Description Service: {bds.bookingService.description}</p>
-                        <p>Price Service: {bds.bookingService.price}</p>
-                        {bds.bookingService.bookingServiceType === "SCAR" ? (
-                          <div>
-                            <p>Service Type: CAR</p>
-                            <p>Number Car: {bds.numberCar}</p>
-                          </div>
-                        ) : (
-                          <div>
-                            <p>Service Type: SPA</p>
-                            <p>Number Person: {bds.numberPerson}</p>
-                            <p>Date: {bds.dateChooseService}</p>
-                          </div>
-                        )}
-
-                      </div>
-                    ))
-                  }
+                  {detail?.bookingDetailServiceResDTOS?.map((bds) => (
+                    <div>
+                      <hr />
+                      <p>Name Service: {bds.bookingService.name}</p>
+                      <p>Description Service: {bds.bookingService.description}</p>
+                      <p>Price Service: {bds.bookingService.price}</p>
+                      {bds.bookingService.bookingServiceType === "SCAR" ? (
+                        <div>
+                          <p>Service Type: CAR</p>
+                          <p>Number Car: {bds.numberCar}</p>
+                        </div>
+                      ) : (
+                        <div>
+                          <p>Service Type: SPA</p>
+                          <p>Number Person: {bds.numberPerson}</p>
+                          <p>Date: {bds.dateChooseService}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
@@ -272,6 +269,5 @@ export default function BookingDetail() {
         </div>
       )}
     </div>
-
   );
 }

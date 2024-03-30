@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,7 +14,6 @@ import {
   createBookingAPI,
   getBookingByIdAPI,
   updateBooking_AddRoomAPI,
-  searchRoomsAPI,
   findAvailableRoomHavePerAPI,
 } from "../BookingSlide";
 import BookingDetail from "./BookingDetail";
@@ -31,6 +31,7 @@ export default function Booking() {
   const [showDetails, setShowDetails] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openImage, setOpenImage] = useState(false);
   const [openView, setOpenView] = React.useState(null);
   const [openSort, setOpenSort] = React.useState(null);
   const [openFilter, setOpenFilter] = React.useState(null);
@@ -44,7 +45,7 @@ export default function Booking() {
   const room = useSelector((state) => state.booking.room);
   const booking = useSelector((state) => state.booking.booking);
   const loading = useSelector((state) => state.loading);
-  // const findAvailableRoomHavePerAPI =useSelector((state) =>state.booking.room.searchBar)
+  // const imageResDTOS = useSelector((room) => room.imageResDTOS);
 
   const [roomModal, setRoomModal] = useState(null);
   const [value, setValue] = React.useState([
@@ -108,10 +109,17 @@ export default function Booking() {
     // lay room theo id => room
     let room = await RoomService.getRoomById(id);
     setRoomModal(room.data)
-
     setOpen(true);
   }
   const handleClose = () => setOpen(false);
+
+  const handleOpenImage = async (id) => {
+    // lay room theo id => room
+    let room = await RoomService.getRoomById(id);
+    setRoomModal(room.data)
+    setOpenImage(true);
+  }
+  const handleCloseImage = () => setOpenImage(false);
   const toggleForm = () => {
     setShowForm(!showForm);
   };
@@ -162,7 +170,7 @@ export default function Booking() {
     }
     let current = adultQuantity + mapAge.get("greatthan4") + Math.ceil(mapAge.get("lessthan4") / 2);
 
-    dispatch(findAvailableRoomHavePerAPI({ 
+    dispatch(findAvailableRoomHavePerAPI({
       current: current,
       checkIn: room.searchBar.checkIn,
       checkOut: room.searchBar.checkOut,
@@ -182,9 +190,9 @@ export default function Booking() {
     checkOut = checkOut.format('DD-MM-YYYY');
 
     dispatch(findAvailableRoomHavePerAPI({
-      checkIn: room.searchBar.checkIn, 
-      checkOut: room.searchBar.checkOut, 
-    
+      checkIn: room.searchBar.checkIn,
+      checkOut: room.searchBar.checkOut,
+
     }));
   };
   const handleChange = (index, event) => {
@@ -196,8 +204,8 @@ export default function Booking() {
 
   useEffect(() => {
     dispatch(findAvailableRoomHavePerAPI({
-      checkIn: room.searchBar.checkIn, 
-      checkOut: room.searchBar.checkOut, 
+      checkIn: room.searchBar.checkIn,
+      checkOut: room.searchBar.checkOut,
       current: 0,
     }));
     let bookingId = localStorage.getItem("bookingId");
@@ -206,8 +214,14 @@ export default function Booking() {
     }
   }, [])
 
-  // console.log("handleNext(item.id)", handleNext(item.id));
-  // console.log("handleChooseBookingDetail(item.id)", handleChooseBookingDetail(item.id));
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
     <>
       <div className="app_container">
@@ -484,7 +498,7 @@ export default function Booking() {
                           <div className="thumb-cards_container">
                             <div className="thumb-cards_extraDetails app_col-sm-12 app_col-md-4 app_col-lg-4">
                               <div className="thumb-cards_imgWrapper thumb-cards_hasMultipleImages">
-                                <button className="thumb-cards_openImage" />
+                                <button className="thumb-cards_openImage" onClick={() => handleOpenImage(item.id)} />
                                 <img className="thumb-cards_image" src={item.imageResDTOS.length == 0 ? "" : item.imageResDTOS[0].fileUrl} />
                               </div>
                             </div>
@@ -553,91 +567,119 @@ export default function Booking() {
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                  <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <div className="modal-message_modalMessage ">
-                      <div className="modal-message_closeButtonWrapper">
-                        <div className="fa-solid fa-xmark modal-message_closeButton " onClick={handleClose}></div>
-                      </div>
-                      <div className="modal-message_contentWrapper">
-                        <div className="app_container">
-                          <div className="app_row">
-                            <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_push-md-6 app_push-lg-6">
-                              <div className="thumb-cards_imgWrapper thumb-cards_hasMultipleImages">
-                                <button className="thumb-cards_openImage"></button>
-                                <img className="thumb-cards_image" src={roomModal?.imageResDTOS.length == 0 ? "" : roomModal?.imageResDTOS[0].fileUrl} />
-                              </div>
-                            </div>
-                            <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_pull-md-6 app_pull-lg-6">
-                              <h2 className="detail-view-room_roomName app_modalTitle">{roomModal?.name}</h2>
-                              <div className="guests-and-roomsize_roomProperties guests-and-roomsize_bold">
-                                <div className="guests-and-roomsize_item guests-and-roomsize_guests">
-                                  <span>Guests {roomModal?.sleep}</span>
+                      <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                      >
+                        <div className="modal-message_modalMessage ">
+                          <div className="modal-message_closeButtonWrapper">
+                            <div className="fa-solid fa-xmark modal-message_closeButton " onClick={handleClose}></div>
+                          </div>
+                          <div className="modal-message_contentWrapper">
+                            <div className="app_container">
+                              <div className="app_row">
+                                <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_push-md-6 app_push-lg-6">
+                                  <div className="thumb-cards_imgWrapper thumb-cards_hasMultipleImages">
+                                    <button className="thumb-cards_openImage" onClick={() => handleOpenImage(item.id)}></button>
+                                    <img className="thumb-cards_image" src={roomModal?.imageResDTOS.length == 0 ? "" : roomModal?.imageResDTOS[0].fileUrl} />
+                                  </div>
                                 </div>
-                                <div className="guests-and-roomsize_item guests-and-roomsize_bed">
-                                  <span>1 King</span>
-                                </div>
-                                <div className="guests-and-roomsize_item guests-and-roomsize_size">53 <span aria-hidden="true" for="room-size-meters-sreader-undefined">
-                                  <span>m²</span>
-                                </span>
-                                  <span className="sr-only" id="room-size-meters-sreader-undefined">square meters</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="app_col-sm-12 app_col-md-12 app_col-lg-12">
-                              <hr className="detail-view-room_line" />
-                              <div className="detail-view-room_shortDescription">{roomModal?.description}</div>
-                              <div className="detail-view-room_longDescription">
-                                <p>Wake up refreshed to breathtaking views of the Truong Son mountain range from the comfort of your king-size bed, and step out onto your private balcony to enjoy the fresh air. Our Garden Balcony King Grand rooms feature a mix of traditional Vietnamese accents with the convenience of modern amenities, such as satellite TV channels, rain showers and complimentary Wi-Fi</p>
-                                <br />
-                                <strong>Amenities</strong>
-                                <br />
-                                <em>Connectivity &amp; Entertainment</em>
-                                <ul>
-                                  <li>Wi-Fi </li>
-                                  <li>Television</li>
-                                  <li>IDD telephone</li>
-                                  <li>Audio system </li>
-                                </ul>
-                                <br />
-                                <em>Bathroom</em>
-                                <ul>
-                                  <li>Toiletries</li>
-                                  <li>Dressing robes</li>
-                                  <li>Hairdryer</li>
-                                </ul>
-                                <br />
-                                <em>Other Services, features &amp; Amenities</em>
-                                <ul>
-                                  <li>Air-conditioning</li>
-                                  <li>Coffee/ tea making facilities replenished daily</li>
-                                  <li>In-room safe</li>
-                                </ul>
-                              </div>
-                              <div className="thumb-cards_button">
-                                <div style={{ textAlign: 'end' }}>
-                                  <button className="btn button_btn button_primary button_sm" style={{ height: '35px' }} datatest="Button">
-                                    <span onClick={() => {
-                                      handleNext(roomModal.id);
-                                      handleChooseBookingDetail(roomModal.id);
-                                    }}>
-                                      {activeStep === steps.length - 1 ? 'Finish' : 'Book Now'}
+                                <div className="app_col-sm-12 app_col-md-6 app_col-lg-6 app_pull-md-6 app_pull-lg-6">
+                                  <h2 className="detail-view-room_roomName app_modalTitle">{roomModal?.name}</h2>
+                                  <div className="guests-and-roomsize_roomProperties guests-and-roomsize_bold">
+                                    <div className="guests-and-roomsize_item guests-and-roomsize_guests">
+                                      <span>Guests {roomModal?.sleep}</span>
+                                    </div>
+                                    <div className="guests-and-roomsize_item guests-and-roomsize_bed">
+                                      <span>1 King</span>
+                                    </div>
+                                    <div className="guests-and-roomsize_item guests-and-roomsize_size">53 <span aria-hidden="true" for="room-size-meters-sreader-undefined">
+                                      <span>m²</span>
                                     </span>
-                                  </button>
+                                      <span className="sr-only" id="room-size-meters-sreader-undefined">square meters</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="app_col-sm-12 app_col-md-12 app_col-lg-12">
+                                  <hr className="detail-view-room_line" />
+                                  <div className="detail-view-room_shortDescription">{roomModal?.description}</div>
+                                  <div className="detail-view-room_longDescription">
+                                    <p>Wake up refreshed to breathtaking views of the Truong Son mountain range from the comfort of your king-size bed, and step out onto your private balcony to enjoy the fresh air. Our Garden Balcony King Grand rooms feature a mix of traditional Vietnamese accents with the convenience of modern amenities, such as satellite TV channels, rain showers and complimentary Wi-Fi</p>
+                                    <br />
+                                    <strong>Amenities</strong>
+                                    <br />
+                                    <em>Connectivity &amp; Entertainment</em>
+                                    <ul>
+                                      <li>Wi-Fi </li>
+                                      <li>Television</li>
+                                      <li>IDD telephone</li>
+                                      <li>Audio system </li>
+                                    </ul>
+                                    <br />
+                                    <em>Bathroom</em>
+                                    <ul>
+                                      <li>Toiletries</li>
+                                      <li>Dressing robes</li>
+                                      <li>Hairdryer</li>
+                                    </ul>
+                                    <br />
+                                    <em>Other Services, features &amp; Amenities</em>
+                                    <ul>
+                                      <li>Air-conditioning</li>
+                                      <li>Coffee/ tea making facilities replenished daily</li>
+                                      <li>In-room safe</li>
+                                    </ul>
+                                  </div>
+                                  <div className="thumb-cards_button">
+                                    <div style={{ textAlign: 'end' }}>
+                                      <button className="btn button_btn button_primary button_sm" style={{ height: '35px' }} datatest="Button">
+                                        <span onClick={() => {
+                                          handleNext(roomModal.id);
+                                          handleChooseBookingDetail(roomModal.id);
+                                        }}>
+                                          {activeStep === steps.length - 1 ? 'Finish' : 'Book Now'}
+                                        </span>
+                                      </button>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Modal>
+                      <Modal
+                        open={openImage}
+                        onClose={handleCloseImage}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description">
+                        <div className="gallery_overlay">
+                          <div className="gallery_popupMainDiv">
+                            <div className="gallery_header">
+                              <h2 className="app_modalTitle gallery_imgTitle" id="gallery-header">Garden Balcony King Grand</h2>
+                              <button className="fa-regular fa-xmark gallery_closeButton" aria-label="close" onClick={handleCloseImage}></button>
+                            </div>
+                            <div className="gallery_galleryWrapper">
+                              <div class="sr-only">Garden Balcony King Grand image 4</div>
+                              {
+                                roomModal != null ? <Slider className="fullPageGallery " {...settings}>
+                                {console.log("roomModal",roomModal)}
+                                {roomModal?.imageResDTOS.map((itemImg, key) => (
+                                <div className="gallery_imgWrapper">
+                                  <img src={itemImg.fileUrl} class="" alt="Garden Balcony King Grand image 1" tabindex="-1" />
+                                </div>
+                                ))}
+                              </Slider> : null
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      </Modal>
                     </div>
-                  </Modal>
+                  ))}
+
                 </div>
               </div>
             </div>
@@ -661,3 +703,4 @@ export default function Booking() {
     </>
   );
 }
+

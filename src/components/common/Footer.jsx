@@ -15,7 +15,7 @@ export default function Footer() {
             <div className="col-md-6 col-lg-4">
               <div className="bg-primary rounded p-4">
                 <Link to="/">
-                  <h1 className="text-white text-uppercase mb-3">Hotelier</h1>
+                  <h1 className="text-white text-uppercase mb-3">DAGUNA</h1>
                 </Link>
                 <p className="text-white mb-0">
                   Build a professional website for your hotel business and grab

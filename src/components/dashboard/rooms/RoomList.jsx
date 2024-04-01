@@ -244,10 +244,10 @@ export default function RoomList() {
                     (
                         <>
                             <div className="d-flex justify-content-center">
-                                <div className="d-flex me-2 algin-items-center my-2 justify-content-center ">
+                                <div className="d-flex algin-items-center my-2 justify-content-center " >
 
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['DateRangePicker']}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                        <DemoContainer components={['DateRangePicker']}  >
                                             <DateRangePicker
                                                 value={selectDate}
                                                 onChange={handleClickSelectDay}
@@ -257,7 +257,10 @@ export default function RoomList() {
 
                                         </DemoContainer>
                                     </LocalizationProvider>
-                                    <button type="button" onClick={handleClickFind}>Find</button>
+                                    <button type="button" onClick={handleClickFind} 
+                                    style={{ marginLeft: "20px" ,marginTop:"7px", width: "75px",height:"45px"}} 
+                                    // className="justify-content-center"
+                                    >Find</button>
                                 </div>
                             </div>
                             {
@@ -337,7 +340,6 @@ export default function RoomList() {
                                                             {
                                                                 loadingSelectDay ?
                                                                     <>
-                                                                        {/* import ArrowBackIcon from '@mui/icons-material/ArrowBack'; */}
                                                                         <div className="d-flex justify-content-between align-items-center my-2">
                                                                             <button type="button" onClick={handleClickBackList} style={{ borderColor: 'green', display: 'flex', alignItems: 'center' }}>
                                                                                 <ArrowBackIcon style={{ marginRight: '5px' }} />
@@ -400,7 +402,7 @@ export default function RoomList() {
                                                                                             onInput={handleSearchText}
                                                                                         />
                                                                                         <SearchIcon style={{ marginLeft: '-25px', marginTop: '2px', fontSize: '27px' }} />
-                                                                                        <input type="button" value="search" style={{ marginLeft: '5px' }} />
+                                                                                        <input type="submit" value="search" style={{ marginLeft: '5px' }} />
                                                                                     </form>
                                                                                 </div>
 

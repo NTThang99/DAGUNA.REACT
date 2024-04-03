@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import "../../../css/booking.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useNavigate } from "react-router-dom";
-import { getBookingByIdAPI, getAllBookingServiceAPI, updateBooking_AddBookingService, updateBooking_DeleteRoomAPI } from "../BookingSlide";
+import { getBookingByIdAPI, getAllBookingServiceAPI, updateBooking_AddBookingService, updateBooking_DeleteRoomAPI, updateBooking_EditBookingService } from "../BookingSlide";
 import { useDispatch, useSelector } from "react-redux";
 import BookingDetail from "./BookingDetail";
 import HeaderBooking from "./HeaderBooking";
+import AppUtil from "../../../services/AppUtil";
 
 const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
 
@@ -27,6 +28,19 @@ export default function BookingService() {
   const dispatch = useDispatch();
   const bookingServices = useSelector((state) => state.booking.addOns.data);
   const booking = useSelector((state) => state.booking.booking);
+  const bookingServicesChoosenId = useSelector((state) => {
+    let bookingDetailChoosenId = state.booking.booking.bookingDetailChoosen;
+    let bookingDetailsList = state.booking.booking.bookingDetails;
+    let bookingDetaiChoosen = bookingDetailsList.find(item => item.bookingDetailId == bookingDetailChoosenId);
+
+    let bookingServiceList = bookingDetaiChoosen.bookingDetailServiceResDTOS;
+
+    let bookingServiceListId = bookingServiceList.map(item => item.bookingService.id);
+    return bookingServiceListId;
+  });
+
+  console.log("bookingServicesChoosenId", bookingServicesChoosenId);
+
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -34,12 +48,12 @@ export default function BookingService() {
 
   const handleNext = (id, bookingServiceType, bookindDetailId) => {
     setShowAddon(bookindDetailId);
-    setLoading(true);
-    handleNavigateBooking();
+    setLoading(false);
     dispatch(updateBooking_AddBookingService({
       bookingDetailId: booking.bookingDetailChoosen,
       bookingServiceId: id,
       bookingServiceType: bookingServiceType,
+      numberCar: perCarQuantity,
     })).then(() => {
       setLoading(true);
     });
@@ -88,6 +102,24 @@ export default function BookingService() {
       });
   };
 
+  const handleBookingServiceEdit = (id, bookingServiceType) => {
+
+    console.log("obj dispatch", {
+      bookingDetailId: booking.bookingDetailChoosen,
+      bookingServiceId: id,
+      bookingServiceType: bookingServiceType,
+      numberCar: perCarQuantity,
+    });
+    dispatch(updateBooking_EditBookingService(
+      {
+        bookingDetailId: booking.bookingDetailChoosen,
+        bookingServiceId: id,
+        bookingServiceType: bookingServiceType,
+        numberCar: perCarQuantity,
+      }
+    ))
+  }
+
   const toggleForm = () => {
     setShowForm(!showForm);
   };
@@ -124,7 +156,27 @@ export default function BookingService() {
     }
   }, [])
 
-  console.log("bookingServices", bookingServices);
+  const perCarPrice = (price) => {
+    const totalCarPrice = price * perCarQuantity;
+    return totalCarPrice;
+  };
+  const governmentTaxPricePerCar = (price) => {
+    const governmentTax = 0.08;
+    const vatPrice = price * governmentTax * perCarQuantity
+    return vatPrice;
+  }
+  const serviceChargePricePerCar = (price) => {
+    const serviceCharge = 0.054;
+    const vatPrice = price * serviceCharge * perCarQuantity;
+    return vatPrice;
+  }
+  const totalCarPerService = (price) => {
+    const carPrice = perCarPrice(price);
+    const governmentTaxPriceCar = governmentTaxPricePerCar(price);
+    const serviceChargePriceCar = serviceChargePricePerCar(price);
+    const totalCarTax = governmentTaxPriceCar + serviceChargePriceCar + carPrice;
+    return totalCarTax;
+  };
 
   return (
     <>
@@ -142,11 +194,12 @@ export default function BookingService() {
                   <div className="add-ons-container_group">
                     <div className="add-ons-container_categoryGroup">
                       <h2 className="app_heading1">Airport Transfer</h2>
+                      {/* {bookingServices && bookingServices.length > 0 && bookingServices.map((item, key) => ( */}
                       {bookingServices && bookingServices.length > 0 && bookingServices.map((item, key) => (
                         <div className="add-ons-container_addOn" key={key}>
                           <div className="add-ons-container_addOnheader">
                             <div className="add-ons-container_addOnImgWrapper">
-                              <img className="add-ons-container_addOnImage" src={item.img} />
+                              <img className="add-ons-container_addOnImage" src={item.fileUrl} style={{ paddingBottom: "0" }} />
                             </div>
                             <div className="add-ons-container_addOnInfo">
                               <div className="add-ons-container_addOnInfoTop">
@@ -184,7 +237,7 @@ export default function BookingService() {
                                 <div className="add-ons-thumb-card-price_container">
                                   <div className="add-ons-thumb-card-price_priceWrapper">
                                     <div className="add-ons-thumb-card-price_price">
-                                      <span>₫{item.price}</span>
+                                      <span>{AppUtil.formatCurrency(item.price)}</span>
                                     </div>
                                   </div>
                                   <div className="add-ons-thumb-card-price_priceType">
@@ -235,7 +288,7 @@ export default function BookingService() {
                                   <span>Total:</span>
                                 </span>
                                 <span className="add-on-price-breakdown_price">
-                                  <span>₫1,253,408</span>
+                                  <span>{AppUtil.formatCurrency(totalCarPerService(item.price))}</span>
                                 </span>
                                 <div className="add-on-price-breakdown_taxIncluded">
                                   <span>Including Taxes and Fees</span>
@@ -251,24 +304,24 @@ export default function BookingService() {
                                     <div className="add-on-price-breakdown_breakdown add-on-price-breakdown_expanded">
                                       <div className="add-on-price-breakdown_detailedPrice">
                                         <div>
-                                          <span>₫1,105,298</span>
-                                          <span> X </span>1<span> Per Car</span>
+                                          <span>{AppUtil.formatCurrency(item.price)}</span>
+                                          <span> X </span>{perCarQuantity}<span> Per Car</span>
                                         </div>
                                         <div className="add-on-price-breakdown_value">
-                                          <span>₫1,105,298</span>
+                                          <span>{AppUtil.formatCurrency(perCarPrice(item.price))}</span>
                                         </div>
                                       </div>
                                       <div>
                                         <div className="add-on-price-breakdown_taxesAndFees">
                                           <div>8% Government Tax</div>
                                           <div className="add-on-price-breakdown_value">
-                                            <span>₫88,424</span>
+                                            <span>{AppUtil.formatCurrency(governmentTaxPricePerCar(item.price))}</span>
                                           </div>
                                         </div>
                                         <div className="add-on-price-breakdown_taxesAndFees">
                                           <div>5% Service Charge</div>
                                           <div className="add-on-price-breakdown_value">
-                                            <span>₫59,686</span>
+                                            <span>{AppUtil.formatCurrency(serviceChargePricePerCar(item.price))}</span>
                                           </div>
                                         </div>
                                       </div>
@@ -278,17 +331,33 @@ export default function BookingService() {
                               </div>
                               <div className="add-ons-details_messages"></div>
                               <div className="button_group">
-                                <button className="btn button_link" datatest="Button" onClick={handleCloseDetails}>
-                                  <span>Cancel</span>
-                                </button>
-                                <button className="btn button_btn button_primary button_sm" datatest="Button" onClick={() => handleNext(item.id, item.bookingServiceType)}>
-                                  <span>Add to my stay</span>
-                                </button>
+                                {!bookingServicesChoosenId.includes(item.id) ? (
+                                  <>
+                                    <button className="btn button_link" datatest="Button" onClick={handleCloseDetails}>
+                                      <span>Cancel</span>
+                                    </button>
+                                    <button className="btn button_btn button_primary button_sm" datatest="Button" onClick={() => handleNext(item.id, item.bookingServiceType)} >
+                                      <span>Add to my stay</span>
+                                    </button>
+
+                                  </>
+                                ) : (
+                                  <>
+                                    <button className="btn button_link" datatest="Button" onClick={handleCloseDetails}>
+                                      <span>Remove</span>
+                                    </button>
+                                    <button className="btn button_btn button_primary button_sm" datatest="Button" onClick={() => handleBookingServiceEdit(item.id, item.bookingServiceType)}>
+                                      <span>Update</span>
+                                    </button>
+                                  </>
+                                )}
+
                               </div>
                             </div>
                           )}
                         </div>
                       ))}
+
                     </div>
                   </div>
 
@@ -313,6 +382,8 @@ export default function BookingService() {
               handleEdit={handleEdit}
               handleDeleteBookingDetail={handleDeleteBookingDetail}
               loading={loading}
+              perCarQuantity={perCarQuantity}
+              handleNavigateBooking={handleNavigateBooking}
             />
           </aside>
         </div>

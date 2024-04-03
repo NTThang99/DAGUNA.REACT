@@ -2092,13 +2092,13 @@ label+.css-uhyr2s-MuiInputBase-root-MuiInput-root {
     padding: 1rem;
 }
 
-.input_radio {
+/* .input_radio {
     left: -99999em;
     opacity: 0;
     float: left;
     position: relative;
     padding: 0;
-}
+} */
 
 .label_radio {
     padding-left: 2.3em;
@@ -2108,33 +2108,6 @@ label+.css-uhyr2s-MuiInputBase-root-MuiInput-root {
     cursor: pointer;
     position: relative;
     min-height: 1.5em;
-}
-
-.app_radioBox {
-    left: 0;
-    display: inline-block;
-    height: 1.5em;
-    margin: 0 0.5em 0 0;
-    padding: 0;
-    position: absolute;
-    top: -2px;
-    width: 1.5em;
-    border-radius: 50%;
-    border: 1px solid #575c5a;
-    background: rgba(255, 255, 255, 1);
-}
-
-.app_radioBox::before {
-    content: "";
-    border-radius: 50%;
-    display: inline-block;
-    height: 0.75em;
-    width: 0.75em;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    background: rgba(0, 0, 0, 1);
 }
 
 .payment-radio-button_content {
@@ -2380,16 +2353,41 @@ strong {
     margin-left: 0.25em;
 }
 
-.show_filter .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-    top: 183px !important;
-    left: 127px !important;
-    width: 838px;
-    border-radius: 0;
+.filter-bar_caret {
+    background: rgba(255, 255, 255, 1);
+    content: '';
+    display: inline-block;
+    height: 1rem;
+    position: absolute;
+    top: 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 1rem;
+    border-top: 1px solid #d7d7d7;
+    border-left: 1px solid #d7d7d7;
+    z-index: 1000;
+    right: 5%;
 }
 
-.show_filter .css-6hp17o-MuiList-root-MuiMenu-list {
-    margin: revert-layer;
+.filter-bar_flyoutFooter {
+    padding-top: 1rem;
+    border-top: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 1rem;
 }
+
+
+
+.filter-bar_flyoutBox {
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid #d7d7d7;
+    border-radius: 0;
+    position: relative;
+    padding: 0 0 1rem;
+    margin-top: 1rem;
+}
+
 
 .filter-bar_flyoutHeader {
     display: flex;
@@ -2422,10 +2420,10 @@ strong {
 
 @media (min-width: 768px) {
     .filter-bar_filterBox {
-        padding-right: 1rem;
-        border-right: 1px solid #ccc;
-        margin: 1.5rem 0 1.5rem 1rem;
-        width: calc(50% - 1rem);
+        padding-right: 1rem !important;
+        border-right: 1px solid #ccc !important;
+        margin: 1.5rem 0 1.5rem 1rem !important;
+        width: calc(50% - 1rem) !important;
     }
 }
 
@@ -2454,14 +2452,14 @@ strong {
     margin: 0 0 0 0;
 }
 
-.label_filter {
+/* .label_filter {
     padding-left: 2.3em;
     display: block;
     cursor: pointer;
     margin-bottom: 0.75rem;
     position: relative;
     min-height: 1.5em;
-}
+} */
 
 .label_filter_right {
     padding-left: 2.3em;
@@ -2504,8 +2502,16 @@ small {
     font-size: 0.875rem;
 }
 
+.css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked {
+    color: black !important;
+}
+
+.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root.Mui-checked {
+    color: black !important;
+}
+
 .filter-bar_filterBox a {
-    color: rgba(181, 82, 25, 1);
+    color: rgba(181, 82, 25, 1) !important;
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: rgba(181, 82, 25, 1);
@@ -2513,6 +2519,46 @@ small {
     cursor: pointer;
     transition: color 150ms;
     text-decoration: none;
+}
+
+.slider_price {
+    color: rgba(181, 82, 25, 1) !important;
+}
+
+.css-jx1sa5-MuiSlider-thumb {
+    color: white !important;
+
+}
+
+.css-jx1sa5-MuiSlider-thumb:active {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 0 6px rgba(152, 88, 19, 1) !important;
+}
+
+.slider_leftNumberEditor,
+.slider_rightNumberEditor {
+    display: inline-block;
+    width: 40%;
+    position: relative;
+    font-size: 16px;
+}
+
+.slider_separator {
+    display: inline-block;
+    margin: 0 1rem;
+    line-height: 3.5em;
+}
+
+.slider_leftNumberEditor .css-1x51dt5-MuiInputBase-input-MuiInput-input,
+.slider_rightNumberEditor .css-1x51dt5-MuiInputBase-input-MuiInput-input {
+    padding-left: 8px !important;
+}
+
+.filter-bar-border {
+    border-top: 1px solid #ccc;
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    margin-top: -1.5rem;
 }
 
 .checkout_image {

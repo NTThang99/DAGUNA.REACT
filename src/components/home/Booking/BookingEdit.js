@@ -2,20 +2,13 @@ import React, { useEffect, useState } from "react";
 import "../../../css/booking.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { searchRoomsAPI } from "../BookingSlide";
 import { updateSearchBar, getBookingByIdAPI, updateBooking_EditRoom } from "../BookingSlide";
 import BookingDetail from "./BookingDetail";
 import HeaderBooking from "./HeaderBooking";
+import AppUtil from "../../../services/AppUtil";
 
 const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
 
@@ -23,7 +16,7 @@ const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
 export default function BookingEdit() {
     const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false);
-    const [showDetails, setShowDetails] = useState(false);
+    const [showDetailsBill, setShowDetailsBill] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
     const [adultQuantity, setAdultQuantity] = useState(2);
@@ -273,7 +266,7 @@ export default function BookingEdit() {
                                                                             <div className="thumb-cards_priceMessages">
                                                                                 <div className="thumb-cards_priceContainer">
                                                                                     <div className="thumb-cards_price">
-                                                                                        <span>₫{item.pricePerNight}</span>
+                                                                                        <span>{AppUtil.formatCurrency(item.pricePerNight)}</span>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -303,8 +296,8 @@ export default function BookingEdit() {
                     </main>
                     <aside className="app_col-sm-12 app_col-md-12 app_col-lg-4">
                         <BookingDetail
-                            showDetails={showDetails}
-                            setShowDetails={setShowDetails}
+                            showDetailsBill={showDetailsBill}
+                            setShowDetailsBill={setShowDetailsBill}
                             toggleForm={toggleForm}
                             showForm={showForm}
                             cancelForm={cancelForm}

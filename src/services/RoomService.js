@@ -12,9 +12,9 @@ class RoomService {
   }
   static async getRoomById(roomId) {
     return apiClients.get(`/rooms/${roomId}`)
-   
+
   }
-  
+
   static async getAllRoomByFilter(url) {
     return apiClients.get(`${url}`)
   }
@@ -56,6 +56,27 @@ class RoomService {
         throw error;
       });
   }
+
+  static async updateSearchSortBarHeader(url, objSend) {
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(objSend),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+
 }
 export default RoomService;
 

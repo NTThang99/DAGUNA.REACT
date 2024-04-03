@@ -1,22 +1,51 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
+import AppUtil from '../../../services/AppUtil';
+import moment from 'moment';
 
 
-
-export default function BookingDetail({ showDetails, setShowDetails, showDetailsBill, setShowDetailsBill, toggleForm, showAddon, showForm, cancelForm, adultQuantity, childQuantity, handleBack, handleNext, handleEdit, handleDeleteBookingDetail, loading }) {
+export default function BookingDetail({ showDetails, setShowDetails, showDetailsBill, setShowDetailsBill, toggleForm, showAddon, showForm, cancelForm, adultQuantity, childQuantity, handleBack, handleNext, handleEdit, handleDeleteBookingDetail, loading, perCarQuantity,handleNavigateBooking }) {
     // const [roomCount, setRoomCount] = useState(1);
     const location = useLocation();
     const currentPath = location.pathname;
     const bookingDetails = useSelector((state) => state.booking.booking.bookingDetails);
     const bookingDetailChoosen = useSelector((state) => state.booking.booking.bookingDetailChoosen)
 
-    // const bookingServiceId = useSelector((arg) => arg.bookingServiceId)
-
-    // || currentPath === '/booking/edit'
-    {
-
+    const GovernmentTaxPriceRoom = (pricePerNight) => {
+        const governmentTax = 0.08;
+        const vatPrice = pricePerNight * governmentTax;
+        return vatPrice;
+    };
+    const ServiceChargePriceRoom = (pricePerNight) => {
+        const serviceCharge = 0.054;
+        const vatPrice = pricePerNight * serviceCharge;
+        return vatPrice;
     }
+    const TotalVatRoom = (pricePerNight) => {
+        const governmentTax = GovernmentTaxPriceRoom(pricePerNight);
+        const serviceCharge = ServiceChargePriceRoom(pricePerNight);
+        const totalTax = governmentTax + serviceCharge;
+        return totalTax;
+    };
+    const GovernmentTaxPriceService = (price) => {
+        const governmentTax = 0.08;
+        const vatPrice = price * governmentTax
+        return vatPrice;
+    }
+    const ServiceChargePriceService = (price) => {
+        const serviceCharge = 0.054;
+        const vatPrice = price * serviceCharge ;
+        return vatPrice;
+    }
+    const TotalVatService = (price) => {
+        const governmentTax = GovernmentTaxPriceService(price);
+        const serviceCharge = ServiceChargePriceService(price);
+        const totalTax = governmentTax + serviceCharge;
+        return totalTax;
+    };
+    console.log("perCarQuantity", perCarQuantity);
+
     if (currentPath === '/booking') {
         return (
             loading ? <span class="loader container-inner"></span> : (
@@ -50,8 +79,8 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                             <div className="cart-container_productDetails">
                                                 <div className="cart-container_summary">
                                                     <div className="cart-container_dates">
-                                                        <span>{item.checkIn}</span> -{" "}
-                                                        <span>{item.checkOut}</span>
+                                                        <span>{moment(item.checkIn).format('DD-MM-YYYY')}</span> -{" "}
+                                                        <span>{moment(item.checkOut).format('DD-MM-YYYY')}</span>
                                                     </div>
                                                     <div className="cart-container_guests">
                                                         <span>{adultQuantity} Adults</span>,
@@ -63,7 +92,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                         <a className="cart_name" tabIndex={0} role='button'>{item.room.name}</a>
                                                     </div>
                                                     <div className="cart-container_price">
-                                                        <span>{item.total}</span>
+                                                        <span>{AppUtil.formatCurrency(item.room.pricePerNight)}</span>
                                                     </div>
                                                 </div>
                                                 <div className="cart-container_taxesAndFees">
@@ -72,7 +101,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                             <span>Taxes and Fees</span>
                                                         </div>
                                                         <span className="cart-container_price">
-                                                            <span>₫394,753</span>
+                                                            <span>{AppUtil.formatCurrency(TotalVatRoom(item.room.pricePerNight))}</span>
                                                         </span>
                                                     </div>
                                                     <div className="display-prices_wrapper">
@@ -84,13 +113,13 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">8% Government Tax</div>
                                                                     <div className="display-prices_price">
-                                                                        <span>₫235,673</span>
+                                                                        <span>{AppUtil.formatCurrency(GovernmentTaxPriceRoom(item.room.pricePerNight))}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">5% Service Charge</div>
                                                                     <div className="display-prices_price">
-                                                                        <span>₫159,080</span>
+                                                                        <span>{AppUtil.formatCurrency(ServiceChargePriceRoom(item.room.pricePerNight))}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -141,7 +170,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                         <span>Total:</span>
                                     </div>
                                     <div className="price-summary_price">
-                                        <span>₫{item.total}</span>
+                                        <span>{AppUtil.formatCurrency(item.totalAmount)}</span>
                                     </div>
                                 </div>
                                 <div className="price-summary_taxIncluded">
@@ -194,8 +223,8 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     <span>Room</span> 1 </h3>
                                                 <div className="cart-container_summary">
                                                     <div className="cart-container_dates">
-                                                        <span>{item.checkIn}</span> -{" "}
-                                                        <span>{item.checkOut}</span>
+                                                        <span>{moment(item.checkIn).format('DD-MM-YYYY')}</span> -{" "}
+                                                        <span>{moment(item.checkOut).format('DD-MM-YYYY')}</span>
                                                     </div>
                                                     <div className="cart-container_guests">
                                                         <span>{adultQuantity} Adults</span>,
@@ -207,7 +236,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                         <a className="cart_name" tabIndex={0} role='button'>{item.room.name}</a>
                                                     </div>
                                                     <div className="cart-container_price">
-                                                        <span>{item.total}</span>
+                                                        <span>{AppUtil.formatCurrency(item.room.pricePerNight)}</span>
                                                     </div>
                                                 </div>
                                                 <div className="cart-container_taxesAndFees">
@@ -216,7 +245,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                             <span>Taxes and Fees</span>
                                                         </div>
                                                         <span className="cart-container_price">
-                                                            <span>₫394,753</span>
+                                                            <span>{AppUtil.formatCurrency(TotalVatRoom(item.room.pricePerNight))}</span>
                                                         </span>
                                                     </div>
                                                     <div className="display-prices_wrapper">
@@ -228,13 +257,13 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">8% Government Tax</div>
                                                                     <div className="display-prices_price">
-                                                                        <span>₫235,673</span>
+                                                                        <span>{AppUtil.formatCurrency(GovernmentTaxPriceRoom(item.room.pricePerNight))}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">5% Service Charge</div>
                                                                     <div className="display-prices_price">
-                                                                        <span>₫159,080</span>
+                                                                        <span>{AppUtil.formatCurrency(ServiceChargePriceRoom(item.room.pricePerNight))}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -242,20 +271,19 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     </div>
                                                 </div>
                                             </div>
-                                            {/* showAddon == item.id  */}
                                             {showAddon ? (
                                                 <>
-                                                    {item.bookingDetailServiceResDTOS.map((item, key) => (
+                                                    {item.bookingDetailServiceResDTOS.map((serviceItem, key) => (
                                                         <div>
                                                             <div className="cart-container_addon">
                                                                 <div className="cart-container_addonNameInfo">
-                                                                    <a role="button" tabindex="0">{item.bookingService.name} </a>
+                                                                    <a role="button" tabindex="0">{serviceItem.bookingService.name} </a>
                                                                     <i className="cart-container_addonInfo">
-                                                                        <span><span data-package-date="03-14-2024">Mar 14</span>  / Per Car: 1</span>
+                                                                        <span><span data-package-date="03-14-2024">{moment(item.checkIn).format('DD-MM-YYYY')}</span>  / Per Car: {serviceItem.numberCar}</span>
                                                                     </i>
                                                                 </div>
                                                                 <div className="cart-container_price">
-                                                                    <span>₫1,105,298</span>
+                                                                    <span>{AppUtil.formatCurrency(serviceItem.total)}</span>
                                                                 </div>
                                                             </div>
                                                             <div className="cart-container_addonActions">
@@ -266,10 +294,10 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                             <div className="cart-container_taxesAndFees">
                                                                 <div className="cart-container_headerWithPrice">
                                                                     <div className="cart-container_taxesAndFeesHeader">
-                                                                        <span>Taxes and Fees</span>
+                                                                        <span>Taxes and Fees 1111 </span>
                                                                     </div>
                                                                     <span className="cart-container_price">
-                                                                        <span>₫394,753</span>
+                                                                        <span>{AppUtil.formatCurrency(TotalVatService(serviceItem.bookingService.price))}</span>
                                                                     </span>
                                                                 </div>
                                                                 <div className="display-prices_wrapper">
@@ -281,13 +309,13 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                             <div className="display-prices_row">
                                                                                 <div className="display-prices_label">8% Government Tax</div>
                                                                                 <div className="display-prices_price">
-                                                                                    <span>₫235,673</span>
+                                                                                    <span>{AppUtil.formatCurrency(GovernmentTaxPriceService(serviceItem.bookingService.price))}</span>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="display-prices_row">
                                                                                 <div className="display-prices_label">5% Service Charge</div>
                                                                                 <div className="display-prices_price">
-                                                                                    <span>₫159,080</span>
+                                                                                    <span>{AppUtil.formatCurrency(ServiceChargePriceService(serviceItem.bookingService.price))}</span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -300,13 +328,13 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                 </>
                                             ) : (
                                                 <>
-                                                    {item.bookingDetailServiceResDTOS.map((item, key) => (
+                                                    {item.bookingDetailServiceResDTOS.map((serviceItem, key) => (
                                                         <div>
                                                             <div className="cart-container_addon">
                                                                 <div className="cart-container_addonNameInfo">
-                                                                    <a role="button" tabindex="0">{item.bookingService.name} </a>
+                                                                    <a role="button" tabindex="0">{serviceItem.bookingService.name} </a>
                                                                     <i className="cart-container_addonInfo">
-                                                                        <span><span data-package-date="03-14-2024">Mar 14</span>  / Per Car: 1</span>
+                                                                        <span><span data-package-date="03-14-2024">{moment(item.checkIn).format('DD-MM-YYYY')}</span>  / Per Car: {serviceItem.numberCar}</span>
                                                                     </i>
                                                                 </div>
                                                                 <div className="cart-container_price">
@@ -409,7 +437,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                         <span>Total:</span>
                                     </div>
                                     <div className="price-summary_price">
-                                        <span>₫{item.total}</span>
+                                        <span>{AppUtil.formatCurrency(item.total)}</span>
                                     </div>
                                 </div>
                                 <div className="price-summary_taxIncluded">
@@ -419,7 +447,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                         ))}
                     </div >
                     <div className="add-ons-container_rightContinue">
-                        <button className="btn button_btn button_primary button_md button_block" datatest="Button" onClick={() => handleNext()}>
+                        <button className="btn button_btn button_primary button_md button_block" datatest="Button" onClick={() => handleNavigateBooking()}>
                             <span>Continue</span>
                         </button>
                     </div>
@@ -461,8 +489,8 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     <span>Room</span> 1 </h3>
                                                 <div className="cart-container_summary">
                                                     <div className="cart-container_dates">
-                                                        <span>{item.checkIn}</span> -{" "}
-                                                        <span>{item.checkOut}</span>
+                                                        <span>{moment(item.checkIn).format('DD-MM-YYYY')}</span> -{" "}
+                                                        <span>{moment(item.checkOut).format('DD-MM-YYYY')}</span>
                                                     </div>
                                                     <div className="cart-container_guests">
                                                         <span>{adultQuantity} Adults</span>,
@@ -474,7 +502,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                         <a className="cart_name" tabIndex={0} role='button'>{item.room.name}</a>
                                                     </div>
                                                     <div className="cart-container_price">
-                                                        <span>{item.total}</span>
+                                                        <span>{AppUtil.formatCurrency(item.room.pricePerNight)}</span>
                                                     </div>
                                                 </div>
                                                 <div className="cart-container_taxesAndFees">
@@ -483,7 +511,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                             <span>Taxes and Fees</span>
                                                         </div>
                                                         <span className="cart-container_price">
-                                                            <span>₫394,753</span>
+                                                            <span>{AppUtil.formatCurrency(TotalVatRoom(item.room.pricePerNight))}</span>
                                                         </span>
                                                     </div>
                                                     <div className="display-prices_wrapper">
@@ -495,13 +523,13 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">8% Government Tax</div>
                                                                     <div className="display-prices_price">
-                                                                        <span>₫235,673</span>
+                                                                        <span>{AppUtil.formatCurrency(GovernmentTaxPriceRoom(item.room.pricePerNight))}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">5% Service Charge</div>
                                                                     <div className="display-prices_price">
-                                                                        <span>₫159,080</span>
+                                                                        <span>{AppUtil.formatCurrency(ServiceChargePriceRoom(item.room.pricePerNight))}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -511,17 +539,17 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                             </div>
                                             {showAddon == item.id && (
                                                 <>
-                                                    {item.bookingDetailServiceResDTOS.map((item, key) => (
+                                                    {item.bookingDetailServiceResDTOS.map((serviceItem, key) => (
                                                         <div>
                                                             <div className="cart-container_addon">
                                                                 <div className="cart-container_addonNameInfo">
                                                                     <a role="button" tabindex="0">{item.bookingService.name} </a>
                                                                     <i className="cart-container_addonInfo">
-                                                                        <span><span data-package-date="03-14-2024">Mar 14</span>  / Per Car: 1</span>
+                                                                        <span><span data-package-date="03-14-2024">{moment(item.checkIn).format('DD-MM-YYYY')}</span>  / Per Car: {serviceItem.numberCar}</span>
                                                                     </i>
                                                                 </div>
                                                                 <div className="cart-container_price">
-                                                                    <span>₫1,105,298</span>
+                                                                    <span>{AppUtil.formatCurrency(item.price)}</span>
                                                                 </div>
                                                             </div>
                                                             <div className="cart-container_addonActions">
@@ -535,7 +563,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                         <span>Taxes and Fees</span>
                                                                     </div>
                                                                     <span className="cart-container_price">
-                                                                        <span>₫394,753</span>
+                                                                        <span>{AppUtil.formatCurrency(TotalVatService(item.bookingService.price))}</span>
                                                                     </span>
                                                                 </div>
                                                                 <div className="display-prices_wrapper">
@@ -547,13 +575,13 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                             <div className="display-prices_row">
                                                                                 <div className="display-prices_label">8% Government Tax</div>
                                                                                 <div className="display-prices_price">
-                                                                                    <span>₫235,673</span>
+                                                                                    <span>{AppUtil.formatCurrency(GovernmentTaxPriceService(item.bookingService.price))}</span>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="display-prices_row">
                                                                                 <div className="display-prices_label">5% Service Charge</div>
                                                                                 <div className="display-prices_price">
-                                                                                    <span>₫159,080</span>
+                                                                                    <span>{AppUtil.formatCurrency(ServiceChargePriceService(item.bookingService.price))}</span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -567,11 +595,6 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                             )}
 
                                             <div div className="cart-container_actions" >
-                                                <button className="btn button_link" aria-label="Edit" datatest="Button" onClick={handleEdit}>
-                                                    <span className="fa-solid fa-pencil button_modify" aria-hidden="true"></span>
-                                                    <span>Edit</span>
-                                                </button>
-                                                <span data-testid="separator"></span>
                                                 <button className="btn button_link" aria-label="Remove" datatest="Button">
                                                     <span className="button_remove fa-regular fa-trash-can" aria-hidden="true">
                                                     </span>
@@ -621,7 +644,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                         <span>Total:</span>
                                     </div>
                                     <div className="price-summary_price">
-                                        <span>₫{item.total}</span>
+                                        <span>{AppUtil.formatCurrency(item.total)}</span>
                                     </div>
                                 </div>
                                 <div className="price-summary_taxIncluded">
@@ -674,8 +697,8 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     <span>Room</span> 1 </h3>
                                                 <div className="cart-container_summary">
                                                     <div className="cart-container_dates">
-                                                        <span>{item.checkIn}</span> -{" "}
-                                                        <span>{item.checkOut}</span>
+                                                        <span>{moment(item.checkIn).format('DD-MM-YYYY')}</span> -{" "}
+                                                        <span>{moment(item.checkOut).format('DD-MM-YYYY')}</span>
                                                     </div>
                                                     <div className="cart-container_guests">
                                                         <span>{adultQuantity} Adults</span>,
@@ -687,7 +710,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                         <a className="cart_name" tabIndex={0} role='button'>{item.room.name}</a>
                                                     </div>
                                                     <div className="cart-container_price">
-                                                        <span>{item.total}</span>
+                                                        <span>{AppUtil.formatCurrency(item.room.pricePerNight)}</span>
                                                     </div>
                                                 </div>
                                                 <div className="cart-container_taxesAndFees">
@@ -696,7 +719,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                             <span>Taxes and Fees</span>
                                                         </div>
                                                         <span className="cart-container_price">
-                                                            <span>₫394,753</span>
+                                                            <span>{AppUtil.formatCurrency(TotalVatRoom(item.room.pricePerNight))}</span>
                                                         </span>
                                                     </div>
                                                     <div className="display-prices_wrapper">
@@ -708,13 +731,13 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">8% Government Tax</div>
                                                                     <div className="display-prices_price">
-                                                                        <span>₫235,673</span>
+                                                                        <span>{AppUtil.formatCurrency(GovernmentTaxPriceRoom(item.room.pricePerNight))}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">5% Service Charge</div>
                                                                     <div className="display-prices_price">
-                                                                        <span>₫159,080</span>
+                                                                        <span>{AppUtil.formatCurrency(ServiceChargePriceRoom(item.room.pricePerNight))}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -722,17 +745,17 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     </div>
                                                 </div>
                                             </div>
-                                            {item.bookingDetailServiceResDTOS.map((item, key) => (
+                                            {item.bookingDetailServiceResDTOS.map((serviceItem, key) => (
                                                 <div>
                                                     <div className="cart-container_addon">
                                                         <div className="cart-container_addonNameInfo">
-                                                            <a role="button" tabindex="0">{item.bookingService.name} </a>
+                                                            <a role="button" tabindex="0">{serviceItem.bookingService.name} </a>
                                                             <i className="cart-container_addonInfo">
-                                                                <span><span data-package-date="03-14-2024">Mar 14</span>  / Per Car: 1</span>
+                                                                <span><span data-package-date="03-14-2024">{moment(item.checkIn).format('DD-MM-YYYY')}</span>  / Per Car: {serviceItem.numberCar}</span>
                                                             </i>
                                                         </div>
                                                         <div className="cart-container_price">
-                                                            <span>₫1,105,298</span>
+                                                            <span>{AppUtil.formatCurrency(serviceItem.price)}</span>
                                                         </div>
                                                     </div>
                                                     <div className="cart-container_addonActions">
@@ -746,7 +769,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                 <span>Taxes and Fees</span>
                                                             </div>
                                                             <span className="cart-container_price">
-                                                                <span>₫394,753</span>
+                                                                <span>{AppUtil.formatCurrency(TotalVatService(serviceItem.bookingService.price))}</span>
                                                             </span>
                                                         </div>
                                                         <div className="display-prices_wrapper">
@@ -758,13 +781,13 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                     <div className="display-prices_row">
                                                                         <div className="display-prices_label">8% Government Tax</div>
                                                                         <div className="display-prices_price">
-                                                                            <span>₫235,673</span>
+                                                                            <span>{AppUtil.formatCurrency(GovernmentTaxPriceService(serviceItem.bookingService.price))}</span>
                                                                         </div>
                                                                     </div>
                                                                     <div className="display-prices_row">
                                                                         <div className="display-prices_label">5% Service Charge</div>
                                                                         <div className="display-prices_price">
-                                                                            <span>₫159,080</span>
+                                                                            <span>{AppUtil.formatCurrency(ServiceChargePriceService(serviceItem.bookingService.price))}</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -829,7 +852,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                         <span>Total:</span>
                                     </div>
                                     <div className="price-summary_price">
-                                        <span>₫{item.total}</span>
+                                        <span>{AppUtil.formatCurrency(item.total)}</span>
                                     </div>
                                 </div>
                                 <div className="price-summary_taxIncluded">

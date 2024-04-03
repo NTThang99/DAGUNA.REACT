@@ -6,22 +6,32 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import Slider from "react-slick";
+import SliderPrice from '@mui/material/Slider';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import bookingReducer from "../BookingSlide";
 import {
   updateSearchBar,
   createBookingAPI,
   getBookingByIdAPI,
   updateBooking_AddRoomAPI,
   findAvailableRoomHavePerAPI,
+  findSortRoomHavePerAPI,
 } from "../BookingSlide";
 import BookingDetail from "./BookingDetail";
 import HeaderBooking from "./HeaderBooking";
 import RoomService from "../../../services/RoomService";
 
 const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
-
+let mapAge = new Map();
 export default function Booking() {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -34,7 +44,7 @@ export default function Booking() {
   const [openImage, setOpenImage] = useState(false);
   const [openView, setOpenView] = React.useState(null);
   const [openSort, setOpenSort] = React.useState(null);
-  const [openFilter, setOpenFilter] = React.useState(null);
+  const [openFilter, setOpenFilter] = useState(false);
   const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(0);
@@ -52,7 +62,7 @@ export default function Booking() {
     dayjs(),
     dayjs().add(1, 'day'),
   ]);
-
+  const [valuePrice, setValuePrice] = React.useState([1000000, 20000000]);
 
   // const [value, setValue] = React.useState(dayjs("2022-04-17T15:30"));
 
@@ -84,13 +94,14 @@ export default function Booking() {
     setIsFocusedSort(false);
     setOpenSort(null);
   };
-  const handleClickFilter = (event) => {
-    setIsFocusedFilter(true);
-    setOpenFilter(event.currentTarget);
+  const handleClickFilter = () => {
+    setIsFocusedFilter(!isFocusedFilter);
+    // setOpenFilter(event.currentTarget);
+    setOpenFilter(!openFilter);
   };
   const handleCloseFilter = () => {
     setIsFocusedFilter(false);
-    setOpenFilter(null);
+    setOpenFilter(false);
   };
   const increaseAdultQuantity = () => {
     setAdultQuantity(adultQuantity + 1);
@@ -153,9 +164,7 @@ export default function Booking() {
 
     dispatch(updateSearchBar({ guests: { numberAdult: newAdultQuantity } }));
   };
-  const handleApplyChanges = () => {
-    // Gọi hàm dispatch để cập nhật dữ liệu vào Redux Store
-    let mapAge = new Map();
+  const handleCurrent = () => {
     mapAge.set("lessthan4", 0);
     mapAge.set("greatthan4", 0);
     for (let i = 0; i < childAges.length; i++) {
@@ -168,6 +177,10 @@ export default function Booking() {
     if (mapAge.get("lessthan4") == 1) {
       mapAge.set("lessthan4", 0)
     }
+  }
+  const handleApplyChanges = () => {
+    // Gọi hàm dispatch để cập nhật dữ liệu vào Redux Store
+    handleCurrent();
     let current = adultQuantity + mapAge.get("greatthan4") + Math.ceil(mapAge.get("lessthan4") / 2);
 
     dispatch(findAvailableRoomHavePerAPI({
@@ -201,6 +214,32 @@ export default function Booking() {
     setChildAges(newAges);
   };
 
+  const handlePrice = (event, newValue) => {
+    setValuePrice(newValue);
+  };
+  const handleSortByChange = (evt) => {
+    dispatch(bookingReducer.actions.handleSortByChange(evt.target.value))
+  }
+  const handleViewTypeChange = (evt) => {
+    dispatch(bookingReducer.actions.handleViewTypeChange(evt.target.value))
+  }
+  const handleBedTypeChange = (evt) => {
+    dispatch(bookingReducer.actions.handleBedTypeChange(evt.target.value))
+  }
+  const handleApplyFilter = () => {
+
+    handleCurrent();
+    let current = adultQuantity + mapAge.get("greatthan4") + Math.ceil(mapAge.get("lessthan4") / 2);
+    dispatch(findSortRoomHavePerAPI({
+      current: current,
+      viewType: room.searchBar.viewType,
+      sortBy: room.searchBar.sortBy,
+      bedType: room.searchBar.bedType,
+      minMaxPrice: valuePrice,
+      checkIn: room.searchBar.checkIn,
+      checkOut: room.searchBar.checkOut
+    }));
+  };
 
   useEffect(() => {
     dispatch(findAvailableRoomHavePerAPI({
@@ -220,6 +259,13 @@ export default function Booking() {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(value);
   };
 
   return (
@@ -327,7 +373,6 @@ export default function Booking() {
                           open={openSort}
                           onClose={handleCloseSort}
                         >
-                          <MenuItem onClick={handleClose}>Recommended</MenuItem>
                           <MenuItem onClick={handleClose}>Lowest Price</MenuItem>
                           <MenuItem onClick={handleClose}>Highest Price</MenuItem>
                         </Menu>
@@ -357,136 +402,160 @@ export default function Booking() {
                             <i className="select_caret_icon fa-solid fa-caret-down"></i>
                           </span>
                         </div>
-                        <Menu
-                          className="show_filter"
-                          anchorEl={openFilter}
-                          showView={openFilters}
-                          open={openFilter}
-                          onClose={handleCloseFilter}
-                        >
-                          <div className="filter-bar_flyoutHeader" >
-                            <h3 className="app_heading1" >
-                              <span>Filters</span>
-                            </h3>
-                          </div>
-                          <div className="filter-bar_flyoutBodyWrapper">
-                            <div className="filter-bar_flyoutBody">
-                              <div className="filter-bar_filterBox">
-                                <div className="filter-bar_header">
-                                  <h4 className="app_heading2">
-                                    <span>Sort By</span>
-                                  </h4>
-                                </div>
-                                <div className="filter-bar_checkbox">
-                                  <input data-error="false" className="input_radio" type="radio" value="" />
-                                  <label className="label_filter" for="recommended">
-                                    <span className="app_radioBox"></span>
-                                    <span>Recommended</span>
-                                  </label>
-                                </div>
-                                <div className="filter-bar_checkbox">
-                                  <input data-error="false" className="input_radio" type="radio" value="" checked="" />
-                                  <label className="label_filter">
-                                    <span className="app_radioBox"></span>
-                                    <span>Lowest Price</span>
-                                  </label>
-                                </div>
-                                <div className="filter-bar_checkbox">
-                                  <input data-error="false" className="input_radio" type="radio" value="" />
-                                  <label className="label_filter">
-                                    <span className="app_radioBox"></span>
-                                    <span>Highest Price</span>
-                                  </label>
-                                </div>
-                              </div>
-                              <div className="filter-bar_filterBox">
-                                <div className="filter-bar_header">
-                                  <h4 className="app_heading2">
-                                    <span>View</span>
-                                  </h4>
-                                </div>
-                                <div>
-                                  <div className="filter-bar_checkbox ">
-                                    <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabIndex="-1" >
-                                      <span>Other</span>
-                                    </label>
-                                  </div>
-                                  <div className="filter-bar_checkbox ">
-                                    <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabIndex="-1" >
-                                      <span>Garden view</span>
-                                    </label>
-                                  </div>
-                                  <div className="filter-bar_checkbox ">
-                                    <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabIndex="-1" >
-                                      <span>Sea view</span>
-                                    </label>
-                                  </div>
-                                </div>
-                                <div className="filter-bar_optionsFooter">
-                                  <div className="filter-bar_clear app_small">
-                                    <a tabIndex="0" role="button" aria-label="Clear View Filter">
-                                      <span>Clear</span>
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="filter-bar_filterBox">
-                                <div className="filter-bar_header">
-                                  <h4 className="app_heading2">
-                                    <span>Bed Type</span>
-                                  </h4>
-                                </div>
-                                <div>
-                                  <div className="filter-bar_checkbox ">
-                                    <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabIndex="-1" >
-                                      <span>Double</span>
-                                    </label>
-                                  </div>
-                                  <div className="filter-bar_checkbox ">
-                                    <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabIndex="-1" >
-                                      <span>King</span>
-                                    </label>
-                                  </div>
-                                  <div className="filter-bar_checkbox ">
-                                    <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabIndex="-1" >
-                                      <span>Twin</span>
-                                    </label>
-                                  </div>
-                                  <div className="filter-bar_checkbox ">
-                                    <input className="input_radio" type="checkbox" value="" />
-                                    <label className="label_filter_right" tabIndex="-1" >
-                                      <span>Various Bed Types</span>
-                                    </label>
-                                  </div>
-                                </div>
-                                <div className="filter-bar_optionsFooter">
-                                  <div className="filter-bar_clear app_small">
-                                    <a tabIndex="0" role="button" aria-label="Clear View Filter">
-                                      <span>Clear</span>
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="filter-bar_filterBox">
-                                <div className="filter-bar_header">
-                                  <h4 className="app_heading2">Price (avg./night)</h4>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </Menu>
                         <div role="alert"></div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+              {openFilter && (
+                <Box
+                  className="filter-bar_flyoutBox"
+                  anchorEl={openFilter}
+                  showView={openFilters}
+                  open={openFilter}
+                  onClose={handleCloseFilter}
+                >
+                  <span className="filter-bar_caret"></span>
+                  <div className="filter-bar_flyoutHeader" >
+                    <h3 className="app_heading1" >
+                      <span>Filters</span>
+                    </h3>
+                  </div>
+                  <div className="filter-bar_flyoutBodyWrapper">
+                    <div className="filter-bar_flyoutBody">
+                      <FormControl className="filter-bar_filterBox">
+                        <FormLabel className="filter-bar_header">
+                          <h4 className="app_heading2">
+                            <span>Sort By</span>
+                          </h4>
+                        </FormLabel>
+                        <RadioGroup
+                          aria-labelledby="demo-radio-buttons-group-label"
+                          defaultValue="female"
+                          name="radio-buttons-group"
+                        >
+                          <FormControlLabel value="ASC"
+                            checked={room.searchBar.sortBy === 'ASC'}
+                            onChange={handleSortByChange} control={<Radio />} label="Lowest Price" />
+                          <FormControlLabel value="DESC"
+                            checked={room.searchBar.sortBy === 'DESC'} onChange={handleSortByChange} control={<Radio />} label="Highest Price" />
+                        </RadioGroup>
+                      </FormControl>
+                      <FormControl className="filter-bar_filterBox">
+                        <FormLabel className="filter-bar_header">
+                          <h4 className="app_heading2">
+                            <span>View</span>
+                          </h4>
+                        </FormLabel>
+                        <RadioGroup
+                          aria-labelledby="demo-radio-buttons-group-label"
+                          defaultValue="female"
+                          name="radio-buttons-group"
+                        >
+                          <FormControlLabel value="OTHER"
+                            checked={room.searchBar.viewType === 'OTHER'}
+                            onChange={handleViewTypeChange} control={<Radio />} label="Other" />
+                          <FormControlLabel value="GARDEN_VIEW"
+                            checked={room.searchBar.viewType === 'GARDEN_VIEW'} onChange={handleViewTypeChange} control={<Radio />} label="Garden view" />
+                          <FormControlLabel value="SEA_VIEW"
+                            checked={room.searchBar.viewType === 'SEA_VIEW'} onChange={handleViewTypeChange} control={<Radio />} label="Sea view" />
+                        </RadioGroup>
+                      </FormControl>
+                      <FormControl className="filter-bar_filterBox">
+                        <FormLabel className="filter-bar_header">
+                          <h4 className="app_heading2">
+                            <span>Bed Type</span>
+                          </h4>
+                        </FormLabel>
+                        <RadioGroup
+                          aria-labelledby="demo-radio-buttons-group-label"
+                          defaultValue="female"
+                          name="radio-buttons-group"
+                        >
+                          <FormControlLabel value="DOUBLE"
+                            checked={room.searchBar.bedType === 'DOUBLE'}
+                            onChange={handleBedTypeChange} control={<Radio />} label="Double" />
+                          <FormControlLabel value="KING"
+                            checked={room.searchBar.bedType === 'KING'} onChange={handleBedTypeChange} control={<Radio />} label="King" />
+                          <FormControlLabel value="TWIN"
+                            checked={room.searchBar.bedType === 'TWIN'} onChange={handleBedTypeChange} control={<Radio />} label="Twin" />
+                          <FormControlLabel value="VARIOUS"
+                            checked={room.searchBar.bedType === 'VARIOUS'} onChange={handleBedTypeChange} control={<Radio />} label="Various Bed Types" />
+                        </RadioGroup>
+                      </FormControl>
+
+                      <div className="filter-bar_filterBox">
+                        <div className="filter-bar_header">
+                          <h4 className="app_heading2">Price (avg./night)</h4>
+                        </div>
+                        <Box sx={{ width: 300 }}>
+                          <SliderPrice className="slider_price"
+                            getAriaLabel={() => 'Temperature range'}
+                            value={valuePrice}
+                            onChange={handlePrice}
+                            valueLabelDisplay="auto"
+                            valueLabelFormat={value => formatCurrency(value)}
+                            min={1000000}
+                            max={30000000}
+                          />
+                        </Box>
+                        <Box className="slider_leftNumberEditor"
+                          component="form"
+                          noValidate
+                          autoComplete="off"
+                        >
+                          <TextField style={{
+                            border: "1px solid black"
+                          }}
+                            id="standard-helperText"
+                            label="Price range from"
+                            defaultValue={formatCurrency(valuePrice[0])}
+                            variant="standard"
+                            value={formatCurrency(valuePrice[0])}
+                          />
+                        </Box>
+                        <div class="slider_separator">-</div>
+                        <Box className="slider_rightNumberEditor"
+                          component="form"
+                          noValidate
+                          autoComplete="off"
+                        >
+                          <TextField style={{
+                            border: "1px solid black"
+                          }}
+                            id="standard-helperText"
+                            label="Price range to"
+                            defaultValue={formatCurrency(valuePrice[1])}
+                            variant="standard"
+                            value={formatCurrency(valuePrice[1])}
+                          />
+                        </Box>
+                        <div className="filter-bar_optionsFooter">
+                          <div className="filter-bar_clear app_small">
+                            <a aria-label="Reset Price (avg./night) Filter" tabindex="0">
+                              <span>Reset</span>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="filter-bar_flyoutFooter">
+                    <div>
+                      <button className="button_btn button_primary button_sm" style={{ height: "40px" }}   onClick={handleCloseFilter}>
+                        <span>Cancel</span>
+                      </button>
+                    </div>
+                    <div style={{paddingLeft:"20px"}}>
+                      <button className="button_btn button_primary button_sm" style={{ height: "40px"}} onClick={handleApplyFilter}>
+                        <span>Apply</span>
+                      </button>
+                    </div>
+                  </div>
+                </Box>
+              )}
             </div>
             <div>
               <div className="thumb-cards_products">
@@ -545,7 +614,7 @@ export default function Booking() {
                                       <div className="thumb-cards_priceMessages">
                                         <div className="thumb-cards_priceContainer">
                                           <div className="thumb-cards_price">
-                                            <span>₫{item.pricePerNight}</span>
+                                            <span>{formatCurrency(item.pricePerNight)}</span>
                                           </div>
                                         </div>
                                       </div>
@@ -665,13 +734,12 @@ export default function Booking() {
                               <div class="sr-only">Garden Balcony King Grand image 4</div>
                               {
                                 roomModal != null ? <Slider className="fullPageGallery " {...settings}>
-                                {console.log("roomModal",roomModal)}
-                                {roomModal?.imageResDTOS.map((itemImg, key) => (
-                                <div className="gallery_imgWrapper">
-                                  <img src={itemImg.fileUrl} class="" alt="Garden Balcony King Grand image 1" tabindex="-1" />
-                                </div>
-                                ))}
-                              </Slider> : null
+                                  {roomModal?.imageResDTOS.map((itemImg, key) => (
+                                    <div className="gallery_imgWrapper">
+                                      <img src={itemImg.fileUrl} class="" alt="Garden Balcony King Grand image 1" tabindex="-1" />
+                                    </div>
+                                  ))}
+                                </Slider> : null
                               }
                             </div>
                           </div>

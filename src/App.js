@@ -44,6 +44,8 @@ import ModalEditRoom from "./components/dashboard/rooms/ModalEditRoom";
 import EditReceptionist from "./components/dashboard/receptionists/EditReceptionist";
 import { ImportExportOutlined } from "@mui/icons-material";
 import BookingDetail from "./components/home/Booking/BookingDetail";
+import ChartPage from "./pages/dashboard/ChartPage";
+import Revenue from "./components/dashboard/charts/Revenue";
 
 export default function App() {
   return (
@@ -68,9 +70,10 @@ export default function App() {
             <Route path="/receptionists/:receptionistName" element={<ReceptionistDetail />} />
             <Route path="/services" element={<Services />} />
             <Route path="/dashboard" element={<Dashboard />}>
-
+              <Route path="revenue" element={<ChartPage />}>
+                <Route path="" index element={<Revenue />} />
+              </Route>
               <Route path="rooms" element={<RoomPage />}>
-                {/* <Route index element={<RoomList />} /> */}
                 <Route path="list" index element={<RoomList />} />
                 <Route path="add" element={<CreateRoom />} />
                 <Route path=":idRoomDetail" element={<RoomDetailDashboard />}>
@@ -86,14 +89,14 @@ export default function App() {
                 <Route path="list" index element={<ReceptionistList />} />
                 <Route path="add" element={<CreateReceptionist />} />
                 <Route path="edit/:receptionistId" element={<EditReceptionist />} />
-                <Route path="detail/:receptionistId" element={<ReceptionistDetail />}/> 
+                <Route path="detail/:receptionistId" element={<ReceptionistDetail />} />
 
               </Route>
 
               <Route path="bookings" element={<BookingPage />}>
-              <Route path="list" index element={<BookingList />} />
+                <Route path="list" index element={<BookingList />} />
                 {/* <Route path="add" element={<CreateReceptionist />} /> */}
-              <Route path="detail/:bookingId" element={<BookingDetailDashboard />}/> 
+                <Route path="detail/:bookingId" element={<BookingDetailDashboard />} />
               </Route>
 
             </Route>

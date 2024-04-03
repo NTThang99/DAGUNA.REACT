@@ -43,6 +43,8 @@ import ModalEditRoom from "./components/dashboard/rooms/ModalEditRoom";
 import EditReceptionist from "./components/dashboard/receptionists/EditReceptionist";
 import { ImportExportOutlined } from "@mui/icons-material";
 import BookingDetail from "./components/home/Booking/BookingDetail";
+import ChartPage from "./pages/dashboard/ChartPage";
+import Revenue from "./components/dashboard/charts/Revenue";
 import PrivateRoute from "./components/common/PrivateRoute";
 import BookingDepositlDashboard from "./components/dashboard/bookings/Deposit";
 
@@ -68,6 +70,10 @@ export default function App() {
             <Route path="/rooms/:roomName" element={<RoomDetail />} />
             <Route path="/receptionists/:receptionistName" element={<ReceptionistDetail />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/dashboard" element={<Dashboard />}>
+              <Route path="revenue" element={<ChartPage />}>
+                <Route path="" index element={<Revenue />} />
+              </Route>
 
             <Route path="/login" element={<LoginForm />} />
             <Route path="/dashboard" element={<PrivateRoute Component={Dashboard} authority={["ROLE_ADMIN", "ROLE_RECEPTIONIST"]} />}  >
@@ -86,8 +92,10 @@ export default function App() {
                 http://localhost:3000/dashboard/receptionists/5
                 */}
                 <Route path="list" index element={<ReceptionistList />} />
+
                 <Route path="add" element={<PrivateRoute Component={CreateReceptionist} authority={["ROLE_ADMIN"]} previousUrl={"/dashboard/receptionists/add"} />} />
                 <Route path="edit/:receptionistId" element={<PrivateRoute Component={EditReceptionist} authority={["ROLE_ADMIN"]} />} />
+
                 <Route path="detail/:receptionistId" element={<ReceptionistDetail />} />
 
               </Route>
@@ -96,7 +104,9 @@ export default function App() {
                 <Route path="list" index element={<BookingList />} />
                 {/* <Route path="add" element={<CreateReceptionist />} /> */}
                 <Route path="detail/:bookingId" element={<BookingDetailDashboard />} />
+
                 <Route path="deposit/:bookingId" element={<BookingDepositlDashboard />} />
+
               </Route>
             </Route>
           </Routes>

@@ -70,45 +70,46 @@ export default function App() {
             <Route path="/rooms/:roomName" element={<RoomDetail />} />
             <Route path="/receptionists/:receptionistName" element={<ReceptionistDetail />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/dashboard" element={<Dashboard />}>
-              <Route path="revenue" element={<ChartPage />}>
-                <Route path="" index element={<Revenue />} />
-              </Route>
+       
 
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/dashboard" element={<PrivateRoute Component={Dashboard} authority={["ROLE_ADMIN", "ROLE_RECEPTIONIST"]} />}  >
-              <Route path="rooms" element={<RoomPage />} >
-                {/* <Route index element={<RoomList />} /> */}
-                <Route path="list" index element={<RoomList />} />
-                <Route path="add" element={<PrivateRoute Component={CreateRoom} authority={["ROLE_ADMIN"]} previousUrl={"/dashboard/rooms/add"} />} />
-                <Route path=":idRoomDetail" element={<RoomDetailDashboard />}  >
-                  <Route path="room-reals"></Route>
+
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/dashboard" element={<PrivateRoute Component={Dashboard} authority={["ROLE_ADMIN", "ROLE_RECEPTIONIST"]} />}  >
+                <Route path="revenue" element={<ChartPage />}>
+                  <Route path="" index element={<Revenue />} />
                 </Route>
-                <Route path=":idRoomEdit" element={<PrivateRoute Component={ModalEditRoom} authority={["ROLE_ADMIN"]} />} />
-              </Route>
+                <Route path="rooms" element={<RoomPage />} >
+                  {/* <Route index element={<RoomList />} /> */}
+                  <Route path="list" index element={<RoomList />} />
+                  <Route path="add" element={<PrivateRoute Component={CreateRoom} authority={["ROLE_ADMIN"]} previousUrl={"/dashboard/rooms/add"} />} />
+                  <Route path=":idRoomDetail" element={<RoomDetailDashboard />}  >
+                    <Route path="room-reals"></Route>
+                  </Route>
+                  <Route path=":idRoomEdit" element={<PrivateRoute Component={ModalEditRoom} authority={["ROLE_ADMIN"]} />} />
+                </Route>
 
-              <Route path="receptionists" element={<ReceptionistPage />}>
-                {/* <Route index element={<RoomList />} /> 
+                <Route path="receptionists" element={<ReceptionistPage />}>
+                  {/* <Route index element={<RoomList />} /> 
                 http://localhost:3000/dashboard/receptionists/5
                 */}
-                <Route path="list" index element={<ReceptionistList />} />
+                  <Route path="list" index element={<ReceptionistList />} />
 
-                <Route path="add" element={<PrivateRoute Component={CreateReceptionist} authority={["ROLE_ADMIN"]} previousUrl={"/dashboard/receptionists/add"} />} />
-                <Route path="edit/:receptionistId" element={<PrivateRoute Component={EditReceptionist} authority={["ROLE_ADMIN"]} />} />
+                  <Route path="add" element={<PrivateRoute Component={CreateReceptionist} authority={["ROLE_ADMIN"]} previousUrl={"/dashboard/receptionists/add"} />} />
+                  <Route path="edit/:receptionistId" element={<PrivateRoute Component={EditReceptionist} authority={["ROLE_ADMIN"]} />} />
 
-                <Route path="detail/:receptionistId" element={<ReceptionistDetail />} />
+                  <Route path="detail/:receptionistId" element={<ReceptionistDetail />} />
 
+                </Route>
+
+                <Route path="bookings" element={<BookingPage />}>
+                  <Route path="list" index element={<BookingList />} />
+                  {/* <Route path="add" element={<CreateReceptionist />} /> */}
+                  <Route path="detail/:bookingId" element={<BookingDetailDashboard />} />
+
+                  <Route path="deposit/:bookingId" element={<BookingDepositlDashboard />} />
+
+                </Route>
               </Route>
-
-              <Route path="bookings" element={<BookingPage />}>
-                <Route path="list" index element={<BookingList />} />
-                {/* <Route path="add" element={<CreateReceptionist />} /> */}
-                <Route path="detail/:bookingId" element={<BookingDetailDashboard />} />
-
-                <Route path="deposit/:bookingId" element={<BookingDepositlDashboard />} />
-
-              </Route>
-            </Route>
           </Routes>
           <Footer />
         </Router>

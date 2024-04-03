@@ -6,7 +6,6 @@ export default function ChartPage() {
 
     return (
         <>
-            
             <div>
                 <Outlet />
             </div>

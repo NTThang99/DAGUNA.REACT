@@ -254,19 +254,18 @@ export default function Revenue() {
             toast.error('Lỗi dữ liệu/ hệ thống')
         }
     }
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let revenueYeahRes = await RevenueService.getShowRevenue()
-                let result = revenueYeahRes?.data
-                setRevenueYeah(result?.map((r) => (r?.total_Amount)));
-                setRevenueTime(result?.map((r) => (r?.month_Year)));
+    useEffect(async () => {
+        try {
+            let revenueYeahRes = await RevenueService.getShowRevenue()
+            let result = revenueYeahRes?.data
+            console.log("result13", result?.map((r) => (r.total_Amount)));
+            setRevenueYeah(result?.map((r) => (r.total_Amount)));
+            setRevenueTime(result?.map((r) => (r.month_Year)));
 
-            } catch (error) {
-                console.log("error", error);
-            }
+        } catch (error) {
+            console.log("error", error);
         }
-        fetchData()
+
     }, [])
 
     const handleChange = (event) => {

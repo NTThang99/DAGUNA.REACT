@@ -13,11 +13,11 @@ export default function RoomPage() {
     const location  = useLocation();
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        if(location.pathname === "/dashboard/rooms/" || location.pathname === "/dashboard/rooms"){
-            navigate("/dashboard/rooms/list");
-        }
-    },[])
+    // useEffect(()=>{
+    //     if(location.pathname === "/dashboard/rooms/" || location.pathname === "/dashboard/rooms"){
+    //         navigate("/dashboard/rooms/list");
+    //     }
+    // },[])
     return (
         <>
             <Table>

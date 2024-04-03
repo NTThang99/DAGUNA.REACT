@@ -13,11 +13,11 @@ export default function ReceptionistPage() {
     const location  = useLocation();
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        if(location.pathname === "/dashboard/receptionists" || location.pathname === "/dashboard/receptionists/"){
-            navigate("/dashboard/receptionists/list");
-        }
-    },[])
+    // useEffect(()=>{
+    //     if(location.pathname === "/dashboard/receptionists" || location.pathname === "/dashboard/receptionists/"){
+    //         navigate("/dashboard/receptionists/list");
+    //     }
+    // },[])
     return (
         <>
             <Table>

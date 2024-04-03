@@ -7,35 +7,35 @@ import {
     TableRow,
 } from "@mui/material";
 
-import { getAllBookingServiceAPI ,getAvailableRoomAPI} from "../../home/BookingSlide";
+import { getAllBookingServiceAPI, getAvailableRoomAPI } from "../../home/BookingSlide";
 
 
-import EditIcon from '@mui/icons-material/Edit';
 import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import BookingSevrice from "../../../services/BookingService";
 import SearchIcon from '@mui/icons-material/Search';
-import BlockIcon from '@mui/icons-material/Block';
-import Deposit from "./Deposit";
+import ModalDeposit from "./ModalDeposit";
 
 export default function BookingList() {
     const [bookingList, setBookingList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false)
-    const [booking, setBooking] = useState(null)
     const [filters, setFilters] = useState({
         direction: '',
         page: 0,
         size: 2,
         kw: "",
-        sortByField: "id",        
-        orderBySort: "asc",        
+        sortByField: "id",
+        orderBySort: "asc",
     })
     const [totalPages, setTotalPages] = useState(0)
-    const [keyword, setKeyword] = useState(null)
-    const [showModel, setShowModel] = useState(false);
+    const [keyword, setKeyword] = useState(null);
+
+
+    const [bookingSelected, setBookingSelected] = useState(null)
+
     const handleShowModel = () => {
-        setShowModel(true);
+        setShow(true);
     };
 
 
@@ -56,7 +56,7 @@ export default function BookingList() {
     }, [filters, totalPages])
 
 
-    const handleRemoveBooking = () => { }
+    // const handleRemoveBooking = () => { }
 
     const handleSearchText = (e) => {
         setKeyword(e.target.value)
@@ -106,32 +106,39 @@ export default function BookingList() {
                                     {bookingList?.map((booking) => (
                                         <>
                                             <TableRow key={`booking_${booking?.bookingId}`}>
-                                                <TableCell className="text-center">{booking?.bookingId}</TableCell> 
-                                                <TableCell className="text-center">{booking?.bookingCode}</TableCell> 
-                                                <TableCell className="text-center">{new Date(booking?.bookingDetails[0]?.checkIn).toLocaleTimeString('en-GB', {hour12: false}) + ' ' + new Date(booking?.bookingDetails[0]?.checkIn).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'})}</TableCell> 
-                                                <TableCell className="text-center">{new Date(booking?.bookingDetails[0]?.checkOut).toLocaleTimeString('en-GB', {hour12: false}) + ' ' + new Date(booking?.bookingDetails[0]?.checkOut).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'})}</TableCell> 
-                                                <TableCell className="text-center">{booking?.bookingDetails[0]?.total}</TableCell> 
-                                                
-                                                <TableCell className="text-center" onClick={handleShowModel}>aaa</TableCell>
+                                                <TableCell className="text-center">{booking?.bookingId}</TableCell>
+                                                <TableCell className="text-center">{booking?.bookingCode}</TableCell>
+                                                <TableCell className="text-center">{new Date(booking?.bookingDetails[0]?.checkIn).toLocaleTimeString('en-GB', { hour12: false }) + ' ' + new Date(booking?.bookingDetails[0]?.checkIn).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</TableCell>
+                                                <TableCell className="text-center">{new Date(booking?.bookingDetails[0]?.checkOut).toLocaleTimeString('en-GB', { hour12: false }) + ' ' + new Date(booking?.bookingDetails[0]?.checkOut).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</TableCell>
+                                                <TableCell className="text-center">{booking?.total}</TableCell>
+
+                                                <TableCell className="text-center" >
+                                                    <button type="button" onClick={() => {
+                                                        setBookingSelected(booking)
+                                                        handleShowModel()
+                                                    }}>N/A</button>
+                                                </TableCell>
 
 
                                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                    <Link className="mx-1" to={`/dashboard/bookings/detail/${booking?.bookingId}`}>
+                                                        <Link className="mx-1" to={`/dashboard/bookings/detail/${booking?.bookingId}`}>
                                                             <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button" />
                                                         </Link>
 
                                                     </div>
                                                 </div>
-                                                
+
                                             </TableRow>
                                         </>
                                     ))}
                                 </TableBody>
                             </Table >
+
                         </>
                     )
             }
+            <ModalDeposit show={show} handleClose={setShow} bookingSelected= {bookingSelected} />
         </>
     );
 }

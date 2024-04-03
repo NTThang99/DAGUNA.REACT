@@ -41,10 +41,9 @@ import ReceptionistDetail from "./components/dashboard/receptionists/Receptionis
 import BookingDetailDashboard from "./components/dashboard/bookings/BookingDetail";
 import ModalEditRoom from "./components/dashboard/rooms/ModalEditRoom";
 import EditReceptionist from "./components/dashboard/receptionists/EditReceptionist";
-import { ImportExportOutlined } from "@mui/icons-material";
-import BookingDetail from "./components/home/Booking/BookingDetail";
+import { ImportExportOutlined } from "@mui/icons-material"; 
 import PrivateRoute from "./components/common/PrivateRoute";
-import BookingDepositlDashboard from "./components/dashboard/bookings/Deposit";
+import BookingDepositlDashboard from "./components/dashboard/bookings/ModalDeposit";
 
 export default function App() {
   return (

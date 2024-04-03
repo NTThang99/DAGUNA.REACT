@@ -21,6 +21,9 @@ class BookingService {
       });
   }
 
+  static async depositBooking(formData) {
+    return apiClients.post('/deposit', formData)
+  }
 
   static async updateBooking_AddService(url, objSend) {
     return fetch(url, {

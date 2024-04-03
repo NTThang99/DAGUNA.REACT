@@ -28,7 +28,7 @@ export default function SocialIcons() {
           onClick={handleClick}
           sx={{ fontSize: '20px', color: '#FEA116 ', fontWeight: 700 }}
         >
-          Login
+          Logout
         </Button>
         <Menu
           id="basic-menu"

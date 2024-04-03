@@ -14,7 +14,7 @@ export default function About() {
               </h6>
               <h1 className="mb-4">
                 Welcome to{" "}
-                <span className="text-primary text-uppercase">Hotelier</span>
+                <span className="text-primary text-uppercase">DAGUNA</span>
               </h1>
               <p className="mb-4">
                 Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit.

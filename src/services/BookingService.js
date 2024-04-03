@@ -21,6 +21,7 @@ class BookingService {
       });
   }
 
+
   static async updateBooking_EditService(url, objSend) {
     console.log("aakakak");
     return fetch(url, {
@@ -41,6 +42,11 @@ class BookingService {
         throw error;
       });
   }
+  static async depositBooking(formData) {
+    return apiClients.post('/deposit', formData)
+  }
+
+
   static async updateBooking_AddService(url, objSend) {
     return fetch(url, {
       method: "PATCH",

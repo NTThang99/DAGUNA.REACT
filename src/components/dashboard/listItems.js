@@ -10,7 +10,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 export const mainListItems = (
   <React.Fragment>
-    {/* <Link to={'/dashboard'}>
+    <Link to={'revenue'}>
       <ListItemButton >
         
         <ListItemIcon>
@@ -18,7 +18,7 @@ export const mainListItems = (
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
-    </Link> */}
+    </Link>
 
     {/* <NavLink to={'Orders'}>
       <ListItemButton>

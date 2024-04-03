@@ -25,7 +25,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import RoomRealService from "../../../services/RoomRealService";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
+import useAuth from "../../common/UseAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function RoomList() {
     const [roomList, setRoomList] = useState([]);
@@ -45,7 +46,8 @@ export default function RoomList() {
     })
     const [totalPages, setTotalPages] = useState(0)
     const [roomTypeList, setRoomTypeList] = useState([]);
-    const [keyword, setKeyword] = useState(null)
+    const [keyword, setKeyword] = useState(null);
+    const navigate = useNavigate();
     const [selectDate, setSelectDate] = useState([
         dayjs(),
         dayjs().add(1, 'day')
@@ -62,6 +64,8 @@ export default function RoomList() {
     const [loadDataRoomReal, setLoadDataRoomReal] = useState(false)
     const [dataRoomRealUnAvailableFind, setDataRoomRealUnAvailableFind] = useState([])
     const [loadDataRoomRealUnAvailable, setLoadDataRoomRealUnAvailable] = useState(false)
+
+    const { user, hasAnyRole } = useAuth();
     function calculateUrl(filters) {
         let urlArray = [];
         if (filters.kw !== "") {
@@ -240,10 +244,10 @@ export default function RoomList() {
                     (
                         <>
                             <div className="d-flex justify-content-center">
-                                <div className="d-flex me-2 algin-items-center my-2 justify-content-center ">
+                                <div className="d-flex algin-items-center my-2 justify-content-center " >
 
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['DateRangePicker']}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                        <DemoContainer components={['DateRangePicker']}  >
                                             <DateRangePicker
                                                 value={selectDate}
                                                 onChange={handleClickSelectDay}
@@ -253,7 +257,10 @@ export default function RoomList() {
 
                                         </DemoContainer>
                                     </LocalizationProvider>
-                                    <button type="button" onClick={handleClickFind}>Find</button>
+                                    <button type="button" onClick={handleClickFind}
+                                        style={{ marginLeft: "20px", marginTop: "7px", width: "75px", height: "45px" }}
+                                    // className="justify-content-center"
+                                    >Find</button>
                                 </div>
                             </div>
                             {
@@ -333,7 +340,6 @@ export default function RoomList() {
                                                             {
                                                                 loadingSelectDay ?
                                                                     <>
-                                                                        {/* import ArrowBackIcon from '@mui/icons-material/ArrowBack'; */}
                                                                         <div className="d-flex justify-content-between align-items-center my-2">
                                                                             <button type="button" onClick={handleClickBackList} style={{ borderColor: 'green', display: 'flex', alignItems: 'center' }}>
                                                                                 <ArrowBackIcon style={{ marginRight: '5px' }} />
@@ -396,7 +402,7 @@ export default function RoomList() {
                                                                                             onInput={handleSearchText}
                                                                                         />
                                                                                         <SearchIcon style={{ marginLeft: '-25px', marginTop: '2px', fontSize: '27px' }} />
-                                                                                        <input type="button" value="search" style={{ marginLeft: '5px' }} />
+                                                                                        <input type="submit" value="search" style={{ marginLeft: '5px' }} />
                                                                                     </form>
                                                                                 </div>
 
@@ -453,17 +459,25 @@ export default function RoomList() {
                                                                                                             />
                                                                                                         </Link>
                                                                                                         <div className="mx-1">
-                                                                                                            <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
-                                                                                                                <EditIcon
-                                                                                                                    style={{ color: 'green' }}
-                                                                                                                    size={22}
-                                                                                                                />
-                                                                                                            </div>
+                                                                                                           
+                                                                                                            {
+                                                                                                                hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) ? <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
+                                                                                                                    <EditIcon
+                                                                                                                        style={{ color: 'green' }}
+                                                                                                                        size={22}
+                                                                                                                    />
+                                                                                                                </div> : null
+                                                                                                            }
                                                                                                         </div>
-                                                                                                        <div className="mx-1">
-                                                                                                            <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
-                                                                                                                onClick={() => handleRemoveRoom(room)} />
-                                                                                                        </div>
+                                                                                                        {/* <div className="mx-1">
+                                                                                                            {
+                                                                                                                hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) ? <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
+                                                                                                                    <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
+                                                                                                                        onClick={() => handleRemoveRoom(room)} />
+                                                                                                                </div> : null
+                                                                                                            }
+
+                                                                                                        </div> */}
                                                                                                     </TableCell>
                                                                                                 </TableRow>
                                                                                             </>

@@ -8,6 +8,8 @@ import InfoIcon from '@mui/icons-material/Info';
 export default function BookingPage() {
     const { idBookingDetail } = useParams()
     const { idBookingEdit } = useParams()
+    const { idBookingDeposit} = useParams()
+    
     return (
         <>
             <Table>
@@ -19,12 +21,12 @@ export default function BookingPage() {
                                 List Bookings
                             </NavLink>
                         </TableCell>
-                        <TableCell className="nav-link ">
+                        {/* <TableCell className="nav-link ">
                             <NavLink to={'/dashboard/bookings/add'}>
                                 <AddIcon />
                                 Create Bookings
                             </NavLink>
-                        </TableCell>
+                        </TableCell> */}
                         {idBookingDetail ?
                             <TableCell className="nav-link ">
                                 <NavLink to={`/dashboard/bookings/${idBookingDetail}`}>
@@ -34,11 +36,11 @@ export default function BookingPage() {
                             </TableCell>
                              : '' 
                         } 
-                           {idBookingEdit ?
+                           {idBookingDeposit ?
                             <TableCell className="nav-link ">
-                                <NavLink to={`/dashboard/bookings/${idBookingEdit}`}>
+                                <NavLink to={`/dashboard/bookings/${idBookingDeposit}`}>
                                     <InfoIcon />
-                                    Edit Bookings
+                                    Deposit Bookings
                                 </NavLink>
                             </TableCell>
                              : '' 

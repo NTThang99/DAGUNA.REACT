@@ -10,6 +10,8 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import ViewTypeService from "../../../services/ViewTypeService";
 import RoomTypeService from "../../../services/RoomTypeService";
 import UtilityService from "../../../services/UtilityService";
+import useAuth from "../../common/UseAuth";
+
 
 
 export default function RoomDetailDashboard() {
@@ -22,6 +24,8 @@ export default function RoomDetailDashboard() {
     const [viewType, setViewType] = useState();
     const [roomType, setRoomType] = useState();
     const [utilityList, setUtilityList] = useState([]);
+    const { user, hasAnyRole } = useAuth();
+
 
     useEffect(() => {
         setLoading(true)
@@ -68,7 +72,6 @@ export default function RoomDetailDashboard() {
                 setLoading(false); // Kết thúc loading
             }
         }
-
         loadData();
     }, [room])
     const handleShowModalCreateReal = (room) => {
@@ -134,20 +137,21 @@ export default function RoomDetailDashboard() {
                                     <div className="d-flex" >
                                         <div className="col-9">
                                             <label style={{ fontSize: '25px' }}>{room?.kindOfRoom?.name}</label>
+                                        </div>
+                                        <div className="col-3 justify-content-end align-items-center d-flex">
+                                            {user && hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
+                                                <div className="d-flex my-1">
+                                                    <button onClick={() => handleShowModalCreateReal(roomReals)}>
+                                                        <AddHomeIcon className="ml-1" />
+                                                        Update Room
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
 
 
-                                        </div>
-                                        <div className="col-3 justify-content-end algin-items-center d-flex">
-                                            <div className="d-flex my-1 ">
-                                                <button onClick={() => handleShowModalCreateReal(roomReals)}>
-                                                    <AddHomeIcon className="ml-1" />
-                                                    Update Room
-                                                </button>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div>
-
                                     </div>
                                     <div className="d-flex">
                                         <div className="col-6 row">

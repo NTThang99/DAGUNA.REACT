@@ -16,6 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import BlockIcon from '@mui/icons-material/Block';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { toast } from "react-toastify";
+import useAuth from "../../common/UseAuth";
 
 
 
@@ -50,7 +51,7 @@ export default function ReceptionistList() {
     useEffect(() => {
         getAllReceptionistFilter();
     }, [filters, totalPages]);
-
+    const { user, hasAnyRole } = useAuth();
 
     const handleLockReceptionist = async (receptionistId) => {
         try {
@@ -63,7 +64,7 @@ export default function ReceptionistList() {
             toast.error('Locking receptionist success!', { theme: "light" });
         }
     };
-    
+
     const handleOpenReceptionist = async (receptionistId) => {
         try {
             await ReceptionistService.openReceptionist(receptionistId);
@@ -76,7 +77,7 @@ export default function ReceptionistList() {
             toast.error('Opening receptionist success!', { theme: "light" });
         }
     };
-    
+
     const handleSearchText = (e) => {
         setKeyword(e.target.value)
     }
@@ -134,7 +135,7 @@ export default function ReceptionistList() {
                                                 <TableCell className="text-center align-middle">{receptionist?.dob}</TableCell>
                                                 <TableCell className="text-center align-middle">{receptionist?.email}</TableCell>
                                                 <TableCell className="text-center align-middle">{receptionist?.phone}</TableCell>
-                                                
+
                                                 <TableCell className="text-center align-middle">{receptionist?.address}</TableCell>
 
                                                 <TableCell className="text-center align-middle">
@@ -145,18 +146,38 @@ export default function ReceptionistList() {
                                                 <TableCell className="text-center align-middle">{receptionist?.receptionistInfo}</TableCell>
                                                 {/* </Link> */}
                                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Link className="mx-1" to={`/dashboard/receptionists/edit/${receptionist?.id}`}>
-                                                            <EditIcon style={{ color: 'orange', marginRight: '10px' }} size={22} title="edit" role="button" />
-                                                        </Link>
+                                                        <div className="mx-1">
+                                                            {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
+                                                                <Link className="mx-1" to={`/dashboard/receptionists/edit/${receptionist?.id}`}>
+                                                                    <EditIcon style={{ color: 'orange', marginRight: '10px' }} size={22} title="edit" role="button" />
+                                                                </Link>
+                                                            )}
+                                                        </div>
                                                         <Link className="mx-1" to={`/dashboard/receptionists/detail/${receptionist?.id}`}>
                                                             <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button" />
                                                         </Link>
+
                                                         <div className="mx-1">
-                                                            <LockOpenIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="block" role="button" onClick={() =>  handleOpenReceptionist(receptionist.id)} />
+                                                            {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
+                                                                <LockOpenIcon
+                                                                    style={{ color: 'red', marginRight: '10px' }}
+                                                                    size={22}
+                                                                    title="block"
+                                                                    role="button"
+                                                                    onClick={() => handleOpenReceptionist(receptionist.id)}
+                                                                />
+                                                            )}
                                                         </div>
                                                         <div className="mx-1">
-                                                            <BlockIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="open" role="button" onClick={() => handleLockReceptionist(receptionist.id)} />
+                                                            {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
+                                                                <BlockIcon style={{ color: 'red', marginRight: '10px' }}
+                                                                    size={22}
+                                                                    title="open"
+                                                                    role="button"
+                                                                    onClick={() => handleLockReceptionist(receptionist.id)} />
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>

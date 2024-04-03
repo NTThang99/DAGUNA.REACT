@@ -25,7 +25,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import RoomRealService from "../../../services/RoomRealService";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
+import useAuth from "../../common/UseAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function RoomList() {
     const [roomList, setRoomList] = useState([]);
@@ -45,7 +46,8 @@ export default function RoomList() {
     })
     const [totalPages, setTotalPages] = useState(0)
     const [roomTypeList, setRoomTypeList] = useState([]);
-    const [keyword, setKeyword] = useState(null)
+    const [keyword, setKeyword] = useState(null);
+    const navigate = useNavigate();
     const [selectDate, setSelectDate] = useState([
         dayjs(),
         dayjs().add(1, 'day')
@@ -62,6 +64,8 @@ export default function RoomList() {
     const [loadDataRoomReal, setLoadDataRoomReal] = useState(false)
     const [dataRoomRealUnAvailableFind, setDataRoomRealUnAvailableFind] = useState([])
     const [loadDataRoomRealUnAvailable, setLoadDataRoomRealUnAvailable] = useState(false)
+
+    const { user, hasAnyRole } = useAuth();
     function calculateUrl(filters) {
         let urlArray = [];
         if (filters.kw !== "") {
@@ -253,8 +257,8 @@ export default function RoomList() {
 
                                         </DemoContainer>
                                     </LocalizationProvider>
-                                    <button type="button" onClick={handleClickFind} 
-                                    style={{ marginLeft: "20px" ,marginTop:"7px", width: "75px",height:"45px"}} 
+                                    <button type="button" onClick={handleClickFind}
+                                        style={{ marginLeft: "20px", marginTop: "7px", width: "75px", height: "45px" }}
                                     // className="justify-content-center"
                                     >Find</button>
                                 </div>
@@ -455,17 +459,25 @@ export default function RoomList() {
                                                                                                             />
                                                                                                         </Link>
                                                                                                         <div className="mx-1">
-                                                                                                            <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
-                                                                                                                <EditIcon
-                                                                                                                    style={{ color: 'green' }}
-                                                                                                                    size={22}
-                                                                                                                />
-                                                                                                            </div>
+                                                                                                           
+                                                                                                            {
+                                                                                                                hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) ? <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
+                                                                                                                    <EditIcon
+                                                                                                                        style={{ color: 'green' }}
+                                                                                                                        size={22}
+                                                                                                                    />
+                                                                                                                </div> : null
+                                                                                                            }
                                                                                                         </div>
-                                                                                                        <div className="mx-1">
-                                                                                                            <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
-                                                                                                                onClick={() => handleRemoveRoom(room)} />
-                                                                                                        </div>
+                                                                                                        {/* <div className="mx-1">
+                                                                                                            {
+                                                                                                                hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) ? <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
+                                                                                                                    <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
+                                                                                                                        onClick={() => handleRemoveRoom(room)} />
+                                                                                                                </div> : null
+                                                                                                            }
+
+                                                                                                        </div> */}
                                                                                                     </TableCell>
                                                                                                 </TableRow>
                                                                                             </>

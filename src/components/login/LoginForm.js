@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import "../../css/loginForm.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function LoginForms() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,12 +22,11 @@ export default function LoginForms() {
       if (response.ok) {
         let user = data;
         localStorage.setItem("user", JSON.stringify(data));
-        if(user.roles[0] === "ROLE_ADMIN"){
-            window.location.href = "/dashboard/rooms/list";
+        if(location.state){
+          navigate(location.state.previousUrl)
         }else{
-            window.location.href = "/";
+          navigate("/dashboard")
         }
-        
       } else {
         alert(data.message);
       }

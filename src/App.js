@@ -5,7 +5,7 @@ import "./css/animate.css";
 import "./css/animate.min.css";
 import "./App.css";
 import Header from "./components/common/Header";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import {
   Home,
   Booking,
@@ -44,6 +44,7 @@ import EditReceptionist from "./components/dashboard/receptionists/EditReception
 import { ImportExportOutlined } from "@mui/icons-material";
 import BookingDetail from "./components/home/Booking/BookingDetail";
 import PrivateRoute from "./components/common/PrivateRoute";
+import BookingDepositlDashboard from "./components/dashboard/bookings/Deposit";
 
 export default function App() {
   return (
@@ -69,15 +70,15 @@ export default function App() {
             <Route path="/services" element={<Services />} />
 
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/dashboard" element={<PrivateRoute Component={Dashboard} authority={["ROLE_ADMIN", "ROLE_RECEPTIONIST"]}/>}  >
+            <Route path="/dashboard" element={<PrivateRoute Component={Dashboard} authority={["ROLE_ADMIN", "ROLE_RECEPTIONIST"]} />}  >
               <Route path="rooms" element={<RoomPage />} >
                 {/* <Route index element={<RoomList />} /> */}
-                <Route path="list" index element={<RoomList />}   />
-                <Route path="add" element={<PrivateRoute Component={CreateRoom} authority={["ROLE_ADMIN"]}/>} />
+                <Route path="list" index element={<RoomList />} />
+                <Route path="add" element={<PrivateRoute Component={CreateRoom} authority={["ROLE_ADMIN"]} previousUrl={"/dashboard/rooms/add"} />} />
                 <Route path=":idRoomDetail" element={<RoomDetailDashboard />}  >
                   <Route path="room-reals"></Route>
                 </Route>
-                <Route path=":idRoomEdit"  element={<PrivateRoute Component={ModalEditRoom} authority={["ROLE_ADMIN"]}/>}/>
+                <Route path=":idRoomEdit" element={<PrivateRoute Component={ModalEditRoom} authority={["ROLE_ADMIN"]} />} />
               </Route>
 
               <Route path="receptionists" element={<ReceptionistPage />}>
@@ -85,8 +86,8 @@ export default function App() {
                 http://localhost:3000/dashboard/receptionists/5
                 */}
                 <Route path="list" index element={<ReceptionistList />} />
-                <Route path="add" element={<CreateReceptionist />} />
-                <Route path="edit/:receptionistId" element={<EditReceptionist />} />
+                <Route path="add" element={<PrivateRoute Component={CreateReceptionist} authority={["ROLE_ADMIN"]} previousUrl={"/dashboard/receptionists/add"} />} />
+                <Route path="edit/:receptionistId" element={<PrivateRoute Component={EditReceptionist} authority={["ROLE_ADMIN"]} />} />
                 <Route path="detail/:receptionistId" element={<ReceptionistDetail />} />
 
               </Route>
@@ -95,6 +96,7 @@ export default function App() {
                 <Route path="list" index element={<BookingList />} />
                 {/* <Route path="add" element={<CreateReceptionist />} /> */}
                 <Route path="detail/:bookingId" element={<BookingDetailDashboard />} />
+                <Route path="deposit/:bookingId" element={<BookingDepositlDashboard />} />
               </Route>
             </Route>
           </Routes>

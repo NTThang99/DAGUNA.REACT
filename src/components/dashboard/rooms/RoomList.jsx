@@ -257,8 +257,8 @@ export default function RoomList() {
 
                                         </DemoContainer>
                                     </LocalizationProvider>
-                                    <button type="button" onClick={handleClickFind} 
-                                    style={{ marginLeft: "20px" ,marginTop:"7px", width: "75px",height:"45px"}} 
+                                    <button type="button" onClick={handleClickFind}
+                                        style={{ marginLeft: "20px", marginTop: "7px", width: "75px", height: "45px" }}
                                     // className="justify-content-center"
                                     >Find</button>
                                 </div>
@@ -459,17 +459,25 @@ export default function RoomList() {
                                                                                                             />
                                                                                                         </Link>
                                                                                                         <div className="mx-1">
-                                                                                                            <div onClick={() => hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) ? handleShowModalEditRoom(room) : navigate("/login")} role="button" title="edit">
-                                                                                                                <EditIcon
-                                                                                                                    style={{ color: 'green' }}
-                                                                                                                    size={22}
-                                                                                                                />
-                                                                                                            </div>
+                                                                                                           
+                                                                                                            {
+                                                                                                                hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) ? <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
+                                                                                                                    <EditIcon
+                                                                                                                        style={{ color: 'green' }}
+                                                                                                                        size={22}
+                                                                                                                    />
+                                                                                                                </div> : null
+                                                                                                            }
                                                                                                         </div>
-                                                                                                        <div className="mx-1">
-                                                                                                            <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
-                                                                                                                onClick={() => handleRemoveRoom(room)} />
-                                                                                                        </div>
+                                                                                                        {/* <div className="mx-1">
+                                                                                                            {
+                                                                                                                hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) ? <div onClick={() => handleShowModalEditRoom(room)} role="button" title="edit">
+                                                                                                                    <PlaylistRemoveIcon style={{ color: 'red' }} size={22} title="remove" role="button"
+                                                                                                                        onClick={() => handleRemoveRoom(room)} />
+                                                                                                                </div> : null
+                                                                                                            }
+
+                                                                                                        </div> */}
                                                                                                     </TableCell>
                                                                                                 </TableRow>
                                                                                             </>

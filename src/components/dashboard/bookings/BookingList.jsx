@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import BookingSevrice from "../../../services/BookingService";
 import SearchIcon from '@mui/icons-material/Search';
 import BlockIcon from '@mui/icons-material/Block';
+import Deposit from "./Deposit";
 
 export default function BookingList() {
     const [bookingList, setBookingList] = useState([]);
@@ -32,6 +33,10 @@ export default function BookingList() {
     })
     const [totalPages, setTotalPages] = useState(0)
     const [keyword, setKeyword] = useState(null)
+    const [showModel, setShowModel] = useState(false);
+    const handleShowModel = () => {
+        setShowModel(true);
+    };
 
 
     useEffect(() => {
@@ -93,6 +98,7 @@ export default function BookingList() {
                                         <TableCell className="text-center">Check In</TableCell>
                                         <TableCell className="text-center">Check Out</TableCell>
                                         <TableCell className="text-center">Total</TableCell>
+                                        <TableCell className="text-center">Deposit</TableCell>
                                         <TableCell className="text-center">Action</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -105,17 +111,19 @@ export default function BookingList() {
                                                 <TableCell className="text-center">{new Date(booking?.bookingDetails[0]?.checkIn).toLocaleTimeString('en-GB', {hour12: false}) + ' ' + new Date(booking?.bookingDetails[0]?.checkIn).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'})}</TableCell> 
                                                 <TableCell className="text-center">{new Date(booking?.bookingDetails[0]?.checkOut).toLocaleTimeString('en-GB', {hour12: false}) + ' ' + new Date(booking?.bookingDetails[0]?.checkOut).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'})}</TableCell> 
                                                 <TableCell className="text-center">{booking?.bookingDetails[0]?.total}</TableCell> 
+                                                
+                                                <TableCell className="text-center" onClick={handleShowModel}>aaa</TableCell>
+
+
                                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            
                                                     <Link className="mx-1" to={`/dashboard/bookings/detail/${booking?.bookingId}`}>
                                                             <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button" />
                                                         </Link>
-                                                        <div className="mx-1">
-                                                            <BlockIcon style={{ color: 'red', marginRight: '10px' }} size={22} title="block" role="button" />
-                                                        </div>
+
                                                     </div>
                                                 </div>
+                                                
                                             </TableRow>
                                         </>
                                     ))}

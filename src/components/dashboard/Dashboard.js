@@ -18,10 +18,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems } from './listItems';
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 import Orders from './Orders';
 import { Outlet } from 'react-router';
+import { useEffect } from 'react';
 
 function Copyright(props) {
   return (
@@ -90,6 +92,15 @@ export default function Dashboard() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const location  = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        if(location.pathname === "/dashboard/" || location.pathname === "/dashboard"){
+            navigate("/dashboard/rooms/list");
+        }
+    },[])
 
   return (
     <ThemeProvider theme={defaultTheme}>

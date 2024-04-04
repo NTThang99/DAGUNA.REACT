@@ -184,5 +184,8 @@ class BookingService {
     console.log("bookingId", bookingId);
     return apiClients.get(`/bookings/${bookingId}`);
   }
+  static async postDeposit(formData){
+    return apiClients.post(`bookings/deposit`,formData)
+  }
 }
 export default BookingService;

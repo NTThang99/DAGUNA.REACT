@@ -101,7 +101,6 @@ function ModalEditRoom({ show, handleClose, roomInfo, setRoomInfo }) {
                 setValue("utilitie", result?.utilitie)
                 setValue("imageResDTOS", result.imageResDTOS)
                 setUtilitiesCheck(result?.utilitie)
-                console.log("result.imageResDTOS", result.imageResDTOS);
 
                 async function loadImages(index) {
                     if (index < result.imageResDTOS.length) {

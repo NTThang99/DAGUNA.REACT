@@ -1,7 +1,16 @@
 import { Modal } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BookingSevrice from "../../../services/BookingService";
+import { useForm } from 'react-hook-form'
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
+const schema = yup.object({
+  method: yup.string().required('Vui lòng chọn phương pháp'),
+  depositedAmount: yup.number().required(`Vui lòng nhập số tiền giao dịch`),
+  transfer_id: yup.string().required(`Không được để trống`),
+  bookingId: yup.string().required(`Không được để trống`)
+})
 
 export default function ModalDeposit({ show, handleClose, bookingSelected }) {
   const [depositedNumber, setDepositedNumber] = useState('');
@@ -13,6 +22,9 @@ export default function ModalDeposit({ show, handleClose, bookingSelected }) {
   const handleCloseModal = () => {
     handleClose(false);
   };
+  const { register, handleSubmit, reset, setValue, formState: { errors }, } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const handleInputChange = (e) => {
     let inputValue = e.target.value;
@@ -35,7 +47,16 @@ export default function ModalDeposit({ show, handleClose, bookingSelected }) {
   const handleNoteChange = (e) => {
     setNote(e.target.value);
   };
-
+  useEffect(() => {
+    // try {
+    //   async function postDeposit() {
+    //     let depositRes = await BookingSevrice.postDeposit()
+    //   }
+    //   postDeposit()
+    // } catch (error) {
+    //   console.log("error", error);
+    // }
+  }, [])
 
   console.log("bookingSelected", bookingSelected);
   return (
@@ -45,9 +66,9 @@ export default function ModalDeposit({ show, handleClose, bookingSelected }) {
           <Modal.Title>Deposit Information</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <div>
-  <p><strong>Booking ID:</strong> <span>{bookingSelected?.bookingId}</span></p>
-</div>
+          <div>
+            <p><strong>Booking ID:</strong> <span>{bookingSelected?.bookingId}</span></p>
+          </div>
 
 
 
@@ -62,6 +83,7 @@ export default function ModalDeposit({ show, handleClose, bookingSelected }) {
             type="text"
             className="form-control"
             value={depositedCode}
+            {...register('transfer_id')}
             onChange={handleInputChange1}
             inputMode="numeric"
             maxLength={7}
@@ -71,6 +93,7 @@ export default function ModalDeposit({ show, handleClose, bookingSelected }) {
           <input
             type="text"
             className="form-control"
+            {...register('depositedAmount')}
             value={depositedNumber}
             onChange={handleInputChange}
           />

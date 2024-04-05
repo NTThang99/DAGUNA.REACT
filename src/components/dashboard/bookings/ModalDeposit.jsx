@@ -38,14 +38,11 @@ export default function ModalDeposit({ show, handleClose, bookingSelected }) {
     }
     try {
       let depositRes = await BookingSevrice.postDeposit(values)
-      console.log("depositRes", depositRes);
-      let result = depositRes?.data;
       if (depositRes) {
         toast.success('Thêm giao dịch thành công', { theme: "light" })
         reset()
         handleCloseModal()
       }
-
     } catch (error) {
       console.log("error", error);
       toast.error(`Lỗi dữ liệu/service`)

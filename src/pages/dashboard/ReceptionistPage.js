@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Footer from "../../components/common/Footer";
 
 export default function ReceptionistPage() {
     const { idReceptionistDetail } = useParams()

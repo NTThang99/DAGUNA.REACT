@@ -98,7 +98,7 @@ export default function Dashboard() {
 
     useEffect(()=>{
         if(location.pathname === "/dashboard/" || location.pathname === "/dashboard"){
-            navigate("/dashboard/rooms/list");
+            navigate("/dashboard/revenue");
         }
     },[])
 

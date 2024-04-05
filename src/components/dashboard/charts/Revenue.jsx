@@ -25,6 +25,7 @@ export default function Revenue() {
     const [revenueYeah, setRevenueYeah] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     const [revenueTime, setRevenueTime] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     const [selectedValue, setSelectedValue] = useState('');
+    const [showChar, setShowChar] = useState(false);
     const [selectAboutDate, setSelectAboutDate] = useState([
         dayjs(),
         dayjs().add(1, 'day')
@@ -45,11 +46,11 @@ export default function Revenue() {
     useEffect(() => {
         const intervalId = setInterval(() => {
             const currentDate = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-            if (currentDate.getDate() !== dayNow.getDate()) {
+            if (currentDate?.getDate() !== dayNow.getDate()) {
                 setDayNow(currentDate);
             }
         }, 1000 * 60 * 60); // Cập nhật 1h 1 lần
-        // return () => clearInterval(intervalId);
+        return () => clearInterval(intervalId);
     }, [dayNow])
 
     // revenue day now
@@ -271,10 +272,13 @@ export default function Revenue() {
 
     const handleChange = (event) => {
         const selectedValue = event.target.value;
-        setShowAboutDay(selectedValue === 'aboutDay');
-        setShowSelectDay(selectedValue === 'selectDay');
-        setShowSelectMonth(selectedValue === 'selectMonth');
-        setShowSelectYear(selectedValue === 'selectYeah');
+        setShowAboutDay(selectedValue === 'aboutDay', setShowChar(true));
+        setShowSelectDay(selectedValue === 'selectDay', setShowChar(true));
+        setShowSelectMonth(selectedValue === 'selectMonth', setShowChar(true));
+        setShowSelectYear(selectedValue === 'selectYeah', setShowChar(true));
+        if (selectedValue == null || selectedValue== "") {
+            setShowChar(false)
+        }
     };
 
     return (
@@ -283,6 +287,11 @@ export default function Revenue() {
             <div className="justify-content-around">
                 <div >
                     <div className="d-flex mb-2 border-bottom border-dark">
+                        <div className="d-flex col-1  justify-content-center">
+                            <div className="justify-content-around d-flex">
+                                <label htmlFor="">Revenue</label>
+                            </div>
+                        </div>
                         <div className="d-flex col-4  justify-content-center">
                             <div className="justify-content-around d-flex">
 
@@ -291,7 +300,7 @@ export default function Revenue() {
                                 <div className="d-flex">
                                     <div>
                                         <p>{revenueDateNow?.total?.toLocaleString('vi-VN')} (VNĐ)</p>
-                                        <p>Total today</p>
+                                        <p>Today</p>
                                     </div>
                                 </div>
                             </div>
@@ -304,12 +313,12 @@ export default function Revenue() {
                                 <div className="d-flex">
                                     <div>
                                         <p>{revenueMonthNow?.total?.toLocaleString('vi-VN')} (VNĐ)</p>
-                                        <p>Total month</p>
+                                        <p>Current month</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="d-flex col-4 justify-content-center">
+                        <div className="d-flex col-3 justify-content-center">
                             <div className="justify-content-around d-flex">
 
                                 <FaRegChartBar className="d-flex my-4 me-3" style={{ fontSize: '30px' }} />
@@ -317,7 +326,7 @@ export default function Revenue() {
                                 <div className="d-flex">
                                     <div>
                                         <p>{revenueYearNow?.total?.toLocaleString('vi-VN')} (VNĐ)</p>
-                                        <p>Total yeah</p>
+                                        <p>Current year</p>
                                     </div>
                                 </div>
                             </div>
@@ -328,9 +337,12 @@ export default function Revenue() {
                             <div className="d-flex mb-2 border-bottom border-dark">
                                 <div className="col-6 d-flex align-items-start gap-4">
                                     <div className=" d-flex flex-column col-4" style={{ marginRight: '10rem' }}>
+                                        <div className="d-flex ">
+                                            <p>Check Revenue</p>
+                                        </div>
                                         <div className="d-flex col-4">
                                             <select id="selectOption" onChange={handleChange} defaultValue={""}>
-                                                <option value="">Select Time Check Revenue</option>
+                                                <option value="">Select Time</option>
                                                 <option value={'aboutDay'}>About Day</option>
                                                 <option value={`selectDay`}>Day</option>
                                                 <option value={`selectMonth`}>Month</option>
@@ -455,15 +467,19 @@ export default function Revenue() {
                                 </div>
                             </div>
 
-                            <div className="justify-content-center align-align-content-center d-flex">
-                                <BarChart series={[
-                                    { data: revenueYeah }
-                                ]}
-                                    height={290} width={800}
-                                    xAxis={[{ data: revenueTime, scaleType: 'band' }]}
-                                    margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
-                                    className="m-2" />
-                            </div>
+                            {showChar ?
+                                <></>
+                                : (
+                                    <div className="justify-content-center align-align-content-center d-flex">
+                                        <BarChart series={[
+                                            { data: revenueYeah }
+                                        ]}
+                                            height={290} width={800}
+                                            xAxis={[{ data: revenueTime, scaleType: 'band' }]}
+                                            margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+                                            className="m-2" />
+                                    </div>
+                                )}
                         </div>
                     </div>
                 </div>

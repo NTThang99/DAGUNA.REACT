@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../../../css/booking.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useNavigate } from "react-router-dom";
-import { getBookingByIdAPI, getAllBookingServiceAPI, updateBooking_AddBookingService, updateBooking_DeleteRoomAPI, updateBooking_EditBookingService } from "../BookingSlide";
+import bookingReducer, { getBookingByIdAPI, getAllBookingServiceAPI, updateBooking_AddBookingService, updateBooking_DeleteRoomAPI, updateBooking_EditBookingService, updateBooking_DeleteBookingService } from "../BookingSlide";
 import { useDispatch, useSelector } from "react-redux";
 import BookingDetail from "./BookingDetail";
 import HeaderBooking from "./HeaderBooking";
@@ -24,7 +24,7 @@ export default function BookingService() {
   const [expanded, setExpanded] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
+  // const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
   const dispatch = useDispatch();
   const bookingServices = useSelector((state) => state.booking.addOns.data);
   const booking = useSelector((state) => state.booking.booking);
@@ -33,29 +33,28 @@ export default function BookingService() {
     let bookingDetailsList = state.booking.booking.bookingDetails;
     let bookingDetaiChoosen = bookingDetailsList.find(item => item.bookingDetailId == bookingDetailChoosenId);
 
-    let bookingServiceList = bookingDetaiChoosen.bookingDetailServiceResDTOS;
+    if (bookingDetaiChoosen) {
+      let bookingServiceList = bookingDetaiChoosen.bookingDetailServiceResDTOS;
 
-    let bookingServiceListId = bookingServiceList.map(item => item.bookingService.id);
-    return bookingServiceListId;
+      let bookingServiceListId = bookingServiceList.map(item => item.bookingService.id);
+      return bookingServiceListId;
+    } else {
+      return [];
+    }
+
   });
-
-  console.log("bookingServicesChoosenId", bookingServicesChoosenId);
-
-
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
+  const bookingDetailChoosen = useSelector((state) => state.booking.booking.bookingDetailChoosen);
 
   const handleNext = (id, bookingServiceType, bookindDetailId) => {
     setShowAddon(bookindDetailId);
-    setLoading(false);
+    setLoading(true);
     dispatch(updateBooking_AddBookingService({
       bookingDetailId: booking.bookingDetailChoosen,
       bookingServiceId: id,
       bookingServiceType: bookingServiceType,
       numberCar: perCarQuantity,
     })).then(() => {
-      setLoading(true);
+      setLoading(false);
     });
   };
 
@@ -81,15 +80,19 @@ export default function BookingService() {
   const handleNavigateBookingBack = () => {
     navigate(`/booking`);
   };
-  const handleEdit = () => {
+
+  const handleEdit = (bookindDetailId) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     handleNavigateBookingEdit();
+    dispatch(bookingReducer.actions.handleChangeBookingDetailChoosen(bookindDetailId))
 
   }
 
   const handleNavigateBookingEdit = () => {
     navigate(`/booking/edit`);
   };
+
+
 
   const handleDeleteBookingDetail = (bookingDetailId) => {
     setLoading(true);
@@ -98,18 +101,22 @@ export default function BookingService() {
       { bookingId, bookingDetailId }
     ))
       .then(() => {
-        setLoading(true);
+        setLoading(false);
+      });
+  };
+
+  const handleDeleteBookingService = (bookingServiceId) => {
+    setLoading(true);
+    let bookingId = localStorage.getItem("bookingId");
+    dispatch(updateBooking_DeleteBookingService(
+      { bookingId, bookingDetailChoosen, bookingServiceId }
+    ))
+      .then(() => {
+        setLoading(false);
       });
   };
 
   const handleBookingServiceEdit = (id, bookingServiceType) => {
-
-    console.log("obj dispatch", {
-      bookingDetailId: booking.bookingDetailChoosen,
-      bookingServiceId: id,
-      bookingServiceType: bookingServiceType,
-      numberCar: perCarQuantity,
-    });
     dispatch(updateBooking_EditBookingService(
       {
         bookingDetailId: booking.bookingDetailChoosen,
@@ -140,9 +147,9 @@ export default function BookingService() {
     setShowDetails(-1);
   };
 
-  const handleChooseBookingDetail = (bookingDetailId) => {
-    setBookingDetailChoosen(bookingDetailId);
-  };
+  // const handleChooseBookingDetail = (bookingDetailId) => {
+  //   setBookingDetailChoosen(bookingDetailId);
+  // };
 
   const cancelForm = () => {
     setShowForm(false);
@@ -343,7 +350,7 @@ export default function BookingService() {
                                   </>
                                 ) : (
                                   <>
-                                    <button className="btn button_link" datatest="Button" onClick={handleCloseDetails}>
+                                    <button className="btn button_link" datatest="Button" onClick={() => handleDeleteBookingService(item.id)}>
                                       <span>Remove</span>
                                     </button>
                                     <button className="btn button_btn button_primary button_sm" datatest="Button" onClick={() => handleBookingServiceEdit(item.id, item.bookingServiceType)}>
@@ -377,7 +384,6 @@ export default function BookingService() {
               childQuantity={childQuantity}
               handleBack={handleBack}
               handleNext={handleNext}
-              handleChooseBookingDetail={handleChooseBookingDetail}
               showAddon={showAddon}
               handleEdit={handleEdit}
               handleDeleteBookingDetail={handleDeleteBookingDetail}

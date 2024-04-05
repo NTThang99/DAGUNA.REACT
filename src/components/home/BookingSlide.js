@@ -28,11 +28,11 @@ const inItState = {
     bookingServices: [],
     data: [],
   },
-  guest: {},
   booking: {
     bookingId: null,
     bookingDetailChoosen: null,
     bookingDetails: [],
+    total: 0
   },
   loading: false,
 };
@@ -110,7 +110,7 @@ export const createBookingAPI = createAsyncThunk(
           checkOut: arg.searchBar.checkOut,
           roomId: arg.roomId,
           numberAdult: arg.searchBar.guests.numberAdult,
-          childrenAges: arg.searchBar.guests.childrenAges,
+          childrenAges: JSON.stringify(arg.searchBar.guests.childrenAges),
         },
       };
       let res = await BookingService.createBooking(
@@ -165,7 +165,7 @@ export const updateBooking_EditRoom = createAsyncThunk(
           checkOut: arg.searchBar.checkOut,
           roomId: arg.roomId,
           numberAdult: arg.searchBar.guests.numberAdult,
-          childrenAges: arg.searchBar.guests.childrenAges,
+          childrenAges: JSON.stringify(arg.searchBar.guests.childrenAges),
         },
         // dateChooseService: arg?.dateChooseService
       };
@@ -233,6 +233,20 @@ export const updateBooking_AddBookingService = createAsyncThunk(
     }
   }
 );
+export const updateBooking_DeleteBookingService = createAsyncThunk(
+  "updateBooking_DeleteBookingService",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const res = await BookingService.updateBooking_DeleteBookingService(
+        `http://localhost:8080/api/bookings/${arg.bookingId}/booking-details/${arg.bookingDetailChoosen}/booking-services/${arg.bookingServiceId}`
+      );
+      return res;
+    } catch (err) {
+      // Trả về lỗi nếu không thể xóa
+      return rejectWithValue("Error deleting bookingService detail");
+    }
+  }
+);
 
 export const updateBooking_AddBookingCustomer = createAsyncThunk(
   "updateBooking_AddBookingService",
@@ -285,10 +299,10 @@ export const updateBooking_AddRoomAPI = createAsyncThunk(
           checkOut: arg.searchBar.checkOut,
           roomId: arg.roomId,
           numberAdult: arg.searchBar.guests.numberAdult,
-          childrenAges: arg.searchBar.guests.childrenAges,
+          childrenAge: arg.searchBar.guests.childrenAges,
         },
       };
-      // console.log("objSend", objSend);
+      console.log("objSend", objSend);
       let res = await BookingService.updateBooking_AddRoom(
         "http://localhost:8080/api/bookings/rooms/add",
         objSend
@@ -391,6 +405,9 @@ const bookingReducer = createSlice({
     handleBedTypeChange: (state, action) => {
       state.room.searchBar = { ...state.room.searchBar, bedType: action.payload }
     },
+    handleChangeBookingDetailChoosen: (state, action) => {
+      state.booking.bookingDetailChoosen = action.payload;
+    },
 
   },
   extraReducers: (builder) => {
@@ -409,6 +426,8 @@ const bookingReducer = createSlice({
       localStorage.setItem("bookingId", action.payload.bookingId);
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
+      state.booking.total = action.payload.total;
+      state.booking.bookingDetailChoosen = action.payload.bookingDetails[0].bookingDetailId
     });
 
     builder.addCase(getBookingByIdAPI.pending, (state, action) => { });
@@ -416,12 +435,17 @@ const bookingReducer = createSlice({
       if (action.payload != null) {
         state.booking.bookingDetails = action.payload.bookingDetails;
         state.booking.bookingId = action.payload.bookingId;
-        if (action.payload.bookingDetails.length != 0) {
-          state.booking.bookingDetailChoosen =
-            action.payload.bookingDetails[
-              action.payload.bookingDetails.length - 1
-            ].bookingDetailId;
+        state.booking.total = action.payload.total
+
+        if(state.booking.bookingDetailChoosen == null){
+          if (action.payload.bookingDetails.length != 0) {
+            state.booking.bookingDetailChoosen =
+              action.payload.bookingDetails[
+                action.payload.bookingDetails.length - 1
+              ].bookingDetailId;
+          }
         }
+        
       }
     });
 
@@ -433,6 +457,7 @@ const bookingReducer = createSlice({
 
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
+      state.booking.total = action.payload.total;
       state.booking.bookingDetailChoosen =
         action.payload.bookingDetails[
           action.payload.bookingDetails.length - 1
@@ -445,6 +470,7 @@ const bookingReducer = createSlice({
     builder.addCase(updateBooking_AddBookingService.fulfilled, (state, action) => {
       state.booking.bookingDetails = action.payload.bookingDetails;
       state.booking.bookingId = action.payload.bookingId;
+      state.booking.total = action.payload.total;
       state.loading = true;
     });
 
@@ -459,6 +485,9 @@ const bookingReducer = createSlice({
     builder.addCase(updateBooking_EditRoom.fulfilled, (state, action) => {
       state.loading = true;
       state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.total = action.payload.total;
+      state.booking.bookingDetailChoosen = action.meta.arg.bookingDetailChoosen
+      state.booking.total = action.payload.total;
     });
 
     builder.addCase(updateBooking_DeleteRoomAPI.pending, (state, action) => {
@@ -467,6 +496,7 @@ const bookingReducer = createSlice({
     builder.addCase(updateBooking_DeleteRoomAPI.fulfilled, (state, action) => {
       state.loading = true;
       state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.total = action.payload.total;
       state.booking.bookingId = action.payload.bookingId;
       if (action.payload.bookingDetails.length == 0) {
         state.booking.bookingDetailChoosen = null;
@@ -482,11 +512,13 @@ const bookingReducer = createSlice({
       state.loading = true;
     });
     builder.addCase(findAvailableRoomHavePerAPI.fulfilled, (state, action) => {
+      console.log("action meta arg findAvailableRoomHavePerAPI", action);
       state.loading = false;
       state.room.data = action.payload.content;
       state.room.searchBar.guests.numberAdult = action.meta.arg.numberAdult
       state.room.searchBar.guests.childrenAges = action.meta.arg.childrenAges
-      // console.log("action meta arg", action);
+
+      
     });
 
     builder.addCase(findSortRoomHavePerAPI.pending, (state, action) => {
@@ -500,6 +532,14 @@ const bookingReducer = createSlice({
     });
     builder.addCase(updateBooking_EditBookingService.fulfilled, (state, action) => {
       state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.total = action.payload.total;
+    });
+    builder.addCase(updateBooking_DeleteBookingService.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updateBooking_DeleteBookingService.fulfilled, (state, action) => {
+      state.booking.bookingDetails = action.payload.bookingDetails;
+      state.booking.total = action.payload.total;
     });
   },
 });

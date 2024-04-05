@@ -80,7 +80,7 @@ export default function BookingEdit() {
         dispatch(updateBooking_EditRoom({
             bookingId: booking.bookingId,
             searchBar: room.searchBar,
-            roomId: id
+            roomId: id,
         }))
 
 

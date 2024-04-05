@@ -122,7 +122,9 @@ export default function ReceptionistList() {
                                         <TableCell className="text-center">Avatar</TableCell>
                                         <TableCell className="text-center">Status</TableCell>
                                         <TableCell className="text-center">Receptionist Info</TableCell>
-                                        <TableCell className="text-center">Action</TableCell>
+                                        <TableCell className="text-center" style={{ display: "flex", width: '130px', height: '65px' }}>
+                                            Action
+                                        </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -145,39 +147,42 @@ export default function ReceptionistList() {
 
                                                 <TableCell className="text-center align-middle">{receptionist?.receptionistInfo}</TableCell>
                                                 {/* </Link> */}
-                                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '135px' }}>
 
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <div className="mx-1">
-                                                            {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
-                                                                <Link className="mx-1" to={`/dashboard/receptionists/edit/${receptionist?.id}`}>
-                                                                    <EditIcon style={{ color: 'orange', marginRight: '10px' }} size={22} title="edit" role="button" />
-                                                                </Link>
-                                                            )}
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
+                                                        <div>
+                                                            <div className="mx-1">
+                                                                {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
+                                                                    <Link className="mx-1" to={`/dashboard/receptionists/edit/${receptionist?.id}`}>
+                                                                        <EditIcon style={{ color: 'orange', marginRight: '10px' }} size={22} title="edit" role="button" />
+                                                                    </Link>
+                                                                )}
+                                                            </div>
+                                                            <Link className="mx-1" to={`/dashboard/receptionists/detail/${receptionist?.id}`}>
+                                                                <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button" />
+                                                            </Link>
                                                         </div>
-                                                        <Link className="mx-1" to={`/dashboard/receptionists/detail/${receptionist?.id}`}>
-                                                            <BiCommentDetail style={{ color: 'green', marginRight: '10px' }} size={22} title="detail" role="button" />
-                                                        </Link>
-
-                                                        <div className="mx-1">
-                                                            {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
-                                                                <LockOpenIcon
-                                                                    style={{ color: 'red', marginRight: '10px' }}
-                                                                    size={22}
-                                                                    title="block"
-                                                                    role="button"
-                                                                    onClick={() => handleOpenReceptionist(receptionist.id)}
-                                                                />
-                                                            )}
-                                                        </div>
-                                                        <div className="mx-1">
-                                                            {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
-                                                                <BlockIcon style={{ color: 'red', marginRight: '10px' }}
-                                                                    size={22}
-                                                                    title="open"
-                                                                    role="button"
-                                                                    onClick={() => handleLockReceptionist(receptionist.id)} />
-                                                            )}
+                                                        <div>
+                                                            <div className="mx-1">
+                                                                {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
+                                                                    <LockOpenIcon
+                                                                        style={{ color: 'red', marginRight: '10px' }}
+                                                                        size={22}
+                                                                        title="block"
+                                                                        role="button"
+                                                                        onClick={() => handleOpenReceptionist(receptionist.id)}
+                                                                    />
+                                                                )}
+                                                            </div>
+                                                            <div className="mx-1">
+                                                                {hasAnyRole(user.roles[0], ["ROLE_ADMIN"]) && (
+                                                                    <BlockIcon style={{ color: 'red', marginRight: '10px' }}
+                                                                        size={22}
+                                                                        title="open"
+                                                                        role="button"
+                                                                        onClick={() => handleLockReceptionist(receptionist.id)} />
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

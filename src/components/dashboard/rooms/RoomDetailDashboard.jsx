@@ -102,7 +102,7 @@ export default function RoomDetailDashboard() {
                                 disabled={currentImageIndex === 0}
                                 style={{
                                     position: 'absolute',
-                                    top: '70%', left: '10px',
+                                    top: '25%', left: '10px',
                                     transform: 'translateY(-50%)'
                                 }}
                             >
@@ -113,7 +113,7 @@ export default function RoomDetailDashboard() {
                                 disabled={currentImageIndex === room?.imageResDTOS?.length - 1}
                                 style={{
                                     position: 'absolute',
-                                    top: '70%', right: '10px',
+                                    top: '25%', right: '10px',
                                     transform: 'translateY(-50%)'
                                 }}
                             >
@@ -124,9 +124,13 @@ export default function RoomDetailDashboard() {
                                 room?.imageResDTOS?.length > 0 && (<img
                                     src={room?.imageResDTOS[currentImageIndex]?.fileUrl}
                                     alt={room?.imageResDTOS[currentImageIndex]?.id}
-                                    style={{ width: '100%', height: '100%', margin: '10px 0' }}
+                                    style={{ width: '100%', height: '45%', margin: '10px 0' }}
                                 />)
                             }
+                            <div className="row">
+                                <label className="pb-2">Description</label>
+                                <label className="ps-4">{room?.description}</label>
+                            </div>
                         </dir>
                         <dir className="row col-8">
                             <div className="">
@@ -206,10 +210,7 @@ export default function RoomDetailDashboard() {
                                         {/* </div> */}
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <label className="pb-2">Description</label>
-                                    <label className="ps-4">{room?.description}</label>
-                                </div>
+
                             </div>
                         </dir>
                     </div>

@@ -8,6 +8,12 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
 import {
   getBookingByIdAPI,
   getAllBookingServiceAPI,
@@ -17,7 +23,7 @@ import {
 
 import BookingDetail from "./BookingDetail";
 import AppUtil from "../../../services/AppUtil";
-
+import moment from 'moment';
 const steps = ["Rooms", "Add-Ons", "Guest Details", "Confirmation"];
 
 const countries = [
@@ -73,7 +79,8 @@ export default function BookingCheckout() {
   const [childQuantity, setChildQuantity] = useState(2);
   const [activeStep, setActiveStep] = React.useState(0);
   const [showAddon, setShowAddon] = useState(-1);
-  const [showDetailsBill, setShowDetailsBill] = useState(false);
+  const [showDetailsBillRoom, setShowDetailsBillRoom] = useState(false);
+  const [showDetailsBillService, setShowDetailsBillService] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -102,25 +109,15 @@ export default function BookingCheckout() {
   const handleCloseModal = () => setOpenModal(false);
 
   const handleNext = () => {
-    // setShowAddon(bookindDetailId);
-    // handleCustomerInfoChange();
-    // setLoading(true);
-    // handleNavigateBooking();
+  
     handleBookingHome()
-    // console.log("aaaaaaa", handleNext);
     dispatch(
       updateBooking_Complete({
         bookingId: booking.bookingId,
-        // customerInfo: customerInfo,
       })
     ).then(() => {
-      // setLoading(true);
     });
   };
-
-  // const handleCustomerInfoChange = (updatedCustomerInfo) => {
-  //   setCustomerInfo(updatedCustomerInfo);
-  // };
 
   const handleBookingHome = () => {
     navigate(`/`);
@@ -173,6 +170,23 @@ export default function BookingCheckout() {
     }
   }, []);
 
+
+  const GovernmentTaxPriceRoom = (pricePerNight) => {
+    const governmentTax = 0.08;
+    const vatPrice = pricePerNight * governmentTax;
+    return vatPrice;
+  };
+  const ServiceChargePriceRoom = (pricePerNight) => {
+    const serviceCharge = 0.054;
+    const vatPrice = pricePerNight * serviceCharge;
+    return vatPrice;
+  }
+  const TotalVatRoom = (pricePerNight) => {
+    const governmentTax = GovernmentTaxPriceRoom(pricePerNight);
+    const serviceCharge = ServiceChargePriceRoom(pricePerNight);
+    const totalTax = governmentTax + serviceCharge;
+    return totalTax;
+  };
   return (
     <>
       <div className="app_container">
@@ -456,186 +470,167 @@ export default function BookingCheckout() {
                           <div className="payment-select-fop_paymentRadioButtonsWrapper">
                             <div className="payment-radio-button_container">
                               <div className="payment-radio-button_header">
-                                <input
-                                  className="input_radio"
-                                  data-error="false"
-                                  type="radio"
-                                  value="CreditCard"
-                                  checked=""
-                                />
-                                <label className="label_radio">
-                                  <span className="app_radioBox"></span>
-                                  <span>Credit/Debit Card</span>
-                                </label>
-                              </div>
-                              <div className="payment-radio-button_content">
-                                <div className="guest-payment-create_paymentSelection">
-                                  <div className="guest-payment-create_ccimageContainer">
-                                    <img
-                                      src="/assets/img/Visa.png"
-                                      alt="Visa"
-                                      style={{ opacity: "0.5" }}
-                                    />
-                                    <img
-                                      src="/assets/img/MasterCard.png"
-                                      alt="MasterCard"
-                                      style={{ opacity: "0.5" }}
-                                    />
-                                    <img
-                                      src="/assets/img/Amex.png"
-                                      alt="American Express"
-                                      style={{ opacity: "0.5" }}
-                                    />
-                                    <img
-                                      src="/assets/img/DinersClub.png"
-                                      alt="Diners Club"
-                                      style={{ opacity: "0.5" }}
-                                    />
-                                    <img
-                                      src="/assets/img/JCB.png"
-                                      alt="JCB"
-                                      style={{ opacity: "0.5" }}
-                                    />
-                                  </div>
-                                  <Box
-                                    sx={{
-                                      height: "56px",
-                                    }}
-                                    className="guest-info_emailAddressFieldGroup "
-                                    component="form"
-                                    noValidate
-                                    autoComplete="off"
+                                <FormControl className="filter-bar_filterBox radio_button" >
+                                  <RadioGroup
+                                    aria-labelledby="demo-radio-buttons-group-label"
+                                    defaultValue="female"
+                                    name="radio-buttons-group"
                                   >
-                                    <Box className="input_card">
-                                      <span className="guest-payment-create_ccard input-field_leftIcon "></span>
-                                      <TextField
-                                        sx={{
-                                          width: "100%",
-                                          height: "100%",
-                                          top: "auto",
-                                          bottom: "auto",
-                                        }}
-                                        id="standard-textarea"
-                                        label="Card Number"
-                                        placeholder=""
-                                        multiline
-                                        variant="standard"
-                                      />
-                                    </Box>
-                                  </Box>
-                                  <div
-                                    style={{ margin: "0 1rem 1rem 0" }}
-                                  ></div>
-                                  <Box
-                                    sx={{
-                                      height: "56px",
-                                    }}
-                                    className="guest-payment-create_expDateField input-field_container "
-                                    component="form"
-                                    noValidate
-                                    autoComplete="off"
-                                  >
-                                    <TextField
-                                      sx={{
-                                        width: "100%",
-                                        height: "100%",
-                                        top: "auto",
-                                        bottom: "auto",
-                                        background: "#fff",
-                                        border: "1px solid #000",
-                                      }}
-                                      id="standard-textarea"
-                                      label="Expiration Date (MM/YY)"
-                                      placeholder="MM/YY"
-                                      multiline
-                                      variant="standard"
-                                    />
-                                  </Box>
+                                    <div className="payment-radio-button_container">
+                                      <div className="payment-radio-button_header">
+                                        <FormControlLabel value="Credit/Debit Card" control={<Radio />} label="Credit/Debit Card" />
+                                      </div>
+                                    </div>
+                                    <div className="payment-radio-button_content">
+                                      <div className="guest-payment-create_paymentSelection">
+                                        <div className="guest-payment-create_ccimageContainer">
+                                          <img
+                                            src="/assets/img/Visa.png"
+                                            alt="Visa"
+                                            style={{ opacity: "0.5" }}
+                                          />
+                                          <img
+                                            src="/assets/img/MasterCard.png"
+                                            alt="MasterCard"
+                                            style={{ opacity: "0.5" }}
+                                          />
+                                          <img
+                                            src="/assets/img/Amex.png"
+                                            alt="American Express"
+                                            style={{ opacity: "0.5" }}
+                                          />
+                                          <img
+                                            src="/assets/img/DinersClub.png"
+                                            alt="Diners Club"
+                                            style={{ opacity: "0.5" }}
+                                          />
+                                          <img
+                                            src="/assets/img/JCB.png"
+                                            alt="JCB"
+                                            style={{ opacity: "0.5" }}
+                                          />
+                                        </div>
+                                        <Box
+                                          sx={{
+                                            height: "56px",
+                                          }}
+                                          className="guest-info_emailAddressFieldGroup "
+                                          component="form"
+                                          noValidate
+                                          autoComplete="off"
+                                        >
+                                          <Box className="input_card">
+                                            <span className="guest-payment-create_ccard input-field_leftIcon "></span>
+                                            <TextField
+                                              sx={{
+                                                width: "100%",
+                                                height: "100%",
+                                                top: "auto",
+                                                bottom: "auto",
+                                              }}
+                                              id="standard-textarea"
+                                              label="Card Number"
+                                              placeholder=""
+                                              multiline
+                                              variant="standard"
+                                            />
+                                          </Box>
+                                        </Box>
+                                        <div
+                                          style={{ margin: "0 1rem 1rem 0" }}
+                                        ></div>
+                                        <Box
+                                          sx={{
+                                            height: "56px",
+                                          }}
+                                          className="guest-payment-create_expDateField input-field_container "
+                                          component="form"
+                                          noValidate
+                                          autoComplete="off"
+                                        >
+                                          <TextField
+                                            sx={{
+                                              width: "100%",
+                                              height: "100%",
+                                              top: "auto",
+                                              bottom: "auto",
+                                              background: "#fff",
+                                              border: "1px solid #000",
+                                            }}
+                                            id="standard-textarea"
+                                            label="Expiration Date (MM/YY)"
+                                            placeholder="MM/YY"
+                                            multiline
+                                            variant="standard"
+                                          />
+                                        </Box>
 
-                                  <Box
-                                    sx={{
-                                      height: "56px",
-                                    }}
-                                    className="payment-cvv-field_cvvField input-field_container input-field_withIconRight "
-                                    component="form"
-                                    noValidate
-                                    autoComplete="off"
-                                  >
-                                    <TextField
-                                      sx={{
-                                        width: "157px",
-                                        height: "100%",
-                                        top: "auto",
-                                        bottom: "auto",
-                                        background: "#fff",
-                                        border: "1px solid #000",
-                                      }}
-                                      id="standard-textarea"
-                                      label="CVV"
-                                      placeholder=""
-                                      multiline
-                                      variant="standard"
-                                    />
-                                  </Box>
+                                        <Box
+                                          sx={{
+                                            height: "56px",
+                                          }}
+                                          className="payment-cvv-field_cvvField input-field_container input-field_withIconRight "
+                                          component="form"
+                                          noValidate
+                                          autoComplete="off"
+                                        >
+                                          <TextField
+                                            sx={{
+                                              width: "157px",
+                                              height: "100%",
+                                              top: "auto",
+                                              bottom: "auto",
+                                              background: "#fff",
+                                              border: "1px solid #000",
+                                            }}
+                                            id="standard-textarea"
+                                            label="CVV"
+                                            placeholder=""
+                                            multiline
+                                            variant="standard"
+                                          />
+                                        </Box>
 
-                                  <Box
-                                    sx={{
-                                      height: "56px",
-                                    }}
-                                    className="guest-payment-create_nameField input-field_container "
-                                    component="form"
-                                    noValidate
-                                    autoComplete="off"
-                                  >
-                                    <TextField
-                                      sx={{
-                                        width: "393px",
-                                        height: "100%",
-                                        top: "auto",
-                                        bottom: "auto",
-                                        background: "#fff",
-                                        border: "1px solid #000",
-                                      }}
-                                      id="standard-textarea"
-                                      label="Name on Card"
-                                      placeholder=""
-                                      multiline
-                                      variant="standard"
-                                    />
-                                  </Box>
-                                </div>
+                                        <Box
+                                          sx={{
+                                            height: "56px",
+                                          }}
+                                          className="guest-payment-create_nameField input-field_container "
+                                          component="form"
+                                          noValidate
+                                          autoComplete="off"
+                                        >
+                                          <TextField
+                                            sx={{
+                                              width: "393px",
+                                              height: "100%",
+                                              top: "auto",
+                                              bottom: "auto",
+                                              background: "#fff",
+                                              border: "1px solid #000",
+                                            }}
+                                            id="standard-textarea"
+                                            label="Name on Card"
+                                            placeholder=""
+                                            multiline
+                                            variant="standard"
+                                          />
+                                        </Box>
+                                      </div>
+                                    </div>
+                                    <div className="payment-radio-button_container">
+                                      <div className="payment-radio-button_header">
+                                        <FormControlLabel value="UnionPay" control={<Radio />} label="UnionPay" />
+                                      </div>
+                                    </div>
+                                    <div className="payment-radio-button_header">
+                                      <FormControlLabel value="AliPay" control={<Radio />} label="AliPay" />
+                                    </div>
+                                  </RadioGroup>
+                                </FormControl>
                               </div>
                             </div>
-                            <div className="payment-radio-button_container">
-                              <div className="payment-radio-button_header">
-                                <input
-                                  className="input_radio"
-                                  data-error="false"
-                                  type="radio"
-                                  value="CreditCard"
-                                  checked=""
-                                />
-                                <label className="label_radio">
-                                  <span className="app_radioBoxx"></span>
-                                  <span>UnionPay</span>
-                                </label>
-                              </div>
-                            </div>
-                            <div className="payment-radio-button_container">
-                              <div className="payment-radio-button_header">
-                                <input
-                                  className="input_radio"
-                                  data-error="false"
-                                  type="radio"
-                                  value="CreditCard"
-                                  checked=""
-                                />
-                                <label className="label_radio">
-                                  <span className="app_radioBoxx"></span>
-                                  <span>AliPay</span>
-                                </label>
-                              </div>
-                            </div>
+
                           </div>
                         </fieldset>
                       </div>
@@ -749,10 +744,6 @@ export default function BookingCheckout() {
                         reservations cost upon making reservations.{" "}
                       </strong>
                     </span>
-                    &nbsp;
-                    <span>
-                      <span>₫4,913,380</span>
-                    </span>
                   </div>
                 </div>
                 <div className="guest-policies_fullPolicyLink">
@@ -765,57 +756,17 @@ export default function BookingCheckout() {
                   </button>
                 </div>
               </section>
+
+
               <section className="policy-acknowledgement_container">
                 <h2 className="app_heading1">
                   <span>Acknowledgement</span>
                 </h2>
-                <div className="policy-acknowledgement_emailCheckBox">
-                  <input className="input_checkbox" type="checkbox" value="" />
-                  <label className="label_checkbox">
-                    <b>
-                      <span>
-                        Yes, I would like to receive newsletters and special
-                        offers by email.
-                      </span>
-                    </b>
-                  </label>
-                  <div role="alert"></div>
-                </div>
-                <div className="policy-acknowledgement_privacyCheckbox">
-                  <input className="input_checkbox" type="checkbox" value="" />
-                  <label className="label_checkbox" for="privacyPolicy">
-                    <b>
-                      <span
-                        className="policy-checkbox-description-link_required"
-                        aria-hidden="true"
-                      >
-                        *{" "}
-                      </span>
-                      <span>
-                        I have read and agree with the terms specified in the
-                        Privacy Policy.
-                      </span>
-                    </b>
-                  </label>
-                  <div role="alert"></div>
-                </div>
-                <div className="policy-acknowledgement_policyCheckbox">
-                  <input className="input_checkbox" type="checkbox" value="" />
-                  <label className="label_checkbox" for="policyAcknowledgement">
-                    <b>
-                      <span
-                        className="policy-checkbox-description-link_required"
-                        aria-hidden="true"
-                      >
-                        *{" "}
-                      </span>
-                      <span>
-                        I have read and agree with the Terms &amp; Conditions.
-                      </span>
-                    </b>
-                  </label>
-                  <div role="alert"></div>
-                </div>
+                <FormGroup>
+                  <FormControlLabel className="Acknowledgement" control={<Checkbox defaultChecked />} label="Yes, I would like to receive newsletters and special offers by email." />
+                  <FormControlLabel className="Acknowledgement" required control={<Checkbox />} label="* I have read and agree with the terms specified in the Privacy Policy.  " />
+                  <FormControlLabel className="Acknowledgement" required control={<Checkbox />} label="* I have read and agree with the Terms & Conditions." />
+                </FormGroup>
               </section>
             </form>
             <div className="guest-info-container_bottomContinue button_group">
@@ -833,8 +784,10 @@ export default function BookingCheckout() {
           </main>
           <aside className="app_col-sm-12 app_col-md-12 app_col-lg-4">
             <BookingDetail
-              showDetailsBill={showDetailsBill}
-              setShowDetailsBill={setShowDetailsBill}
+              showDetailsBillRoom={showDetailsBillRoom}
+              setShowDetailsBillRoom={setShowDetailsBillRoom}
+              showDetailsBillService={showDetailsBillService}
+              setShowDetailsBillService={setShowDetailsBillService}
               toggleForm={toggleForm}
               showForm={showForm}
               cancelForm={cancelForm}
@@ -847,7 +800,7 @@ export default function BookingCheckout() {
               handleEdit={handleEdit}
               handleDeleteBookingDetail={handleDeleteBookingDetail}
               loading={loading}
-              // perCarQuantity={perCarQuantity}
+            // perCarQuantity={perCarQuantity}
             />
           </aside>
 
@@ -913,10 +866,6 @@ export default function BookingCheckout() {
                         reservations cost upon making reservations.{" "}
                       </strong>
                     </span>
-                    &nbsp;
-                    <span>
-                      <span>₫4,913,380</span>
-                    </span>
                   </div>
                 </div>
                 <div className="guest-policies_childrenPolicy">
@@ -969,18 +918,22 @@ export default function BookingCheckout() {
                     </b>
                     <span>Before 12:00 PM</span>
                   </div>
-                  <div className="guest-policies_Adult">
-                    <b>
-                      <span>Number Adult</span>
-                    </b>
-                    <span>2</span>
-                  </div>
-                  <div className="guest-policies_Children">
-                    <b>
-                      <span>Number Children</span>
-                    </b>
-                    <span>0</span>
-                  </div>
+                  {bookingDetails.map((item, key) => (
+                    <>
+                      <div className="guest-policies_Adult">
+                        <b>
+                          <span>Number Adult</span>
+                        </b>
+                        <span>{item.numberAdult}</span>
+                      </div>
+                      <div className="guest-policies_Children">
+                        <b>
+                          <span>Number Children</span>
+                        </b>
+                        <span>{JSON.parse(item.childrenAges).length}</span>
+                      </div>
+                    </>
+                  ))}
                 </div>
                 {bookingDetails.map((item, key) => (
                   <div>
@@ -1010,7 +963,7 @@ export default function BookingCheckout() {
                                   <b>
                                     <span>Guests</span>
                                   </b>
-                                  <span>2</span>
+                                  <span>{(item.numberAdult) + (JSON.parse(item.childrenAges).length)}</span>
                                 </div>
                                 <div className="guest-policies_King">
                                   <b>
@@ -1042,7 +995,7 @@ export default function BookingCheckout() {
                               <a className="cart_name" >Price:</a>
                             </div>
                             <div className="cart-container_price">
-                              <span>{AppUtil.formatCurrency(item.totalAmount)}</span>
+                              <span>{AppUtil.formatCurrency(item.room.pricePerNight)}</span>
                             </div>
                           </div>
                           <div className="cart-container_taxesAndFees" style={{ marginBottom: "0" }}>
@@ -1051,25 +1004,25 @@ export default function BookingCheckout() {
                                 <span>Taxes and Fees:</span>
                               </div>
                               <span className="cart-container_price">
-                                <span>₫394,753</span>
+                                <span>{AppUtil.formatCurrency(TotalVatRoom(item.room.pricePerNight))}</span>
                               </span>
                             </div>
                             <div className="display-prices_wrapper">
-                              <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                <span>{showDetailsBill ? "Details" : "Details"}</span>
+                              <button className="btn button_link" onClick={() => setShowDetailsBillRoom(!showDetailsBillRoom)}>
+                                <span>{showDetailsBillRoom ? "Details" : "Details"}</span>
                               </button>
-                              {showDetailsBill && (
+                              {showDetailsBillRoom && (
                                 <div className="display-prices_breakdown" style={{ paddingLeft: "0" }}>
                                   <div className="display-prices_row">
                                     <div className="display-prices_label">8% Government Tax</div>
                                     <div className="display-prices_price">
-                                      <span>₫235,673</span>
+                                      <span>{AppUtil.formatCurrency(GovernmentTaxPriceRoom(item.room.pricePerNight))}</span>
                                     </div>
                                   </div>
                                   <div className="display-prices_row">
                                     <div className="display-prices_label">5% Service Charge</div>
                                     <div className="display-prices_price">
-                                      <span>₫159,080</span>
+                                      <span>{AppUtil.formatCurrency(ServiceChargePriceRoom(item.room.pricePerNight))}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -1080,14 +1033,14 @@ export default function BookingCheckout() {
                       </div>
                       <div style={{ paddingLeft: "519px", marginBottom: "-12px" }}>
                         <hr className="detail-view-room_line" />
-                        <div className="cart-container_addon" style={{ paddingBottom: "0" }}>
+                        <div className="cart-container_addon" style={{ paddingBottom: "0", alignItems: "center" }}>
                           <div className="cart-container_addonNameInfo" style={{ paddingRight: "81px" }}>
                             <h2 className="app_modalTitle guest-policies_policiesModalHeading" style={{ fontSize: "20px" }}>
                               <span>Total:</span>
                             </h2>
                           </div>
                           <div className="cart-container_price" style={{ fontSize: "15px" }}>
-                            <span>{AppUtil.formatCurrency(item.total)}</span>
+                            <span>{AppUtil.formatCurrency(TotalVatRoom(item.room.pricePerNight) + (item.room.pricePerNight))}</span>
                           </div>
                         </div>
                       </div>
@@ -1103,7 +1056,7 @@ export default function BookingCheckout() {
                                   <div className="guest-policies_hotelDetails">
                                     <div className="guest-policies_View">
                                       <b>
-                                        <span> <span>Mar 14 </span>/ Per Car: 1</span>
+                                        <span> <span>{moment(item.checkIn).format('DD-MM-YYYY')} </span>/ Per Car: {bsItem.numberCar}</span>
                                       </b>
                                     </div>
                                   </div>
@@ -1124,7 +1077,7 @@ export default function BookingCheckout() {
                                   <a className="cart_name" >Price:</a>
                                 </div>
                                 <div className="cart-container_price">
-                                  <span>{AppUtil.formatCurrency(bsItem.bookingService.price)}</span>
+                                  <span>{AppUtil.formatCurrency(bsItem.price)}</span>
                                 </div>
                               </div>
                               <div className="cart-container_taxesAndFees" style={{ marginBottom: "0" }}>
@@ -1133,25 +1086,25 @@ export default function BookingCheckout() {
                                     <span>Taxes and Fees:</span>
                                   </div>
                                   <span className="cart-container_price">
-                                    <span>₫39,475</span>
+                                    <span>{AppUtil.formatCurrency((bsItem.price) * (bsItem.numberCar) * 0.134)}</span>
                                   </span>
                                 </div>
                                 <div className="display-prices_wrapper">
-                                  <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                    <span>{showDetailsBill ? "Details" : "Details"}</span>
+                                  <button className="btn button_link" onClick={() => setShowDetailsBillService(!showDetailsBillService)}>
+                                    <span>{showDetailsBillService ? "Details" : "Details"}</span>
                                   </button>
-                                  {showDetailsBill && (
+                                  {showDetailsBillService && (
                                     <div className="display-prices_breakdown" style={{ paddingLeft: "0" }}>
                                       <div className="display-prices_row">
                                         <div className="display-prices_label">8% Government Tax</div>
                                         <div className="display-prices_price">
-                                          <span>₫23,567</span>
+                                          <span>{AppUtil.formatCurrency(+(bsItem.price) * (bsItem.numberCar) * 0.08)}</span>
                                         </div>
                                       </div>
                                       <div className="display-prices_row">
                                         <div className="display-prices_label">5% Service Charge</div>
                                         <div className="display-prices_price">
-                                          <span>₫15,908</span>
+                                          <span>{AppUtil.formatCurrency((bsItem.price) * (bsItem.numberCar) * 0.05)}</span>
                                         </div>
                                       </div>
                                     </div>
@@ -1160,16 +1113,16 @@ export default function BookingCheckout() {
                               </div>
                             </div>
                           </div>
-                          <div style={{ paddingLeft: "519px" }}>
+                          <div style={{ paddingLeft: "519px", marginBottom: "-12px" }}>
                             <hr className="detail-view-room_line" />
-                            <div className="cart-container_addon">
-                              <div className="cart-container_addonNameInfo" style={{ paddingLeft: "20px", paddingRight: "81px" }}>
+                            <div className="cart-container_addon" style={{ paddingBottom: "0", alignItems: "center" }}>
+                              <div className="cart-container_addonNameInfo" style={{ paddingRight: "81px" }}>
                                 <h2 className="app_modalTitle guest-policies_policiesModalHeading" style={{ fontSize: "20px" }}>
                                   <span>Total:</span>
                                 </h2>
                               </div>
                               <div className="cart-container_price" style={{ fontSize: "15px" }}>
-                                <span>{AppUtil.formatCurrency(bsItem.total)}</span>
+                                <span>{AppUtil.formatCurrency((bsItem.price) + (bsItem.price) * (bsItem.numberCar) * 0.134)}</span>
                               </div>
                             </div>
                           </div>
@@ -1185,7 +1138,7 @@ export default function BookingCheckout() {
                           </h2>
                         </div>
                         <div className="cart-container_price" style={{ fontSize: "1.5rem" }}>
-                          <span>₫1,105,298</span>
+                          <span>{AppUtil.formatCurrency(booking.total)}</span>
                         </div>
                       </div>
                     </div>

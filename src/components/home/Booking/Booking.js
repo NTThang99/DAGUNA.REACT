@@ -125,7 +125,6 @@ export default function Booking() {
   const handleClose = () => setOpen(false);
 
   const handleOpenImage = async (id) => {
-    // lay room theo id => room
     let room = await RoomService.getRoomById(id);
     setRoomModal(room.data)
     setOpenImage(true);
@@ -146,13 +145,17 @@ export default function Booking() {
     if (booking.bookingId == null) {
       dispatch(createBookingAPI({
         searchBar: room.searchBar,
-        roomId: id
+        roomId: id,
+        numberAdult: room.searchBar.guests.numberAdult,
+        childrenAges: room.searchBar.guests.childrenAges,
       }));
     } else {
       dispatch(updateBooking_AddRoomAPI({
         bookingId: booking.bookingId,
         roomId: id,
         searchBar: room.searchBar,
+        numberAdult: room.searchBar.guests.numberAdult,
+        childrenAges: room.searchBar.guests.childrenAges,
       }));
     }
   };
@@ -246,6 +249,8 @@ export default function Booking() {
       checkIn: room.searchBar.checkIn,
       checkOut: room.searchBar.checkOut,
       current: 0,
+      numberAdult: room.searchBar.guests.numberAdult,
+      childrenAges: room.searchBar.guests.childrenAges,
     }));
     let bookingId = localStorage.getItem("bookingId");
     if (bookingId != null) {

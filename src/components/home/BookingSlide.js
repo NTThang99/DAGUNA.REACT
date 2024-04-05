@@ -377,8 +377,14 @@ export const findSortRoomHavePerAPI = createAsyncThunk(
         selectFirstDay: arg.checkIn,
         selectLastDay: arg.checkOut,
       }
+      let url = "";
+      if(arg.viewType == "ALL"){
+        url = `http://localhost:8080/api/rooms/find-available-room-have-per-pageable?current=${arg.current}&sort=${arg.sortBy}&minPrice=${arg.minMaxPrice[0]}&maxPrice=${arg.minMaxPrice[1]}`
+      }else{
+        url = `http://localhost:8080/api/rooms/find-available-room-have-per-pageable?current=${arg.current}&sort=${arg.sortBy}&minPrice=${arg.minMaxPrice[0]}&maxPrice=${arg.minMaxPrice[1]}&view=${arg.viewType}`
+      }
       let res = await RoomService.updateSearchSortBarHeader(
-        `http://localhost:8080/api/rooms/find-available-room-have-per-pageable?current=${arg.current}&sort=${arg.sortBy}&minPrice=${arg.minMaxPrice[0]}&maxPrice=${arg.minMaxPrice[1]}&view=${arg.viewType}`, objSend
+        url, objSend
       );
 
       return res;

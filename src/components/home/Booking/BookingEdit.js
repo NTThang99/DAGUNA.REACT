@@ -9,6 +9,9 @@ import { updateSearchBar, getBookingByIdAPI, updateBooking_EditRoom } from "../B
 import BookingDetail from "./BookingDetail";
 import HeaderBooking from "./HeaderBooking";
 import AppUtil from "../../../services/AppUtil";
+import RoomService from "../../../services/RoomService";
+import Modal from '@mui/material/Modal';
+import Slider from "react-slick";
 
 const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
 
@@ -16,12 +19,14 @@ const steps = ['Rooms', 'Add-Ons', 'Guest Details', 'Confirmation'];
 export default function BookingEdit() {
     const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false);
-    const [showDetailsBill, setShowDetailsBill] = useState(false);
+    const [showDetailsBillRoom, setShowDetailsBillRoom] = useState(false);
+    const [showDetailsBillService, setShowDetailsBillService] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [bookingDetailChoosen, setBookingDetailChoosen] = useState(null);
     const [adultQuantity, setAdultQuantity] = useState(2);
     const [childQuantity, setChildQuantity] = useState(2);
-
+    const [openImage, setOpenImage] = useState(false);
+    const [roomModal, setRoomModal] = useState(null);
     // const [selectedDate, setSelectedDate] = useState(dayjs());
     const [activeStep, setActiveStep] = React.useState(0);
     const dispatch = useDispatch();
@@ -59,8 +64,6 @@ export default function BookingEdit() {
         setChildQuantity(childQuantity + 1);
     };
 
-
-
     const toggleForm = () => {
         setShowForm(!showForm);
     };
@@ -73,6 +76,13 @@ export default function BookingEdit() {
         setShowForm(false);
     };
 
+    const handleOpenImage = async (id) => {
+        let room = await RoomService.getRoomById(id);
+        setRoomModal(room.data)
+        setOpenImage(true);
+    }
+    const handleCloseImage = () => setOpenImage(false);
+
     const handleNext = (id) => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         handleNavigateBooking();
@@ -80,10 +90,8 @@ export default function BookingEdit() {
         dispatch(updateBooking_EditRoom({
             bookingId: booking.bookingId,
             searchBar: room.searchBar,
-            roomId: id
+            roomId: id,
         }))
-
-
     };
     const handleNavigateBooking = () => {
         navigate(`/booking/addons`);
@@ -111,6 +119,14 @@ export default function BookingEdit() {
             dispatch(getBookingByIdAPI(bookingId))
         }
     }, [])
+    var settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+    };
+
     return (
         <>
             <div className="app_container">
@@ -222,7 +238,7 @@ export default function BookingEdit() {
                                                     <div className="thumb-cards_container">
                                                         <div className="thumb-cards_extraDetails app_col-sm-12 app_col-md-4 app_col-lg-4">
                                                             <div className="thumb-cards_imgWrapper thumb-cards_hasMultipleImages">
-                                                                <button className="thumb-cards_openImage" />
+                                                                <button className="thumb-cards_openImage" onClick={() => handleOpenImage(item.id)} />
                                                                 <img className="thumb-cards_image" src={item.imageResDTOS.length == 0 ? "" : item.imageResDTOS[0].fileUrl} />
                                                             </div>
                                                         </div>
@@ -288,6 +304,32 @@ export default function BookingEdit() {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <Modal
+                                                open={openImage}
+                                                onClose={handleCloseImage}
+                                                aria-labelledby="modal-modal-title"
+                                                aria-describedby="modal-modal-description">
+                                                <div className="gallery_overlay">
+                                                    <div className="gallery_popupMainDiv">
+                                                        <div className="gallery_header">
+                                                            <h2 className="app_modalTitle gallery_imgTitle" id="gallery-header">Garden Balcony King Grand</h2>
+                                                            <button className="fa-regular fa-xmark gallery_closeButton" aria-label="close" onClick={handleCloseImage}></button>
+                                                        </div>
+                                                        <div className="gallery_galleryWrapper">
+                                                            <div class="sr-only">Garden Balcony King Grand image 4</div>
+                                                            {
+                                                                roomModal != null ? <Slider className="fullPageGallery " {...settings}>
+                                                                    {roomModal?.imageResDTOS.map((itemImg, key) => (
+                                                                        <div className="gallery_imgWrapper">
+                                                                            <img src={itemImg.fileUrl} class="" alt="Garden Balcony King Grand image 1" tabindex="-1" />
+                                                                        </div>
+                                                                    ))}
+                                                                </Slider> : null
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Modal>
                                         </div>
                                     ))}
                                 </div>
@@ -296,8 +338,10 @@ export default function BookingEdit() {
                     </main>
                     <aside className="app_col-sm-12 app_col-md-12 app_col-lg-4">
                         <BookingDetail
-                            showDetailsBill={showDetailsBill}
-                            setShowDetailsBill={setShowDetailsBill}
+                            showDetailsBillRoom={showDetailsBillRoom}
+                            setShowDetailsBillRoom={setShowDetailsBillRoom}
+                            showDetailsBillService={showDetailsBillService}
+                            setShowDetailsBillService={setShowDetailsBillService}
                             toggleForm={toggleForm}
                             showForm={showForm}
                             cancelForm={cancelForm}

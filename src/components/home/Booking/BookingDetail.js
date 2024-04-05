@@ -5,13 +5,14 @@ import AppUtil from '../../../services/AppUtil';
 import moment from 'moment';
 
 
-export default function BookingDetail({ showDetails, setShowDetails, showDetailsBill, setShowDetailsBill, showDetailsBillRoom, setShowDetailsBillRoom, showDetailsBillService, setShowDetailsBillService, toggleForm, showAddon, showForm, cancelForm, handleBack, handleNext, handleEdit, handleDeleteBookingDetail, loading, handleNavigateBooking }) {
+export default function BookingDetail({ showDetails, setShowDetails, showDetailsBillRoom, setShowDetailsBillRoom, showDetailsBillService, setShowDetailsBillService, toggleForm, showAddon, showForm, cancelForm, handleBack, handleNext, handleEdit, handleDeleteBookingDetail, loading, handleNavigateBooking, handleDeleteBookingService }) {
     // const [roomCount, setRoomCount] = useState(1);
     const location = useLocation();
     const currentPath = location.pathname;
     const booking = useSelector((state) => state.booking.booking);
     const bookingDetails = useSelector((state) => state.booking.booking.bookingDetails);
     const bookingDetailChoosen = useSelector((state) => state.booking.booking.bookingDetailChoosen)
+    
 
     const GovernmentTaxPriceRoom = (pricePerNight) => {
         const governmentTax = 0.08;
@@ -129,7 +130,64 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                         )}
                                                     </div>
                                                 </div>
+
                                             </div>
+                                            {showAddon == item.id && (
+                                                <>
+                                                    {item.bookingDetailServiceResDTOS.map((serviceItem, key) => (
+                                                        <div>
+                                                            <div className="cart-container_addon">
+                                                                <div className="cart-container_addonNameInfo">
+                                                                    <a role="button" tabindex="0">{serviceItem.bookingService.name} </a>
+                                                                    <i className="cart-container_addonInfo">
+                                                                        <span><span data-package-date="03-14-2024">{moment(item.checkIn).format('DD-MM-YYYY')}</span>  / Per Car: {serviceItem.numberCar}</span>
+                                                                    </i>
+                                                                </div>
+                                                                <div className="cart-container_price">
+                                                                    <span>{AppUtil.formatCurrency((serviceItem.price) * (serviceItem.numberCar))}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div className="cart-container_addonActions">
+                                                                <button className="btn button_link" datatest="Button" onClick={() => handleDeleteBookingService(serviceItem.bookingService.id, item.bookingDetailId)}>
+                                                                    <span>Remove</span>
+                                                                </button>
+                                                            </div>
+                                                            <div className="cart-container_taxesAndFees">
+                                                                <div className="cart-container_headerWithPrice">
+                                                                    <div className="cart-container_taxesAndFeesHeader">
+                                                                        <span>Taxes and Fees</span>
+                                                                    </div>
+                                                                    <span className="cart-container_price">
+                                                                        <span>{AppUtil.formatCurrency(TotalVatService(serviceItem.bookingService.price))}</span>
+                                                                    </span>
+                                                                </div>
+                                                                <div className="display-prices_wrapper">
+                                                                    <button className="btn button_link" onClick={() => setShowDetailsBillService(!showDetailsBillService)}>
+                                                                        <span>{showDetailsBillService ? "Details" : "Details"}</span>
+                                                                    </button>
+                                                                    {showDetailsBillService && (
+                                                                        <div className="display-prices_breakdown">
+                                                                            <div className="display-prices_row">
+                                                                                <div className="display-prices_label">8% Government Tax</div>
+                                                                                <div className="display-prices_price">
+                                                                                    <span>{AppUtil.formatCurrency(GovernmentTaxPriceService(serviceItem.bookingService.price))}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="display-prices_row">
+                                                                                <div className="display-prices_label">5% Service Charge</div>
+                                                                                <div className="display-prices_price">
+                                                                                    <span>{AppUtil.formatCurrency(ServiceChargePriceService(serviceItem.bookingService.price))}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    ))}
+                                                </>
+                                            )}
                                             <div className="cart-container_actions">
                                                 <button className="btn button_link" aria-label="Remove" datatest="Button">
                                                     <span className="button_remove fa-regular fa-trash-can" aria-hidden="true">
@@ -289,7 +347,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                 </div>
                                                             </div>
                                                             <div className="cart-container_addonActions">
-                                                                <button className="btn button_link" datatest="Button"  >
+                                                                <button className="btn button_link" datatest="Button" onClick={() => handleDeleteBookingService(serviceItem.bookingService.id)} >
                                                                     <span>Remove</span>
                                                                 </button>
                                                             </div>
@@ -344,7 +402,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                 </div>
                                                             </div>
                                                             <div className="cart-container_addonActions">
-                                                                <button className="btn button_link" datatest="Button"  >
+                                                                <button className="btn button_link" datatest="Button" onClick={() => handleDeleteBookingService(serviceItem.bookingService.id)} >
                                                                     <span>Remove</span>
                                                                 </button>
                                                             </div>
@@ -593,7 +651,6 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     ))}
                                                 </>
                                             )}
-
                                             <div div className="cart-container_actions" >
                                                 <button className="btn button_link" aria-label="Remove" datatest="Button">
                                                     <span className="button_remove fa-regular fa-trash-can" aria-hidden="true">

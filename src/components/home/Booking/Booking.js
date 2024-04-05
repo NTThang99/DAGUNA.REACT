@@ -25,6 +25,7 @@ import {
   updateBooking_AddRoomAPI,
   findAvailableRoomHavePerAPI,
   findSortRoomHavePerAPI,
+  updateBooking_DeleteBookingService
 } from "../BookingSlide";
 import BookingDetail from "./BookingDetail";
 import HeaderBooking from "./HeaderBooking";
@@ -39,6 +40,7 @@ export default function Booking() {
   const [isFocusedSort, setIsFocusedSort] = useState(false);
   const [isFocusedFilter, setIsFocusedFilter] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [showDetailsBillService, setShowDetailsBillService] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [open, setOpen] = useState(false);
   const [openImage, setOpenImage] = useState(false);
@@ -49,7 +51,7 @@ export default function Booking() {
   const [adultQuantity, setAdultQuantity] = useState(2);
   const [childQuantity, setChildQuantity] = useState(0);
   const [childAges, setChildAges] = useState([]);
-  // const [selectedDate, setSelectedDate] = useState(dayjs());
+
   const [activeStep, setActiveStep] = React.useState(0);
   const dispatch = useDispatch();
   const room = useSelector((state) => state.booking.room);
@@ -243,6 +245,15 @@ export default function Booking() {
       checkOut: room.searchBar.checkOut
     }));
   };
+
+  const handleDeleteBookingService = (bookingServiceId, bookingDetailId) => {
+    let bookingId = localStorage.getItem("bookingId");
+
+    dispatch(updateBooking_DeleteBookingService(
+      { bookingId, bookingDetailChoosen: bookingDetailId, bookingServiceId }
+    ))
+  };
+
 
   useEffect(() => {
     dispatch(findAvailableRoomHavePerAPI({
@@ -549,12 +560,12 @@ export default function Booking() {
 
                   <div className="filter-bar_flyoutFooter">
                     <div>
-                      <button className="button_btn button_primary button_sm" style={{ height: "40px" }}   onClick={handleCloseFilter}>
+                      <button className="button_btn button_primary button_sm" style={{ height: "40px" }} onClick={handleCloseFilter}>
                         <span>Cancel</span>
                       </button>
                     </div>
-                    <div style={{paddingLeft:"20px"}}>
-                      <button className="button_btn button_primary button_sm" style={{ height: "40px"}} onClick={handleApplyFilter}>
+                    <div style={{ paddingLeft: "20px" }}>
+                      <button className="button_btn button_primary button_sm" style={{ height: "40px" }} onClick={handleApplyFilter}>
                         <span>Apply</span>
                       </button>
                     </div>
@@ -761,6 +772,8 @@ export default function Booking() {
             <BookingDetail
               showDetails={showDetails}
               setShowDetails={setShowDetails}
+              showDetailsBillService={showDetailsBillService}
+              setShowDetailsBillService={setShowDetailsBillService}
               toggleForm={toggleForm}
               showForm={showForm}
               cancelForm={cancelForm}
@@ -769,6 +782,7 @@ export default function Booking() {
               handleNext={handleNext}
               handleChooseBookingDetail={handleChooseBookingDetail}
               loading={loading}
+              handleDeleteBookingService={handleDeleteBookingService}
             />
           </aside>
         </div>

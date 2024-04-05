@@ -24,6 +24,7 @@ import {
 import BookingDetail from "./BookingDetail";
 import AppUtil from "../../../services/AppUtil";
 import moment from 'moment';
+import { toast } from "react-toastify";
 const steps = ["Rooms", "Add-Ons", "Guest Details", "Confirmation"];
 
 const countries = [
@@ -109,14 +110,14 @@ export default function BookingCheckout() {
   const handleCloseModal = () => setOpenModal(false);
 
   const handleNext = () => {
-  
     handleBookingHome()
     dispatch(
       updateBooking_Complete({
         bookingId: booking.bookingId,
       })
-    ).then(() => {
-    });
+
+    )
+    toast.success('Bạn đã đặt phòng thành công vui lòng kiểm tra email để xác nhận thông tin', { theme: "light" })
   };
 
   const handleBookingHome = () => {

@@ -386,6 +386,7 @@ export default function BookingService() {
               loading={loading}
               perCarQuantity={perCarQuantity}
               handleNavigateBooking={handleNavigateBooking}
+              handleDeleteBookingService={handleDeleteBookingService}
             />
           </aside>
         </div >

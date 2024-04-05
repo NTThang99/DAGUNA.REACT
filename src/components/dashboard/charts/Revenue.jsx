@@ -46,11 +46,11 @@ export default function Revenue() {
     useEffect(() => {
         const intervalId = setInterval(() => {
             const currentDate = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-            if (currentDate.getDate() !== dayNow.getDate()) {
+            if (currentDate?.getDate() !== dayNow.getDate()) {
                 setDayNow(currentDate);
             }
         }, 1000 * 60 * 60); // Cập nhật 1h 1 lần
-        // return () => clearInterval(intervalId);
+        return () => clearInterval(intervalId);
     }, [dayNow])
 
     // revenue day now

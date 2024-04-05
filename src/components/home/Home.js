@@ -6,7 +6,7 @@ import Services from "./Service";
 import Room from "./Rooms";
 import Sliders from "./Slider";
 import Teams from "./Team";
-
+import Footer from "../common/Footer";
 export default function Home() {
   return (
     <>
@@ -17,6 +17,7 @@ export default function Home() {
       <Services />
       <Sliders />
       <Teams />
+      <Footer />
     </>
   );
 }

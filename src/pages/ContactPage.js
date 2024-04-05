@@ -2,6 +2,7 @@ import React from "react";
 import Heading from "../components/common/Heading";
 import CommonHeading from "../components/common/CommonHeading";
 import { contact } from "../components/data/Data";
+import Footer from "../components/common/Footer";
 
 export default function Contact() {
   return (
@@ -102,6 +103,7 @@ export default function Contact() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

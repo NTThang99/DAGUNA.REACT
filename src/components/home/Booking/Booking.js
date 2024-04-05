@@ -591,9 +591,9 @@ export default function Booking() {
                               <div className="thumb-cards_cardHeader">
                                 <h2 className="app_heading1">{item.name}</h2>
                                 <div className="thumb-cards_urgencyTriggerAndRoomInfo">
-                                  <div className="thumb-cards_urgencyTrigger">
+                                  {/* <div className="thumb-cards_urgencyTrigger">
                                     <span>9 people booked in last 24 hours</span>
-                                  </div>
+                                  </div> */}
                                   <div className="guests-and-roomsize_roomProperties">
                                     <div className="guests-and-roomsize_item guests-and-roomsize_guests">
                                       <span>Guests {item.sleep}</span>

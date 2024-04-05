@@ -5,7 +5,7 @@ import AppUtil from '../../../services/AppUtil';
 import moment from 'moment';
 
 
-export default function BookingDetail({ showDetails, setShowDetails, showDetailsBill, setShowDetailsBill, toggleForm, showAddon, showForm, cancelForm, handleBack, handleNext, handleEdit, handleDeleteBookingDetail, loading, handleNavigateBooking }) {
+export default function BookingDetail({ showDetails, setShowDetails, showDetailsBill, setShowDetailsBill, showDetailsBillRoom, setShowDetailsBillRoom, showDetailsBillService, setShowDetailsBillService, toggleForm, showAddon, showForm, cancelForm, handleBack, handleNext, handleEdit, handleDeleteBookingDetail, loading, handleNavigateBooking }) {
     // const [roomCount, setRoomCount] = useState(1);
     const location = useLocation();
     const currentPath = location.pathname;
@@ -250,10 +250,10 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                         </span>
                                                     </div>
                                                     <div className="display-prices_wrapper">
-                                                        <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                                            <span>{showDetailsBill ? "Details" : "Details"}</span>
+                                                        <button className="btn button_link" onClick={() => setShowDetailsBillRoom(!showDetailsBillRoom)}>
+                                                            <span>{showDetailsBillRoom ? "Details" : "Details"}</span>
                                                         </button>
-                                                        {showDetailsBill && (
+                                                        {showDetailsBillRoom && (
                                                             <div className="display-prices_breakdown">
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">8% Government Tax</div>
@@ -303,10 +303,10 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                     </span>
                                                                 </div>
                                                                 <div className="display-prices_wrapper">
-                                                                    <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                                                        <span>{showDetailsBill ? "Details" : "Details"}</span>
+                                                                    <button className="btn button_link" onClick={() => setShowDetailsBillService(!showDetailsBillService)}>
+                                                                        <span>{showDetailsBillService ? "Details" : "Details"}</span>
                                                                     </button>
-                                                                    {showDetailsBill && (
+                                                                    {showDetailsBillService && (
                                                                         <div className="display-prices_breakdown">
                                                                             <div className="display-prices_row">
                                                                                 <div className="display-prices_label">8% Government Tax</div>
@@ -358,10 +358,10 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                     </span>
                                                                 </div>
                                                                 <div className="display-prices_wrapper">
-                                                                    <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                                                        <span>{showDetailsBill ? "Details" : "Details"}</span>
+                                                                    <button className="btn button_link" onClick={() => setShowDetailsBillService(!showDetailsBillService)}>
+                                                                        <span>{showDetailsBillService ? "Details" : "Details"}</span>
                                                                     </button>
-                                                                    {showDetailsBill && (
+                                                                    {showDetailsBillService && (
                                                                         <div className="display-prices_breakdown">
                                                                             <div className="display-prices_row">
                                                                                 <div className="display-prices_label">8% Government Tax</div>
@@ -515,11 +515,11 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                         </span>
                                                     </div>
                                                     <div className="display-prices_wrapper">
-                                                        <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                                            <span>{showDetailsBill ? "Details" : "Details"}</span>
+                                                        <button className="btn button_link" onClick={() => setShowDetailsBillRoom(!showDetailsBillRoom)}>
+                                                            <span>{showDetailsBillRoom ? "Details" : "Details"}</span>
                                                         </button>
-                                                        {showDetailsBill && (
-                                                            <div className="display-prices_breakdown">container_taxesAndFeesHeader
+                                                        {showDetailsBillRoom && (
+                                                            <div className="display-prices_breakdown">
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">8% Government Tax</div>
                                                                     <div className="display-prices_price">
@@ -567,10 +567,10 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                                     </span>
                                                                 </div>
                                                                 <div className="display-prices_wrapper">
-                                                                    <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                                                        <span>{showDetailsBill ? "Details" : "Details"}</span>
+                                                                    <button className="btn button_link" onClick={() => setShowDetailsBillService(!showDetailsBillService)}>
+                                                                        <span>{showDetailsBillService ? "Details" : "Details"}</span>
                                                                     </button>
-                                                                    {showDetailsBill && (
+                                                                    {showDetailsBillService && (
                                                                         <div className="display-prices_breakdown">
                                                                             <div className="display-prices_row">
                                                                                 <div className="display-prices_label">8% Government Tax</div>
@@ -626,13 +626,6 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                             </div>
                                         </div>
                                     </div >
-                                    <div className="cart-container_addAnotherRoom">
-                                        <button className="btn button_circle" datatest="Button" onClick={() => { handleBack(); }}>
-                                            <span className="button_add fa-solid fa-circle-plus" aria-hidden="true">
-                                            </span>
-                                            <span>Add a Room</span>
-                                        </button>
-                                    </div>
                                 </>
                             ))}
                         </div>
@@ -721,10 +714,10 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                         </span>
                                                     </div>
                                                     <div className="display-prices_wrapper">
-                                                        <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                                            <span>{showDetailsBill ? "Details" : "Details"}</span>
+                                                        <button className="btn button_link" onClick={() => setShowDetailsBillRoom(!showDetailsBillRoom)}>
+                                                            <span>{showDetailsBillRoom ? "Details" : "Details"}</span>
                                                         </button>
-                                                        {showDetailsBill && (
+                                                        {showDetailsBillRoom && (
                                                             <div className="display-prices_breakdown">
                                                                 <div className="display-prices_row">
                                                                     <div className="display-prices_label">8% Government Tax</div>
@@ -771,10 +764,10 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                             </span>
                                                         </div>
                                                         <div className="display-prices_wrapper">
-                                                            <button className="btn button_link" onClick={() => setShowDetailsBill(!showDetailsBill)}>
-                                                                <span>{showDetailsBill ? "Details" : "Details"}</span>
+                                                            <button className="btn button_link" onClick={() => setShowDetailsBillService(!showDetailsBillService)}>
+                                                                <span>{showDetailsBillService ? "Details" : "Details"}</span>
                                                             </button>
-                                                            {showDetailsBill && (
+                                                            {showDetailsBillService && (
                                                                 <div className="display-prices_breakdown">
                                                                     <div className="display-prices_row">
                                                                         <div className="display-prices_label">8% Government Tax</div>

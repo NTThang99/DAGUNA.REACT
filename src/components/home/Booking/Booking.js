@@ -125,7 +125,6 @@ export default function Booking() {
   const handleClose = () => setOpen(false);
 
   const handleOpenImage = async (id) => {
-    // lay room theo id => room
     let room = await RoomService.getRoomById(id);
     setRoomModal(room.data)
     setOpenImage(true);

@@ -485,7 +485,6 @@ const bookingReducer = createSlice({
     builder.addCase(updateBooking_EditRoom.fulfilled, (state, action) => {
       state.loading = true;
       state.booking.bookingDetails = action.payload.bookingDetails;
-      state.booking.total = action.payload.total;
       state.booking.bookingDetailChoosen = action.meta.arg.bookingDetailChoosen
       state.booking.total = action.payload.total;
     });

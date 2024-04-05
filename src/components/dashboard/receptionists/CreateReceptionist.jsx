@@ -43,6 +43,7 @@ export default function CreateReceptionist() {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
+  console.log("error",errors);
   const InputChange = (e) => {
     let file = e.target.files[0];
     let reader = new FileReader();
@@ -54,8 +55,6 @@ export default function CreateReceptionist() {
       let formData = new FormData();
       formData.append("file", file);
       ImageService.saveImage(formData).then(response => {
-
-        console.log("response img", response);
         SetSelectedFile((preValue) => {
           return {
             id: response.data.id,
@@ -106,15 +105,12 @@ export default function CreateReceptionist() {
     }
     let imageIds = [selectedfile.id];
 
-    console.log("values:.........", values);
     let objSend = {
       ...values,
       avatarImgId: imageIds,
     }
     try {
       setIsCreate(true);
-
-      console.log("objSend", objSend);
       let createReceptionistRes = await ReceptionistService.createReceptionist(objSend)
       let result = createReceptionistRes?.data;
       if (result) {
@@ -184,9 +180,6 @@ export default function CreateReceptionist() {
                   <input ref={inputElement} id="fileUpload" type="file" onChange={InputChange} multiple className="form-control form-control-sm mb-3" />
                   {/*  Đây là input cho phép người dùng chọn nhiều hình ảnh từ thiết bị của họ. Khi người dùng thay đổi các tệp được chọn, hàm InputChange sẽ được gọi để xử lý việc tải lên các tệp.  */}
                   <div className="row mb-3">
-                    {
-                      console.log("selectedfile....", selectedfile)
-                    }
                     {
                       (selectedfile != null || selectedfile != undefined)  ? (
                         <div className="col-md-3 col-lg-3 col-sm-12 mb-3" key={selectedfile.id}>

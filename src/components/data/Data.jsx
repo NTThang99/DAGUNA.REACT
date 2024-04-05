@@ -70,15 +70,11 @@ export const carouselData = [
     img: "../assets/img/carousel-1.jpg",
     title: "Discover A Brand Luxurious Hotel",
     subtitle: "luxury living",
-    btn1: "Our Room",
-    btn2: "Book Room",
   },
   {
     img: "../assets/img/carousel-2.jpg",
     title: "Discover A Brand Luxurious Hotel",
     subtitle: "luxury living",
-    btn1: "Our Room",
-    btn2: "Book Room",
   },
 ];
 export const about = [
@@ -267,59 +263,6 @@ export const testimonial = [
 ];
 
 export const roomItems = [
-  {
-    img: "../assets/img/room-1.jpg",
-    price: "$110/night",
-    name: "JUNIOR SUITE",
-    url: 'junior-suite',
-    heading:'Booking',
-    star: [
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-    ],
-    description:
-      "Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet lorem.",
-    yellowbtn: "View Detail",
-    darkbtn: "book now",
-  },
-
-  {
-    img: "../assets/img/room-2.jpg",
-    price: "$110/night",
-    name: "EXECUTIVE SUITE",
-    url:'executive-suite',
-    star: [
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-    ],
-    description:
-      "Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet lorem.",
-    yellowbtn: "View Detail",
-    darkbtn: "book now",
-  },
-  {
-    img: "../assets/img/room-3.jpg",
-    price: "$110/night",
-    name: "SUPER DELUXE",
-    url: 'super-deluxe',
-    star: [
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-      <small className="fa fa-star text-primary"></small>,
-    ],
-    description:
-      "Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet lorem.",
-    yellowbtn: "View Detail",
-    darkbtn: "book now",
-  },
   {
     img: "../assets/img/room-4.jpg",
     price: "$120/night",

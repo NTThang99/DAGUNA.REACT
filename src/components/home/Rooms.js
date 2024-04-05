@@ -76,9 +76,7 @@ export default function Rooms() {
                   <div className="room-item shadow rounded overflow-hidden">
                     <div className="position-relative">
                       <img className="img-fluid" style={{ width: '100%', height: '300px' }} src={item.img} alt="img" />
-                      <small className="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">
-                        {item.price}
-                      </small>
+                      
                     </div>
                     <div className="p-4 mt-2">
                       <div className="d-flex justify-content-between mb-3">
@@ -95,12 +93,7 @@ export default function Rooms() {
                       </div>
                       <p className="text-body mb-3">{item.description}</p>
                       <div className="d-flex justify-content-between">
-                        <button
-                          className="btn btn-sm btn-primary rounded py-2 px-4"
-                          onClick={() => handleNavigateRoom(item.url)}
-                        >
-                          {item.yellowbtn}
-                        </button>
+                      
                         <button
                           className="btn btn-sm btn-dark rounded py-2 px-4"
                           onClick={() => handleNavigateBooking(item.url)}

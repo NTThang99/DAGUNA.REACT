@@ -5,14 +5,13 @@ import AppUtil from '../../../services/AppUtil';
 import moment from 'moment';
 
 
-export default function BookingDetail({ showDetails, setShowDetails, showDetailsBillRoom, setShowDetailsBillRoom, showDetailsBillService, setShowDetailsBillService, toggleForm, showAddon, showForm, cancelForm, handleBack, handleNext, handleEdit, handleDeleteBookingDetail, loading, handleNavigateBooking, handleDeleteBookingService }) {
+export default function BookingDetail({ showDetails, setShowDetails, showDetailsBillRoom, setShowDetailsBillRoom, showDetailsBillService, setShowDetailsBillService, toggleForm, showAddon, showForm, cancelForm, handleBack, handleNext, handleEdit, handleDeleteBookingDetail, loading, handleNavigateBooking, handleDeleteBookingService, totalPriceDays }) {
     // const [roomCount, setRoomCount] = useState(1);
     const location = useLocation();
     const currentPath = location.pathname;
     const booking = useSelector((state) => state.booking.booking);
     const bookingDetails = useSelector((state) => state.booking.booking.bookingDetails);
     const bookingDetailChoosen = useSelector((state) => state.booking.booking.bookingDetailChoosen)
-    
 
     const GovernmentTaxPriceRoom = (pricePerNight) => {
         const governmentTax = 0.08;
@@ -46,7 +45,7 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
         const totalTax = governmentTax + serviceCharge;
         return totalTax;
     };
-    console.log("currentPath", currentPath);
+
 
     if (currentPath === '/booking') {
         return (
@@ -83,8 +82,8 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     <span>Room</span> {key + 1} </h3>
                                                 <div className="cart-container_summary">
                                                     <div className="cart-container_dates">
-                                                        <span>{moment(item.checkIn).format('DD-MM-YYYY')}</span> -{" "}
-                                                        <span>{moment(item.checkOut).format('DD-MM-YYYY')}</span>
+                                                        <span>{moment(item.checkIn).add(1, 'day').format('DD-MM-YYYY')}</span> -{" "}
+                                                        <span>{moment(item.checkOut).add(1, 'day').format('DD-MM-YYYY')}</span>
                                                     </div>
                                                     <div className="cart-container_guests">
                                                         <span>{item.numberAdult} Adults</span>,
@@ -282,8 +281,8 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     <span>Room</span> {key + 1} </h3>
                                                 <div className="cart-container_summary">
                                                     <div className="cart-container_dates">
-                                                        <span>{moment(item.checkIn).format('DD-MM-YYYY')}</span> -{" "}
-                                                        <span>{moment(item.checkOut).format('DD-MM-YYYY')}</span>
+                                                        <span>{moment(item.checkIn).add(1, 'day').format('DD-MM-YYYY')}</span> -{" "}
+                                                        <span>{moment(item.checkOut).add(1, 'day').format('DD-MM-YYYY')}</span>
                                                     </div>
                                                     <div className="cart-container_guests">
                                                         <span>{item.numberAdult} Adults</span>,
@@ -547,8 +546,8 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     <span>Room</span> {key + 1} </h3>
                                                 <div className="cart-container_summary">
                                                     <div className="cart-container_dates">
-                                                        <span>{moment(item.checkIn).format('DD-MM-YYYY')}</span> -{" "}
-                                                        <span>{moment(item.checkOut).format('DD-MM-YYYY')}</span>
+                                                        <span>{moment(item.checkIn).add(1, 'day').format('DD-MM-YYYY')}</span> -{" "}
+                                                        <span>{moment(item.checkOut).add(1, 'day').format('DD-MM-YYYY')}</span>
                                                     </div>
                                                     <div className="cart-container_guests">
                                                         <span>{item.numberAdult} Adults</span>,
@@ -745,8 +744,8 @@ export default function BookingDetail({ showDetails, setShowDetails, showDetails
                                                     <span>Room</span> {key + 1} </h3>
                                                 <div className="cart-container_summary">
                                                     <div className="cart-container_dates">
-                                                        <span>{moment(item.checkIn).format('DD-MM-YYYY')}</span> -{" "}
-                                                        <span>{moment(item.checkOut).format('DD-MM-YYYY')}</span>
+                                                        <span>{moment(item.checkIn).add(1, 'day').format('DD-MM-YYYY')}</span> -{" "}
+                                                        <span>{moment(item.checkOut).add(1, 'day').format('DD-MM-YYYY')}</span>
                                                     </div>
                                                     <div className="cart-container_guests">
                                                         <span>{item.numberAdult} Adults</span>,

@@ -28,7 +28,7 @@ export default function SocialIcons() {
           onClick={handleClick}
           sx={{ fontSize: '20px', color: '#FEA116 ', fontWeight: 700 }}
         >
-          Logout
+          login
         </Button>
         <Menu
           id="basic-menu"
@@ -39,8 +39,6 @@ export default function SocialIcons() {
             'aria-labelledby': 'basic-button',
           }}
         >
-          {/* <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem> */}
           <MenuItem onClick={handleClose}>Logout</MenuItem>
         </Menu>
       </div>

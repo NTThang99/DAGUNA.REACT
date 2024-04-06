@@ -425,8 +425,12 @@ export default function HeaderBooking({ isExpanded, dayjs, toggleFlyout, decreas
                                 <DemoContainer components={['DateRangePicker']}>
                                     <DateRangePicker
                                         value={value}
-                                        onChange={(newValue) => setValue(newValue)}
-                                        localeText={{ start: 'Check-in', end: 'Check-out' }} />
+                                        onChange={(newValue) => {
+                                            const correctedValue = [newValue[0], dayjs(newValue[1])];
+                                            setValue(correctedValue);
+                                            handleCheckChange(correctedValue);
+                                        }}
+                                        localeText={{ start: 'Check-in', end: 'Check-out' }}/>
                                 </DemoContainer>
                             </LocalizationProvider>
                             <div

@@ -18,6 +18,7 @@ import Box from '@mui/material/Box';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import bookingReducer from "../BookingSlide";
+import moment from 'moment';
 import {
   updateSearchBar,
   createBookingAPI,
@@ -150,6 +151,8 @@ export default function Booking() {
         roomId: id,
         numberAdult: room.searchBar.guests.numberAdult,
         childrenAges: room.searchBar.guests.childrenAges,
+        checkIn: room.searchBar.checkIn,
+        checkOut: room.searchBar.checkOut
       }));
     } else {
       dispatch(updateBooking_AddRoomAPI({
@@ -204,15 +207,22 @@ export default function Booking() {
     if (checkOut.isBefore(checkIn, 'day')) {
       checkOut = checkIn.add(1, 'day');
     }
-    checkIn = checkIn.format('DD-MM-YYYY');
-    checkOut = checkOut.format('DD-MM-YYYY');
+    if (isNaN(checkOut)) {
+      checkOut = moment(new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
+    }
 
+    handleCurrent();
+    let current = adultQuantity + mapAge.get("greatthan4") + Math.ceil(mapAge.get("lessthan4") / 2);
+    let numberOfDays = checkOut.diff(checkIn, 'days');
     dispatch(findAvailableRoomHavePerAPI({
-      checkIn: room.searchBar.checkIn,
-      checkOut: room.searchBar.checkOut,
-
+      checkIn: checkIn,
+      checkOut: checkOut,
+      current: current,
+      numberOfDays: numberOfDays
     }));
   };
+
+
   const handleChange = (index, event) => {
     const newAges = [...childAges];
     newAges[index] = event.target.value;
@@ -262,6 +272,7 @@ export default function Booking() {
       current: 0,
       numberAdult: room.searchBar.guests.numberAdult,
       childrenAges: room.searchBar.guests.childrenAges,
+      numberOfDays: room.searchBar.numberOfDays
     }));
     let bookingId = localStorage.getItem("bookingId");
     if (bookingId != null) {

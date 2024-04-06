@@ -14,6 +14,7 @@ const inItState = {
       },
       checkIn: new Date(),
       checkOut: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+      numberOfDays:'0',
       viewType: "ALL",
       sortBy: "",
       bedType: "-1",
@@ -129,6 +130,7 @@ export const createBookingAPI = createAsyncThunk(
 export const createBookingUser = createAsyncThunk(
   "createBookingAPI",
   async (arg, { rejectWithValue }) => {
+    console.log("arg", arg);
     try {
       // tùy vào arg để gửi thông tin lên cho phù hợp
       let objSend = {
@@ -140,6 +142,7 @@ export const createBookingUser = createAsyncThunk(
           childrenAges: arg.searchBar.guests.childrenAges
         }
       };
+      console.log("objSend", objSend);
       let res = await BookingService.createBooking(
         "http://localhost:8080/api/bookings",
         objSend
@@ -353,8 +356,9 @@ export const findAvailableRoomHavePerAPI = createAsyncThunk(
       let objSend = {
         selectFirstDay: arg.checkIn,
         selectLastDay: arg.checkOut,
+        numberOfDays: arg.numberOfDays
       }
-
+    
       const res = await RoomService.updateSearchBarHeader(
         `http://localhost:8080/api/rooms/find-available-room-have-per-pageable?current=${arg.current}`, objSend
       );
@@ -378,9 +382,9 @@ export const findSortRoomHavePerAPI = createAsyncThunk(
         selectLastDay: arg.checkOut,
       }
       let url = "";
-      if(arg.viewType == "ALL"){
+      if (arg.viewType == "ALL") {
         url = `http://localhost:8080/api/rooms/find-available-room-have-per-pageable?current=${arg.current}&sort=${arg.sortBy}&minPrice=${arg.minMaxPrice[0]}&maxPrice=${arg.minMaxPrice[1]}`
-      }else{
+      } else {
         url = `http://localhost:8080/api/rooms/find-available-room-have-per-pageable?current=${arg.current}&sort=${arg.sortBy}&minPrice=${arg.minMaxPrice[0]}&maxPrice=${arg.minMaxPrice[1]}&view=${arg.viewType}`
       }
       let res = await RoomService.updateSearchSortBarHeader(
@@ -443,7 +447,7 @@ const bookingReducer = createSlice({
         state.booking.bookingId = action.payload.bookingId;
         state.booking.total = action.payload.total
 
-        if(state.booking.bookingDetailChoosen == null){
+        if (state.booking.bookingDetailChoosen == null) {
           if (action.payload.bookingDetails.length != 0) {
             state.booking.bookingDetailChoosen =
               action.payload.bookingDetails[
@@ -451,7 +455,7 @@ const bookingReducer = createSlice({
               ].bookingDetailId;
           }
         }
-        
+
       }
     });
 
@@ -522,8 +526,11 @@ const bookingReducer = createSlice({
       state.room.data = action.payload.content;
       state.room.searchBar.guests.numberAdult = action.meta.arg.numberAdult
       state.room.searchBar.guests.childrenAges = action.meta.arg.childrenAges
+      state.room.searchBar.checkIn = action.meta.arg.checkIn
+      state.room.searchBar.checkOut = action.meta.arg.checkOut
+      state.room.searchBar.numberOfDays = action.meta.arg.numberOfDays
 
-      
+
     });
 
     builder.addCase(findSortRoomHavePerAPI.pending, (state, action) => {

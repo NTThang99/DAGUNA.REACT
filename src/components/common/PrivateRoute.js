@@ -32,7 +32,7 @@ const PrivateRoute = ({ Component, authority, previousUrl }) => {
    
 // const [isAuthenticated, setIsAuthenticated] = useState(false);
     let user = JSON.parse(localStorage.getItem('user'));
-    let isAuthenticated = hasAnyRole(user.roles[0], authority)
+    let isAuthenticated = hasAnyRole(user?.roles[0], authority)
   return isAuthenticated ? <Component /> : <Navigate to="/login" state={{ previousUrl: previousUrl }} />;
 };
 export default PrivateRoute;

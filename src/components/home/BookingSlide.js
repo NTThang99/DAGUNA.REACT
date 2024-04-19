@@ -522,7 +522,9 @@ const bookingReducer = createSlice({
       state.room.data = action.payload.content;
       state.room.searchBar.guests.numberAdult = action.meta.arg.numberAdult
       state.room.searchBar.guests.childrenAges = action.meta.arg.childrenAges
+      state.room.searchBar.checkIn=action.meta.arg.checkIn
 
+      state.room.searchBar.checkOut=action.meta.arg.checkOut
       
     });
 

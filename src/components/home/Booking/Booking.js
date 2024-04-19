@@ -150,6 +150,8 @@ export default function Booking() {
         roomId: id,
         numberAdult: room.searchBar.guests.numberAdult,
         childrenAges: room.searchBar.guests.childrenAges,
+        checkIn: room.searchBar.guests.checkIn,
+        checkOut: room.searchBar.guests.checkOut,
       }));
     } else {
       dispatch(updateBooking_AddRoomAPI({
@@ -158,6 +160,8 @@ export default function Booking() {
         searchBar: room.searchBar,
         numberAdult: room.searchBar.guests.numberAdult,
         childrenAges: room.searchBar.guests.childrenAges,
+        checkIn: room.searchBar.guests.checkIn,
+        checkOut: room.searchBar.guests.checkOut,
       }));
     }
   };
@@ -204,12 +208,15 @@ export default function Booking() {
     if (checkOut.isBefore(checkIn, 'day')) {
       checkOut = checkIn.add(1, 'day');
     }
-    checkIn = checkIn.format('DD-MM-YYYY');
-    checkOut = checkOut.format('DD-MM-YYYY');
+    // checkIn = checkIn.format('DD-MM-YYYY');
+    // checkOut = checkOut.format('DD-MM-YYYY');
+    handleCurrent();
+    let current = adultQuantity + mapAge.get("greatthan4") + Math.ceil(mapAge.get("lessthan4") / 2);
 
     dispatch(findAvailableRoomHavePerAPI({
-      checkIn: room.searchBar.checkIn,
-      checkOut: room.searchBar.checkOut,
+      checkIn: checkIn,
+      checkOut: checkOut,
+      current: current
 
     }));
   };
